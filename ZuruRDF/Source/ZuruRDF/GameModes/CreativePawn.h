@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
+#include "Math/Vector.h"
 
 #include "CreativePawn.generated.h"
 
@@ -29,7 +30,14 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	// Move the pawn on the XY plane.
+	void Strafe(const FVector& InStrafe);
+
+	// Rotate the pawn on the Z axis.
+	void Orbit(float InOrbit);
+
+	// Raise\lower the pivot.
+	void Pivot(float InPivot);
 
 protected:
 	
@@ -39,15 +47,15 @@ private:
 
 	// A dummy mesh to locate the pawn. Hidden in game.
 	UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* Root{ nullptr };
+	UStaticMeshComponent* PawnComponent{ nullptr };
 
 	// Pivot component used to raise or lower the camera relative to its target.
 	UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	USceneComponent* Pivot{ nullptr };
+	USceneComponent* PivotComponent{ nullptr };
 
 	// Main camera.
 	UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* Camera{ nullptr };
+	UCameraComponent* CameraComponent{ nullptr };
 
 	// Desired distance of the camera from the target, in world units.
 	UPROPERTY(Category = Configuration, EditAnywhere)
@@ -57,9 +65,6 @@ private:
 	UPROPERTY(Category = Configuration, EditAnywhere)
 	float CameraVerticalOffset{ 50.0f };
 
-	// Desired camera angle, relative to its target, in degrees.
-	UPROPERTY(Category = Configuration, EditAnywhere)
-	float CameraInclination{ 45.0f };
 };
 
 // ==================================================================== //

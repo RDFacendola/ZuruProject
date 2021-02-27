@@ -3,6 +3,7 @@
 
 #include "CreativePawn.h"
 #include "Math/Vector.h"
+#include "Math/Rotator.h"
 
 // ==================================================================== //
 
@@ -12,23 +13,23 @@ ACreativePawn::ACreativePawn()
 
 	// Root component.
 
-	Root = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Pawn"));
-	Root->SetGenerateOverlapEvents(false);
-	Root->SetHiddenInGame(true);
+	PawnComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Pawn"));
+	PawnComponent->SetGenerateOverlapEvents(false);
+	PawnComponent->SetHiddenInGame(true);
 
-	SetRootComponent(Root);
+	SetRootComponent(PawnComponent);
 
 	// Pivot component.
 
-	Pivot = CreateDefaultSubobject<USceneComponent>(TEXT("Pivot"));
+	PivotComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Pivot"));
 	
-	Pivot->SetupAttachment(Root);
+	PivotComponent->SetupAttachment(PawnComponent);
 
 	// Camera component.
 
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 
-	Camera->SetupAttachment(Pivot);
+	CameraComponent->SetupAttachment(PivotComponent);
 
 }
 
@@ -43,13 +44,23 @@ void ACreativePawn::Tick(float DeltaTime)
 
 	// Just move the camera along the forward vector: pivot will take care of the inclination of the camera automatically.
 
-	Camera->SetRelativeLocation(FVector{ -CameraDistance, 0.0f, CameraVerticalOffset });
-	Pivot->SetRelativeRotation(FRotator{ -CameraInclination, 0.0f, 0.0f });
+	CameraComponent->SetRelativeLocation(FVector{ -CameraDistance, 0.0f, CameraVerticalOffset });
+
 }
 
-void ACreativePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ACreativePawn::Strafe(const FVector& InStrafe)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	SetActorRelativeLocation(InStrafe);
+}
+
+void ACreativePawn::Orbit(float InOrbit)
+{
+	SetActorRelativeRotation(FRotator(0.0f, 0.0f, InOrbit));
+}
+
+void ACreativePawn::Pivot(float InPivot)
+{
+	PivotComponent->SetRelativeRotation(FRotator(0.0f, InPivot, 0.0f));
 }
 
 // ==================================================================== //

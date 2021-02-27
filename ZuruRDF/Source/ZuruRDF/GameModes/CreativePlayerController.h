@@ -5,6 +5,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Math/Vector.h"
+#include "FreeCameraComponent.h"
 
 #include "CreativePlayerController.generated.h"
 
@@ -24,8 +26,22 @@ class ZURURDF_API ACreativePlayerController : public APlayerController
 	
 public:
 
+	ACreativePlayerController();
+
+	void Tick(float DeltaSeconds) override;
+
+protected:
+	
+	void SetupInputComponent() override;
+
+	void OnPossess(APawn* InPawn) override;
+
 private:
 
+	// The camera component.
+	UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	UFreeCameraComponent* CameraComponent{ nullptr };
+	
 };
 
 // ==================================================================== //
