@@ -9,21 +9,20 @@
 
 void UFreeCameraInputComponent::Bind(UInputComponent& InInputComponent)
 {
-	InInputComponent.BindAxis(FCameraInputs::kCameraForward, this, &UFreeCameraInputComponent::OnForwardInput);
-	InInputComponent.BindAxis(FCameraInputs::kCameraRight, this, &UFreeCameraInputComponent::OnRightInput);
-	InInputComponent.BindAxis(FCameraInputs::kCameraOrbit, this, &UFreeCameraInputComponent::OnOrbitInput);
-	InInputComponent.BindAxis(FCameraInputs::kCameraPivot, this, &UFreeCameraInputComponent::OnPivotInput);
-	InInputComponent.BindAxis(FCameraInputs::kCameraDistance, this, &UFreeCameraInputComponent::OnDistanceInput);
+	InInputComponent.BindAxis(FCameraInputs::kCameraForward, this, &UFreeCameraInputComponent::OnForwardAxis);
+	InInputComponent.BindAxis(FCameraInputs::kCameraRight, this, &UFreeCameraInputComponent::OnRightAxis);
+	InInputComponent.BindAxis(FCameraInputs::kCameraOrbit, this, &UFreeCameraInputComponent::OnOrbitAxis);
+	InInputComponent.BindAxis(FCameraInputs::kCameraPivot, this, &UFreeCameraInputComponent::OnPivotAxis);
+	InInputComponent.BindAxis(FCameraInputs::kCameraDistance, this, &UFreeCameraInputComponent::OnDistanceAxis);
 
-	InInputComponent.BindAction(FCameraInputs::kCameraOrbitSnapRightAction, IE_Pressed, this, &UFreeCameraInputComponent::OnOrbitSnapRightPressed);
-	InInputComponent.BindAction(FCameraInputs::kCameraOrbitSnapLeftAction, IE_Pressed, this, &UFreeCameraInputComponent::OnOrbitSnapLeftPressed);
-	InInputComponent.BindAction(FCameraInputs::kCameraOrbitSnapRightAction, IE_Released, this, &UFreeCameraInputComponent::OnOrbitSnapRightReleased);
-	InInputComponent.BindAction(FCameraInputs::kCameraOrbitSnapLeftAction, IE_Released, this, &UFreeCameraInputComponent::OnOrbitSnapLeftReleased);
-
-	InInputComponent.BindAction(FCameraInputs::kCameraPivotSnapTopAction, IE_Pressed, this, &UFreeCameraInputComponent::OnPivotSnapTopPressed);
-	InInputComponent.BindAction(FCameraInputs::kCameraPivotSnapFrontAction, IE_Pressed, this, &UFreeCameraInputComponent::OnPivotSnapFrontPressed);
-	InInputComponent.BindAction(FCameraInputs::kCameraPivotSnapTopAction, IE_Released, this, &UFreeCameraInputComponent::OnPivotSnapTopReleased);
-	InInputComponent.BindAction(FCameraInputs::kCameraPivotSnapFrontAction, IE_Released, this, &UFreeCameraInputComponent::OnPivotSnapFrontReleased);
+	InInputComponent.BindAction(FCameraInputs::kCameraTopView, IE_Pressed, this, &UFreeCameraInputComponent::OnTopViewPressed);
+	InInputComponent.BindAction(FCameraInputs::kCameraTopView, IE_Released, this, &UFreeCameraInputComponent::OnTopViewReleased);
+	InInputComponent.BindAction(FCameraInputs::kCameraFrontView, IE_Pressed, this, &UFreeCameraInputComponent::OnFrontViewPressed);
+	InInputComponent.BindAction(FCameraInputs::kCameraFrontView, IE_Released, this, &UFreeCameraInputComponent::OnFrontViewReleased);
+	InInputComponent.BindAction(FCameraInputs::kCameraClockwise, IE_Pressed, this, &UFreeCameraInputComponent::OnClockwisePressed);
+	InInputComponent.BindAction(FCameraInputs::kCameraClockwise, IE_Released, this, &UFreeCameraInputComponent::OnClockwiseReleased);
+	InInputComponent.BindAction(FCameraInputs::kCameraCounterClockwise, IE_Pressed, this, &UFreeCameraInputComponent::OnCounterClockwisePressed);
+	InInputComponent.BindAction(FCameraInputs::kCameraCounterClockwise, IE_Released, this, &UFreeCameraInputComponent::OnCounterClockwiseReleased);
 }
 
 void UFreeCameraInputComponent::Bind(APawn& InPawn)
@@ -33,148 +32,90 @@ void UFreeCameraInputComponent::Bind(APawn& InPawn)
 
 void UFreeCameraInputComponent::Advance(float InDeltaSeconds)
 {
-	if (FreeCameraComponent)
+	// Disable orbit actions until clockwise and counterclockwise keys are released.
+
+	if (!bClockwiseEnabled || !bCounterClockwiseEnabled)
 	{
-		FreeCameraComponent->OnStrafeInput(GetStrafeInput());
-		FreeCameraComponent->OnDistanceInput(DistanceInput);
-		
-		// Either rotate right or snap right.
-
-		if (bOrbitSnapRight)
-		{
-			FreeCameraComponent->OnOrbitSnapRightInput();
-		}
-		else if ((OrbitInput > 0.0f) && bOrbitSnapRightEnabled)
-		{
-			FreeCameraComponent->OnOrbitInput(OrbitInput);
-		}
-
-		// Either rotate left or snap left.
-
-		if (bOrbitSnapLeft)
-		{
-			FreeCameraComponent->OnOrbitSnapLeftInput();
-		}
-		else if ((OrbitInput < 0.0f) && bOrbitSnapLeftEnabled)
-		{
-			FreeCameraComponent->OnOrbitInput(OrbitInput);
-		}
-
-		// Either raise or snap top.
-
-		if (bPivotSnapTop)
-		{
-			FreeCameraComponent->OnPivotSnapTopInput();
-		}
-		else if ((PivotInput > 0.0f) && bPivotSnapTopEnabled)
-		{
-			FreeCameraComponent->OnPivotInput(PivotInput);
-		}
-
-		// Either lower or snap front.
-
-		if (bPivotSnapFront)
-		{
-			FreeCameraComponent->OnPivotSnapFrontInput();
-		}
-		else if ((PivotInput < 0.0f) && bPivotSnapFrontEnabled)
-		{
-			FreeCameraComponent->OnPivotInput(PivotInput);
-		}
+		Actions.Orbit = 0.0f;
 	}
 
-	ConsumeInputs();
+	if (FreeCameraComponent)
+	{
+		FreeCameraComponent->SetActions(Actions);
+	}
+
+	Actions = {};
 }
 
-FVector2D UFreeCameraInputComponent::GetStrafeInput() const
+void UFreeCameraInputComponent::OnForwardAxis(float InValue)
 {
-	auto Size2 = StrafeInput.SizeSquared();
-
-	return (Size2 < 1.0f) ? (StrafeInput) : (StrafeInput * FMath::InvSqrt(Size2));
+	Actions.Strafe.X += InValue;
 }
 
-void UFreeCameraInputComponent::ConsumeInputs()
+void UFreeCameraInputComponent::OnRightAxis(float InValue)
 {
-	StrafeInput = FVector2D::ZeroVector;
-	OrbitInput = 0.0f;
-	PivotInput = 0.0f;
-	DistanceInput = 0.0f;
-	bOrbitSnapRight = false;
-	bOrbitSnapLeft = false;
-	bPivotSnapFront = false;
-	bPivotSnapTop = false;
+	Actions.Strafe.Y += InValue;
 }
 
-void UFreeCameraInputComponent::OnForwardInput(float InValue)
+void UFreeCameraInputComponent::OnOrbitAxis(float InValue)
 {
-	StrafeInput.X += InValue;
+	Actions.Orbit += InValue;
 }
 
-void UFreeCameraInputComponent::OnRightInput(float InValue)
+void UFreeCameraInputComponent::OnPivotAxis(float InValue)
 {
-	StrafeInput.Y += InValue;
+	Actions.Pivot += InValue;
 }
 
-void UFreeCameraInputComponent::OnOrbitInput(float InValue)
+void UFreeCameraInputComponent::OnDistanceAxis(float InValue)
 {
-	OrbitInput += InValue;
+	Actions.Distance += InValue;
 }
 
-void UFreeCameraInputComponent::OnPivotInput(float InValue)
+void UFreeCameraInputComponent::OnTopViewPressed()
 {
-	PivotInput += InValue;
+	Actions.bTopView = bTopViewEnabled;
+	bTopViewEnabled = false;
 }
 
-void UFreeCameraInputComponent::OnDistanceInput(float InValue)
+void UFreeCameraInputComponent::OnTopViewReleased()
 {
-	// Inverted as moving towards the target (positive) reduces its distance from the camera.
-
-	DistanceInput -= InValue;
+	bTopViewEnabled = true;
 }
 
-void UFreeCameraInputComponent::OnOrbitSnapRightPressed()
+void UFreeCameraInputComponent::OnFrontViewPressed()
 {
-	bOrbitSnapRight = bOrbitSnapRightEnabled;
-	bOrbitSnapRightEnabled = false;
+	Actions.bFrontView = bFrontViewEnabled;
+	bFrontViewEnabled = false;
 }
 
-void UFreeCameraInputComponent::OnOrbitSnapLeftPressed()
+void UFreeCameraInputComponent::OnFrontViewReleased()
 {
-	bOrbitSnapLeft = bOrbitSnapLeftEnabled;
-	bOrbitSnapLeftEnabled = false;
+	bFrontViewEnabled = true;
 }
 
-void UFreeCameraInputComponent::OnOrbitSnapRightReleased()
+void UFreeCameraInputComponent::OnClockwisePressed()
 {
-	bOrbitSnapRightEnabled = true;
+	Actions.bClockwise = bClockwiseEnabled;
+	bClockwiseEnabled = false;
 }
 
-void UFreeCameraInputComponent::OnOrbitSnapLeftReleased()
+void UFreeCameraInputComponent::OnClockwiseReleased()
 {
-	bOrbitSnapLeftEnabled = true;
+	bClockwiseEnabled = true;
 }
 
-void UFreeCameraInputComponent::OnPivotSnapTopPressed()
+void UFreeCameraInputComponent::OnCounterClockwisePressed()
 {
-	bPivotSnapTop = bPivotSnapTopEnabled;
-	bPivotSnapTopEnabled = false;
+	Actions.bCounterClockwise = bCounterClockwiseEnabled;
+	bCounterClockwiseEnabled = false;
 }
 
-void UFreeCameraInputComponent::OnPivotSnapFrontPressed()
+void UFreeCameraInputComponent::OnCounterClockwiseReleased()
 {
-	bPivotSnapFront = bPivotSnapFrontEnabled;
-	bPivotSnapFrontEnabled = false;
+	bCounterClockwiseEnabled = true;
 }
 
-void UFreeCameraInputComponent::OnPivotSnapTopReleased()
-{
-	bPivotSnapTopEnabled = true;
-}
-
-void UFreeCameraInputComponent::OnPivotSnapFrontReleased()
-{
-	bPivotSnapFrontEnabled = true;
-}
 
 // ==================================================================== //
 

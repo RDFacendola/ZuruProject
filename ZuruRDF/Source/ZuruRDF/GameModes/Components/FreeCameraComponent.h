@@ -11,6 +11,38 @@
 
 // ==================================================================== //
 
+// Set of free camera actions.
+//
+// @author Raffaele D. Facendola - February 2021.
+struct FFreeCameraActions
+{
+	// Movement of the camera, in world units.
+	FVector2D Strafe{ FVector2D::ZeroVector };
+
+	// Rotation of the camera around its target, in degrees.
+	float Orbit{ 0.0f };
+
+	// Raise or lower the camera with respect to its target, in degrees.
+	float Pivot{ 0.0f };
+
+	// Move the camera close or far aways from its target.
+	float Distance{ 0.0f };
+
+	// Switch to a top-view camera and snap.
+	bool bTopView{ false };
+
+	// Switch to a front-view camera and snap.
+	bool bFrontView{ false };
+
+	// Rotate the camera by 90 degrees clockwise and snap.
+	bool bClockwise{ false };
+
+	// Rotate the camera by 90 degrees counter-clockwise and snap.
+	bool bCounterClockwise{ false };
+};
+
+// ==================================================================== //
+
 /************************************************************************/
 /* FREE CAMERA COMPONENT                                                */
 /************************************************************************/
@@ -35,48 +67,36 @@ public:
 	// Create a new free camera component.
 	UFreeCameraComponent();
 
-	// Called whenever a strafe input is detected.
-	void OnStrafeInput(const FVector2D& InStrafe);
-
-	// Called whenever an orbit input is detected.
-	void OnOrbitInput(float InOrbit);
-
-	// Called whenever a pivot input is detected.
-	void OnPivotInput(float InPivot);
-
-	// Called whenever a distance input is detected.
-	void OnDistanceInput(float InDistance);
-
-	// Called whenever an orbit snap right input is detected.
-	void OnOrbitSnapRightInput();
-
-	// Called whenever an orbit snap left input is detected.
-	void OnOrbitSnapLeftInput();
-
-	// Called whenever an pivot snap top input is detected.
-	void OnPivotSnapTopInput();
-
-	// Called whenever an pivot snap front input is detected.
-	void OnPivotSnapFrontInput();
+	// Set camera actions.
+	void SetActions(const FFreeCameraActions& InCameraActions);
 
 	// Advance the component status.
 	void Advance(float InDeltaTime);
+
+	// Get the target location.
+	FVector GetLocation() const;
+
+	// Get the target 2D location.
+	FVector2D GetLocation2D() const;
+
+	// Get the orbit angle of the camera relative to its target.
+	FRotator GetOrbit() const;
+
+	// Get the pivot angle of the camera relative to its target.
+	float GetPivot() const;
+
+	// Get the distance of the camera from its target.
+	float GetDistance() const;
 
 	void BeginPlay() override;
 
 private:
 	
-	// Integrate input actions and update the target camera movements.
-	void IntegrateInputs(float InDeltaTime);
-
-	// Filter target movements and smoothly blend towards them.
-	void FilterInputs(float InDeltaTime);
+	// Update camera target movements.
+	void IntegrateActions(float InDeltaTime);
 
 	// Update actors and components to reflect latest component movements.
-	void ApplyInputs(float InDeltaTime);
-
-	// Consume pending inputs.
-	void ConsumeInputs();
+	void ApplyActions(float InDeltaTime);
 
 	// Minimum angle between the camera and its target, in degrees.
 	UPROPERTY(Category = Camera, EditAnywhere)
@@ -138,58 +158,24 @@ private:
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float DistanceSmooth{ 0.0f };
 
-	// Whether this component applies both strafe and orbit inputs on the actor (true)
-	// or on its parent component (false).
+	// Whether the camera target is the root of the actor (true) or the parent actor (false).
 	UPROPERTY(Category = Camera, EditAnywhere)
-	bool bMoveActor{ true };
+	bool bTargetRoot{ true };
 
-	// Movement in the XY plane.
-	FVector2D StrafeInput;
-
-	// Orbit input.
-	float OrbitInput{ 0.0f };
-
-	// Pivot input.
-	float PivotInput{ 0.0f };
-
-	// Distance input.
-	float DistanceInput{ 0.0f };
-
-	// Orbit snap right input.
-	bool bOrbitSnapRightInput{ false };
-
-	// Orbit snap left input.
-	bool bOrbitSnapLeftInput{ false };
-
-	// Orbit pivot top input.
-	bool bPivotSnapTopInput{ false };
-
-	// Orbit pivot front input.
-	bool bPivotSnapFrontInput{ false };
+	// Current camera actions.
+	FFreeCameraActions Actions;
 
 	// Target camera location, in world units.
 	FVector2D TargetLocation;
 
 	// Target camera orbit, in degrees.
-	float TargetOrbit{ 0.0f };
+	FRotator TargetOrbit;
 
 	// Target camera pivot, in degrees.
 	float TargetPivot{ 0.0f };
 
 	// Target camera distance, in world units.
 	float TargetDistance{ 200.0f };
-
-	// Current location, in world units.
-	FVector2D CurrentLocation{ FVector2D::ZeroVector };
-
-	// Current orbit value, in degrees.
-	float CurrentOrbit{ 0.0f };
-
-	// Current pivot value, in degrees.
-	float CurrentPivot{ 0.0f };
-
-	// Current distance from the camera target, in world units.
-	float CurrentDistance{ 0.0f };
 
 };
 

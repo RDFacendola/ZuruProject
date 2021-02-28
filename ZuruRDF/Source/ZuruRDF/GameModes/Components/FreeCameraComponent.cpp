@@ -15,127 +15,131 @@ UFreeCameraComponent::UFreeCameraComponent()
 	
 }
 
-void UFreeCameraComponent::OnStrafeInput(const FVector2D& InStrafe)
+void UFreeCameraComponent::SetActions(const FFreeCameraActions& InCameraActions)
 {
-	// Strafe input is always relative to current rotation.
-
-	auto CurrentRotation = FRotator{ 0.0f, CurrentOrbit, 0.0f };
-
-	auto RelativeStrafe = CurrentRotation.RotateVector(FVector{ InStrafe.X, InStrafe.Y, 0.0f });
-
-	StrafeInput = FVector2D{ RelativeStrafe };
-}
-
-void UFreeCameraComponent::OnOrbitInput(float InOrbit)
-{
-	OrbitInput = InOrbit;
-}
-
-void UFreeCameraComponent::OnPivotInput(float InPivot)
-{
-	PivotInput = InPivot;
-}
-
-void UFreeCameraComponent::OnDistanceInput(float InDistance)
-{
-	DistanceInput = InDistance;
-}
-
-void UFreeCameraComponent::OnOrbitSnapRightInput()
-{
-	bOrbitSnapRightInput = true;
-}
-
-void UFreeCameraComponent::OnOrbitSnapLeftInput()
-{
-	bOrbitSnapLeftInput = true;
-}
-
-void UFreeCameraComponent::OnPivotSnapTopInput()
-{
-	bPivotSnapTopInput = true;
-}
-
-void UFreeCameraComponent::OnPivotSnapFrontInput()
-{
-	bPivotSnapFrontInput = true;
+	Actions = InCameraActions;
 }
 
 void UFreeCameraComponent::Advance(float InDeltaTime)
 {
-	IntegrateInputs(InDeltaTime);
-	FilterInputs(InDeltaTime);
-	ApplyInputs(InDeltaTime);
-	ConsumeInputs();
+	IntegrateActions(InDeltaTime);
+	ApplyActions(InDeltaTime);
+
+	Actions = {};
 }
 
-void UFreeCameraComponent::IntegrateInputs(float InDeltaTime)
+FVector UFreeCameraComponent::GetLocation() const
 {
-	// Strafe action quickens as the camera moves away from the target.
+	return (bTargetRoot) ? (GetOwner()->GetActorLocation()) : (GetAttachParent()->GetComponentLocation());
+}
 
-	auto StrafeInputWeight = FMath::Lerp(1.0f, MaxDistance / MinDistance, (CurrentDistance - MinDistance) / (MaxDistance - MinDistance));
+FVector2D UFreeCameraComponent::GetLocation2D() const
+{
+	return FVector2D{ GetLocation() };
+}
 
-	TargetLocation += StrafeInputWeight * StrafeInput * StrafeSpeed * InDeltaTime;
-	TargetOrbit += OrbitInput * OrbitSpeed * InDeltaTime;
-	TargetPivot += PivotInput * PivotSpeed * InDeltaTime;
-	TargetDistance += TargetDistance * DistanceInput * DistanceSpeed * InDeltaTime;
+FRotator UFreeCameraComponent::GetOrbit() const
+{
+	return (bTargetRoot) ? (GetOwner()->GetActorRotation()) : (GetAttachParent()->GetComponentRotation());
+}
 
-	TargetPivot = FMath::Clamp(TargetPivot, MinPivot, MaxPivot);
+float UFreeCameraComponent::GetPivot() const
+{
+	return -GetRelativeRotation().Pitch;
+}
+
+float UFreeCameraComponent::GetDistance() const
+{
+	return FVector::Distance(GetLocation() + VerticalOffset * FVector::UpVector , GetComponentLocation());
+}
+
+void UFreeCameraComponent::IntegrateActions(float InDeltaTime)
+{
+	// Strafe action.
+
+	auto StrafeWS = [&]()
+	{
+		// From local space to world space, clamping the combined input.
+
+		auto Size2 = Actions.Strafe.SizeSquared();
+
+		auto StrafeLS = (Size2 < 1.0f) ? (Actions.Strafe) : (Actions.Strafe * FMath::InvSqrt(Size2));
+
+		return Actions.Strafe.GetRotated(GetOrbit().Yaw);
+	}();
+	
+	auto StrafeSpeedup = FMath::Lerp(1.0f, MaxDistance / MinDistance, (GetDistance() - MinDistance) / (MaxDistance - MinDistance));		// Increase the speed when far away from the target and cover more space.
+
+	TargetLocation += StrafeSpeedup * StrafeWS * StrafeSpeed * InDeltaTime;
+
+	// Distance action.
+
+	auto DistanceSpeedup = TargetDistance;
+
+	TargetDistance += DistanceSpeedup * Actions.Distance * DistanceSpeed * InDeltaTime;
+
 	TargetDistance = FMath::Clamp(TargetDistance, MinDistance, MaxDistance);
 
-	// Apply snap orbit if requested.
+	// Clockwise and CounterClockwise actions are mutually exclusive with the Orbit action.
 
-	if (bOrbitSnapRightInput)
+	if (Actions.bClockwise)
 	{
-		TargetOrbit = FMath::CeilToInt(TargetOrbit / 90.0f) * 90.0f;
-		TargetOrbit += 90.0f;
+		TargetOrbit.Yaw = FMath::FloorToInt(TargetOrbit.Yaw / 90.0f) * 90.0f - 90.0f;		// Snap and rotate clockwise.
+	}
+	else if (Actions.bCounterClockwise)
+	{
+		TargetOrbit.Yaw = FMath::CeilToInt(TargetOrbit.Yaw / 90.0f) * 90.0f + 90.0f;		// Snap and rotate counter-clockwise.
+	}
+	else
+	{
+		TargetOrbit.Yaw += Actions.Orbit * OrbitSpeed * InDeltaTime;
 	}
 
-	if (bOrbitSnapLeftInput)
-	{
-		TargetOrbit = FMath::FloorToInt(TargetOrbit / 90.0f) * 90.0f;
-		TargetOrbit -= 90.0f;
-	}
+	TargetOrbit.Normalize();
 
-	if (bPivotSnapTopInput)
+	// TopView and FrontView actions are mutually exclusive with the Pivot action.
+
+	if (Actions.bTopView)
 	{
 		TargetPivot = 90.0f;
 	}
-
-	if (bPivotSnapFrontInput)
+	else if (Actions.bFrontView)
 	{
 		TargetPivot = 0.0f;
 	}
+	else
+	{
+		TargetPivot += Actions.Pivot * PivotSpeed * InDeltaTime;
+
+		TargetPivot = FMath::Clamp(TargetPivot, MinPivot, MaxPivot);
+	}
 }
 
-void UFreeCameraComponent::FilterInputs(float InDeltaTime)
+void UFreeCameraComponent::ApplyActions(float InDeltaTime)
 {
-	// Smoothly interpolate the current movements to avoid abrupt camera movements.
+	// Smoothly interpolate the current actions to avoid abrupt camera movements.
 
-	CurrentLocation = FMath::Vector2DInterpTo(CurrentLocation, TargetLocation, InDeltaTime, StrafeSmooth);
-	CurrentOrbit = FMath::FInterpTo(CurrentOrbit, TargetOrbit, InDeltaTime, OrbitSmooth);
-	CurrentPivot = FMath::FInterpTo(CurrentPivot, TargetPivot, InDeltaTime, PivotSmooth);
-	CurrentDistance = FMath::FInterpTo(CurrentDistance, TargetDistance, InDeltaTime, DistanceSmooth);
-}
+	auto Location = FMath::Vector2DInterpTo(GetLocation2D(), TargetLocation, InDeltaTime, StrafeSmooth);
+	auto Orbit  = FMath::RInterpTo(GetOrbit(), TargetOrbit, InDeltaTime, OrbitSmooth);
+	auto Pivot = FMath::FInterpTo(GetPivot(), TargetPivot, InDeltaTime, PivotSmooth);
+	auto Distance = FMath::FInterpTo(GetDistance(), TargetDistance, InDeltaTime, DistanceSmooth);
 
-void UFreeCameraComponent::ApplyInputs(float InDeltaTime)
-{
-	// Update camera component (distance, pivot and vertical offset).
+	// Update camera component to reflect distance, pivot and vertical offset actions.
 
-	auto CameraDistanceTransform = FTranslationMatrix{ FVector{ -CurrentDistance, 0.0f, 0.0f } };
-	auto CameraPivotTransform = FRotationMatrix{ FRotator{ -CurrentPivot, 0.0f, 0.0f } };
-	auto CameraVerticalOffsetTransform = FTranslationMatrix{ FVector{ 0.0f, 0.0f, VerticalOffset } };
+	auto DistanceTransform = FTranslationMatrix{ FVector{ -Distance, 0.0f, 0.0f } };
+	auto PivotTransform = FRotationMatrix{ FRotator{ -Pivot, 0.0f, 0.0f } };
+	auto VerticalOffsetTransform = FTranslationMatrix{ VerticalOffset * FVector::UpVector };
 
-	SetRelativeTransform(FTransform{ CameraDistanceTransform * CameraPivotTransform * CameraVerticalOffsetTransform });
+	SetRelativeTransform(FTransform{ DistanceTransform * PivotTransform * VerticalOffsetTransform });
 
-	// Update the owning actor or the parent component (strafe and orbit).
+	// Update the target location and rotation to reflect strafe and orbit actions.
 
-	if (bMoveActor)
+	if (bTargetRoot)
 	{
 		auto& Actor = *GetOwner();
 
-		auto ActorLocation = FVector{ CurrentLocation.X, CurrentLocation.Y, Actor.GetActorLocation().Z };
-		auto ActorRotation = FRotator{ 0.0f, CurrentOrbit, 0.0f };
+		auto ActorLocation = FVector{ Location.X, Location.Y, Actor.GetActorLocation().Z };
+		auto ActorRotation = Orbit;
 
 		Actor.SetActorLocationAndRotation(ActorLocation, ActorRotation);
 	}
@@ -143,23 +147,11 @@ void UFreeCameraComponent::ApplyInputs(float InDeltaTime)
 	{
 		auto& Parent = *GetAttachParent();
 
-		auto ComponentLocation = FVector{ CurrentLocation.X, CurrentLocation.Y, Parent.GetRelativeLocation().Z };
-		auto ComponentRotation = FRotator{ 0.0f, CurrentOrbit, 0.0f };
+		auto ComponentLocation = FVector{ Location.X, Location.Y, Parent.GetRelativeLocation().Z };
+		auto ComponentRotation = Orbit;
 
 		Parent.SetRelativeLocationAndRotation(ComponentLocation, ComponentRotation);
 	}
-}
-
-void UFreeCameraComponent::ConsumeInputs()
-{
-	StrafeInput = FVector2D::ZeroVector;
-	OrbitInput = 0.0f;
-	PivotInput = 0.0f;
-	DistanceInput = 0.0f;
-	bOrbitSnapRightInput = false;
-	bOrbitSnapLeftInput = false;
-	bPivotSnapTopInput = false;
-	bPivotSnapFrontInput = false;
 }
 
 void UFreeCameraComponent::BeginPlay()
@@ -168,15 +160,10 @@ void UFreeCameraComponent::BeginPlay()
 
 	auto& Actor = *GetOwner();
 
-	CurrentLocation = FVector2D{ Actor.GetActorLocation() };
-	CurrentOrbit = Actor.GetActorRotation().Yaw;
-	CurrentPivot = FMath::Clamp(DefaultPivot, MinPivot, MaxPivot);;
-	CurrentDistance = FMath::Clamp(DefaultDistance, MinPivot, MaxPivot);;
-
-	TargetLocation = CurrentLocation;
-	TargetOrbit = CurrentOrbit;
-	TargetPivot = CurrentPivot;
-	TargetDistance = CurrentDistance;
+	TargetLocation = GetLocation2D();
+	TargetOrbit = GetOrbit();
+	TargetPivot = GetPivot();
+	TargetDistance = GetDistance();
 }
 
 PRAGMA_ENABLE_OPTIMIZATION
