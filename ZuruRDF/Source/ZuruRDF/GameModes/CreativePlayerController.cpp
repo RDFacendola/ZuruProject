@@ -3,21 +3,20 @@
 
 #include "CreativePlayerController.h"
 
-#include "CreativeInputs.h"
 #include "CreativePawn.h"
 
 // ==================================================================== //
 
 ACreativePlayerController::ACreativePlayerController()
 {
-	CameraComponent = CreateDefaultSubobject<UFreeCameraComponent>(TEXT("Camera"));
+	CameraInputComponent = CreateDefaultSubobject<UFreeCameraInputComponent>(TEXT("CameraInput"));
 }
 
-void ACreativePlayerController::Tick(float DeltaSeconds)
+void ACreativePlayerController::Tick(float InDeltaSeconds)
 {
-	Super::Tick(DeltaSeconds);
+	Super::Tick(InDeltaSeconds);
 
-
+	CameraInputComponent->Advance(InDeltaSeconds);
 }
 
 void ACreativePlayerController::SetupInputComponent()
@@ -26,15 +25,16 @@ void ACreativePlayerController::SetupInputComponent()
 
 	ensure(InputComponent);
 
-	CameraComponent->Bind(*InputComponent);
+	CameraInputComponent->Bind(*InputComponent);
 }
 
 void ACreativePlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
+	ensure(InPawn);
 
-
+	CameraInputComponent->Bind(*InPawn);
 }
 
 // ==================================================================== //

@@ -6,7 +6,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Math/Vector.h"
-#include "FreeCameraComponent.h"
+#include "Components/FreeCameraInputComponent.h"
+#include "CreativePawn.h"
 
 #include "CreativePlayerController.generated.h"
 
@@ -16,7 +17,7 @@
 /* CREATIVE PLAYER CONTROLLER                                           */
 /************************************************************************/
 
-// A player controller for the "creative" game mode.
+// Models a player's will the "creative" game mode.
 //
 // @author Raffaele D. Facendola - February 2021.
 UCLASS()
@@ -28,7 +29,7 @@ public:
 
 	ACreativePlayerController();
 
-	void Tick(float DeltaSeconds) override;
+	void Tick(float InDeltaSeconds) override;
 
 protected:
 	
@@ -38,10 +39,10 @@ protected:
 
 private:
 
-	// The camera component.
+	// Handles camera-specific inputs.
 	UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	UFreeCameraComponent* CameraComponent{ nullptr };
-	
+	UFreeCameraInputComponent* CameraInputComponent{ nullptr };
+
 };
 
 // ==================================================================== //

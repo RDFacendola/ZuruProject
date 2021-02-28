@@ -8,6 +8,8 @@
 #include "Camera/CameraComponent.h"
 #include "Math/Vector.h"
 
+#include "Components/FreeCameraComponent.h"
+
 #include "CreativePawn.generated.h"
 
 // ==================================================================== //
@@ -28,16 +30,7 @@ public:
 
 	ACreativePawn();
 
-	virtual void Tick(float DeltaTime) override;
-
-	// Move the pawn on the XY plane.
-	void Strafe(const FVector& InStrafe);
-
-	// Rotate the pawn on the Z axis.
-	void Orbit(float InOrbit);
-
-	// Raise\lower the pivot.
-	void Pivot(float InPivot);
+	virtual void Tick(float InDeltaTime) override;
 
 protected:
 	
@@ -55,15 +48,7 @@ private:
 
 	// Main camera.
 	UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* CameraComponent{ nullptr };
-
-	// Desired distance of the camera from the target, in world units.
-	UPROPERTY(Category = Configuration, EditAnywhere)
-	float CameraDistance{ 200.0f };
-
-	// Desired vertical offset of the camera relative to its target, in world units.
-	UPROPERTY(Category = Configuration, EditAnywhere)
-	float CameraVerticalOffset{ 50.0f };
+	UFreeCameraComponent* CameraComponent{ nullptr };
 
 };
 

@@ -27,7 +27,7 @@ ACreativePawn::ACreativePawn()
 
 	// Camera component.
 
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	CameraComponent = CreateDefaultSubobject<UFreeCameraComponent>(TEXT("Camera"));
 
 	CameraComponent->SetupAttachment(PivotComponent);
 
@@ -38,29 +38,12 @@ void ACreativePawn::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ACreativePawn::Tick(float DeltaTime)
+void ACreativePawn::Tick(float InDeltaTime)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(InDeltaTime);
 
-	// Just move the camera along the forward vector: pivot will take care of the inclination of the camera automatically.
+	CameraComponent->Advance(InDeltaTime);
 
-	CameraComponent->SetRelativeLocation(FVector{ -CameraDistance, 0.0f, CameraVerticalOffset });
-
-}
-
-void ACreativePawn::Strafe(const FVector& InStrafe)
-{
-	SetActorRelativeLocation(InStrafe);
-}
-
-void ACreativePawn::Orbit(float InOrbit)
-{
-	SetActorRelativeRotation(FRotator(0.0f, 0.0f, InOrbit));
-}
-
-void ACreativePawn::Pivot(float InPivot)
-{
-	PivotComponent->SetRelativeRotation(FRotator(0.0f, InPivot, 0.0f));
 }
 
 // ==================================================================== //

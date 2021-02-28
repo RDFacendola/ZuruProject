@@ -5,6 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Camera/CameraComponent.h"
 
 #include "FreeCameraComponent.generated.h"
 
@@ -24,7 +25,7 @@
 //
 // @author Raffaele D. Facendola - February 2021.
 UCLASS()
-class ZURURDF_API UFreeCameraComponent : public UActorComponent
+class ZURURDF_API UFreeCameraComponent : public UCameraComponent
 {
 	GENERATED_BODY()
 
@@ -36,42 +37,27 @@ public:
 	// Maximum pivot value, in degrees.
 	static constexpr auto kMaxPivot = 90.0f;
 
-	// Bind to an input component.
-	void Bind(UInputComponent& InInputComponent);
+	// Called whenever a strafe input is detected.
+	void OnStrafeInput(const FVector2D& InStrafe);
 
-	// Set the camera location.
-	void SetLocation(const FVector2D& InLocation);
+	// Called whenever an orbit input is detected.
+	void OnOrbitInput(float InOrbit);
 
-	// Set the camera orbit.
-	void SetOrbit(float InOrbit);
+	// Called whenever a pivot input is detected.
+	void OnPivotInput(float InPivot);
 
-	// Set the camera pivot.
-	void SetPivot(float InPivot);
-
-	// Get the camera location.
-	const FVector2D& GetLocation() const;
-
-	// Get the camera orbit.
-	float GetOrbit() const;
-
-	// Get the camera pivot.
-	float GetPivot() const;
-
-	void TickComponent(float InDeltaTime, enum ELevelTick InTickType, FActorComponentTickFunction* InTickFunction) override;
+	// Advance the component status.
+	void Advance(float InDeltaTime);
 
 private:
 
-	// Called whenever the camera forward/backward input is detected.
-	void OnForwardInput(float InValue);
+	// Desired distance of the camera from the target, in world units.
+	UPROPERTY(Category = Configuration, EditAnywhere)
+	float Distance{ 200.0f };
 
-	// Called whenever the camera right/left input is detected.
-	void OnRightInput(float InValue);
-
-	// Called whenever the camera orbit input is detected.
-	void OnOrbitInput(float InValue);
-
-	// Called whenever the camera pivot input is detected.
-	void OnPivotInput(float InValue);
+	// Desired vertical offset of the camera relative to its target, in world units.
+	UPROPERTY(Category = Configuration, EditAnywhere)
+	float VerticalOffset{ 50.0f };
 
 	// Movement speed, in world units per second.
 	UPROPERTY(Category = Camera, EditAnywhere)
@@ -114,15 +100,6 @@ private:
 
 	// Target camera pivot, in degrees.
 	float TargetPivot{ 0.0f };
-
-	// Current camera location, in world units.
-	FVector2D Location;
-
-	// Current camera orbit, in degrees.
-	float Orbit{ 0.0f };
-
-	// Current camera pivot, in degrees.
-	float Pivot{ 0.0f };
 
 };
 
