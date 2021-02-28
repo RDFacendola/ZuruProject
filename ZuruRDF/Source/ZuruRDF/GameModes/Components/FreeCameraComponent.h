@@ -107,19 +107,19 @@ private:
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float DistanceSpeed{ 10.0f };
 
-	// Movement smoothing.
+	// Movement smoothing speed. Zero to disable filtering.
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float StrafeSmooth{ 0.0f };
 
-	// Orbit smoothing.
+	// Orbit smoothing speed. Zero to disable filtering.
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float OrbitSmooth{ 0.0f };
 
-	// Pivot smoothing.
+	// Pivot smoothing speed. Zero to disable filtering.
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float PivotSmooth{ 0.0f };
 
-	// Distance smoothing.
+	// Distance smoothing speed. Zero to disable filtering.
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float DistanceSmooth{ 0.0f };
 
