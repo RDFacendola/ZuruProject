@@ -11,11 +11,13 @@
 
 PRAGMA_DISABLE_OPTIMIZATION
 
-void UZuruGameInstance::PostInitProperties()
+void UZuruGameInstance::Init()
 {
-	Super::PostInitProperties();
+	Super::Init();
 
-	Database = NewObject<UZuruDatabase>(this, DatabaseClass, TEXT("Database"));
+	// NOTE: This is ok if the number of records is negligible, otherwise is a big "no".
+
+	Database = NewObject<UZuruDatabase>(this, DatabaseClass, TEXT("ZuruDatabase"), RF_Transient);
 }
 
 PRAGMA_ENABLE_OPTIMIZATION

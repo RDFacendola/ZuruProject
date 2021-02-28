@@ -25,7 +25,7 @@ class ZURURDF_API UZuruGameInstance : public UGameInstance
 	
 public:
 
-	virtual void PostInitProperties() override;
+	virtual void Init() override;
 
 private:
 
@@ -34,7 +34,7 @@ private:
 	TSubclassOf<UZuruDatabase> DatabaseClass{ UZuruDatabase::StaticClass() };
 
 	// The database singleton.
-	UPROPERTY()
+	UPROPERTY(transient)
 	UZuruDatabase* Database{ nullptr };
 
 };

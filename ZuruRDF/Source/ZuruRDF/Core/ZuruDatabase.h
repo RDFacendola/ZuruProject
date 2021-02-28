@@ -18,16 +18,24 @@
 /* ZURU DATABASE ENTITY RECORD                                          */
 /************************************************************************/
 
+// Type of a single record in the entity database.
+//
+// @author Raffaele D. Facendola - February 2021.
 USTRUCT(Blueprintable, BlueprintType)
-struct FZuruDatabaseEntityRecord
+struct FZuruDatabaseEntityRecord : public FTableRowBase
 {
 	GENERATED_BODY()
 
 	// Entity key.
+	UPROPERTY(EditAnywhere)
 	FName Key;
 
-	// Dummy field.
-	int32 Dummy;
+	// Entity class.
+	// NOTE: This is not a brilliant idea as it would cause all subclasses being loaded
+	//       at once, causing massive stalls. It's way better to use a soft class reference
+	//       and load it manually.
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AZuruEntity> EntityClass;
 };
 
 /************************************************************************/
