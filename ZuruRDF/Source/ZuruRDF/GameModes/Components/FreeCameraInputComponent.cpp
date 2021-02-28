@@ -7,6 +7,10 @@
 
 // ==================================================================== //
 
+/************************************************************************/
+/* FREE CAMERA INPUT COMPONENT                                          */
+/************************************************************************/
+
 void UFreeCameraInputComponent::Bind(UInputComponent& InInputComponent)
 {
 	InInputComponent.BindAxis(FCameraInputs::kCameraForward, this, &UFreeCameraInputComponent::OnForwardAxis);

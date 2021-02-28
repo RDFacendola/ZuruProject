@@ -8,7 +8,9 @@
 
 // ==================================================================== //
 
-PRAGMA_DISABLE_OPTIMIZATION
+/************************************************************************/
+/* FREE CAMERA COMPONENT                                                */
+/************************************************************************/
 
 UFreeCameraComponent::UFreeCameraComponent()
 {
@@ -165,8 +167,6 @@ void UFreeCameraComponent::BeginPlay()
 	TargetPivot = GetPivot();
 	TargetDistance = GetDistance();
 }
-
-PRAGMA_ENABLE_OPTIMIZATION
 
 // ==================================================================== //
 
