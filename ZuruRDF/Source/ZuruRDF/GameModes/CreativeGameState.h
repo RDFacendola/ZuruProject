@@ -6,6 +6,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
 
+#include "ZuruRDF/Core/Project.h"
+
 #include "CreativeGameState.generated.h"
 
 // ==================================================================== //
@@ -24,8 +26,18 @@ class ZURURDF_API ACreativeGameState : public AGameStateBase
 	
 public:
 
+	// Get the active project.
+	AProject& GetProject();
+
+	// Create a new project, discarding existing ones, if any.
+	AProject& NewProject();
+
+	void HandleBeginPlay() override;
+
 private:
 
+	// Active project.
+	AProject* Project{ nullptr };
 };
 
 // ==================================================================== //
