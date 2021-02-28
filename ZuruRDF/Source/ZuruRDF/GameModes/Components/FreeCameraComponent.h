@@ -32,12 +32,6 @@ class ZURURDF_API UFreeCameraComponent : public UCameraComponent
 
 public:
 
-	// Minimum pivot value, in degrees.
-	static constexpr auto kMinPivot = 0.0f;
-
-	// Maximum pivot value, in degrees.
-	static constexpr auto kMaxPivot = 90.0f;
-
 	// Create a new free camera component.
 	UFreeCameraComponent();
 
@@ -60,12 +54,24 @@ public:
 
 private:
 	
-	// Desired distance of the camera from the target, in world units.
-	UPROPERTY(Category = Configuration, EditAnywhere)
-	float Distance{ 200.0f };
+	// Minimum angle between the camera and its target, in degrees.
+	UPROPERTY(Category = Camera, EditAnywhere)
+	float MinPivot{ 0.0f };
+
+	// Maximum angle between the camera and its target, in degrees.
+	UPROPERTY(Category = Camera, EditAnywhere)
+	float MaxPivot{ 90.0f };
+
+	// Minimum distance of the camera from the target, in world units.
+	UPROPERTY(Category = Camera, EditAnywhere)
+	float MinDistance{ 200.0f };
+
+	// Maximum distance of the camera from the target, in world units.
+	UPROPERTY(Category = Camera, EditAnywhere)
+	float MaxDistance{ 2000.0f };
 
 	// Desired vertical offset of the camera relative to its target, in world units.
-	UPROPERTY(Category = Configuration, EditAnywhere)
+	UPROPERTY(Category = Camera, EditAnywhere)
 	float VerticalOffset{ 50.0f };
 
 	// Movement speed, in world units per second.
@@ -80,7 +86,7 @@ private:
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float PivotSpeed{ 45.0f };
 
-	// Distance speed, in world units per second.
+	// Distance speed, in distance percentage per second.
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float DistanceSpeed{ 10.0f };
 
@@ -123,6 +129,9 @@ private:
 
 	// Target camera distance, in world units.
 	float TargetDistance{ 200.0f };
+
+	// Distance of the camera from its target.
+	float Distance{ 200.0f };
 };
 
 // ==================================================================== //

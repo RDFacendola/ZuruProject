@@ -34,13 +34,13 @@ void UFreeCameraComponent::Advance(float InDeltaTime)
 {
 	// Evaluate movement from input.
 
-	auto NormalizedStrafeInput = StrafeInput.GetSafeNormal() * (StrafeInput.X + StrafeInput.Y - StrafeInput.X * StrafeInput.Y);		// Probabilistic sum to preserve "analog" inputs.
-
-	TargetLocation += NormalizedStrafeInput * StrafeSpeed * InDeltaTime;
+	TargetLocation += StrafeInput * StrafeSpeed * InDeltaTime;
 	TargetOrbit += OrbitInput * OrbitSpeed * InDeltaTime;
 	TargetPivot += PivotInput * PivotSpeed * InDeltaTime;
-	TargetDistance += DistanceInput * DistanceSpeed * InDeltaTime;
-	TargetPivot = FMath::Clamp(TargetPivot, kMinPivot, kMaxPivot);
+	TargetDistance += TargetDistance * DistanceInput * DistanceSpeed * InDeltaTime;
+
+	TargetPivot = FMath::Clamp(TargetPivot, MinPivot, MaxPivot);
+	TargetDistance = FMath::Clamp(TargetDistance, MinDistance, MaxDistance);
 
 	// Smoothly move towards target values.
 
@@ -49,7 +49,7 @@ void UFreeCameraComponent::Advance(float InDeltaTime)
 	//Location = FMath::Lerp(TargetLocation, Location, StrafeSmooth * InvDeltaTime);
 	//Orbit = FMath::Lerp(TargetOrbit, Orbit, OrbitSmooth * InvDeltaTime);
 	//Pivot = FMath::Lerp(TargetPivot, Pivot, PivotSmooth * InvDeltaTime);
-	Distance = FMath::Lerp(TargetDistance, Distance, DistanceSmooth * InDeltaTime);
+	Distance = FMath::Lerp(TargetDistance, Distance, FMath::Clamp(DistanceSmooth * InDeltaTime, 0.0f, 1.0f));
 
 	// Update camera distance and vertical offset.
 
@@ -60,6 +60,7 @@ void UFreeCameraComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Distance = FMath::Clamp(Distance, MinDistance, MaxDistance);
 	TargetDistance = Distance;
 }
 
