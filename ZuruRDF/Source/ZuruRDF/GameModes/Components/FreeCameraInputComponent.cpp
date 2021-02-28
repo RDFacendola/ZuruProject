@@ -43,7 +43,7 @@ FVector2D UFreeCameraInputComponent::GetStrafeInput() const
 
 void UFreeCameraInputComponent::ConsumeInputs()
 {
-	StrafeInput = {};
+	StrafeInput = FVector2D::ZeroVector;
 	OrbitInput = 0.0f;
 	PivotInput = 0.0f;
 	DistanceInput = 0.0f;

@@ -54,6 +54,15 @@ public:
 
 private:
 	
+	// Integrate input actions and update the target camera movements.
+	void IntegrateInputs(float InDeltaTime);
+
+	// Filter target movements and smoothly blend towards them.
+	void FilterInputs(float InDeltaTime);
+
+	// Update actors and components to reflect latest component movements.
+	void ApplyInputs(float InDeltaTime);
+
 	// Minimum angle between the camera and its target, in degrees.
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float MinPivot{ 0.0f };
@@ -61,14 +70,22 @@ private:
 	// Maximum angle between the camera and its target, in degrees.
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float MaxPivot{ 90.0f };
+	
+	// Initial camera pivot value, in degrees.
+	UPROPERTY(Category = Camera, EditAnywhere)
+	float DefaultPivot{ 60.0f };
 
 	// Minimum distance of the camera from the target, in world units.
 	UPROPERTY(Category = Camera, EditAnywhere)
-	float MinDistance{ 200.0f };
+	float MinDistance{ 100.0f };
 
 	// Maximum distance of the camera from the target, in world units.
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float MaxDistance{ 2000.0f };
+
+	// Initial camera distance value, in world units. 
+	UPROPERTY(Category = Camera, EditAnywhere)
+	float DefaultDistance{ 1000.0f };
 
 	// Desired vertical offset of the camera relative to its target, in world units.
 	UPROPERTY(Category = Camera, EditAnywhere)
@@ -106,6 +123,11 @@ private:
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float DistanceSmooth{ 0.0f };
 
+	// Whether this component applies both strafe and orbit inputs on the actor (true)
+	// or on its parent component (false).
+	UPROPERTY(Category = Camera, EditAnywhere)
+	bool bMoveActor{ true };
+
 	// Movement in the XY plane.
 	FVector2D StrafeInput;
 
@@ -130,8 +152,18 @@ private:
 	// Target camera distance, in world units.
 	float TargetDistance{ 200.0f };
 
-	// Distance of the camera from its target.
-	float Distance{ 200.0f };
+	// Current location, in world units.
+	FVector2D CurrentLocation{ FVector2D::ZeroVector };
+
+	// Current orbit value, in degrees.
+	float CurrentOrbit{ 0.0f };
+
+	// Current pivot value, in degrees.
+	float CurrentPivot{ 0.0f };
+
+	// Current distance from the camera target, in world units.
+	float CurrentDistance{ 0.0f };
+
 };
 
 // ==================================================================== //
