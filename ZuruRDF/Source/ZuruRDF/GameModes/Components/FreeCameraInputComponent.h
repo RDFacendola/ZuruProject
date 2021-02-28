@@ -37,19 +37,13 @@ public:
 	// Advance the component status.
 	void Advance(float InDeltaSeconds);
 
+private:
+
 	// Get the strafe input.
-	FVector2D GetStrafe() const;
-
-	// Get the orbit input.
-	float GetOrbit() const;
-
-	// Get the pivot input.
-	float GetPivot() const;
+	FVector2D GetStrafeInput() const;
 
 	// Consume all inputs.
 	void ConsumeInputs();
-
-private:
 
 	// Called whenever the camera forward/backward input is detected.
 	void OnForwardInput(float InValue);
@@ -63,6 +57,9 @@ private:
 	// Called whenever the camera pivot input is detected.
 	void OnPivotInput(float InValue);
 
+	// Called whenever the camera distance input is detected.
+	void OnDistanceInput(float InValue);
+
 	// The free-camera component counterpart on the pawn.
 	UPROPERTY()
 	UFreeCameraComponent* FreeCameraComponent{ nullptr };
@@ -75,6 +72,9 @@ private:
 
 	// Pivot input.
 	float PivotInput{ 0.0f };
+
+	// Distance input.
+	float DistanceInput{ 0.0f };
 
 };
 

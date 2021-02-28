@@ -17,11 +17,12 @@
 
 // A free camera component used to navigate the world from the above.
 //
-// The camera has three movements:
+// The camera has four movements:
 //
 // Strafe: moves the camera in the XY plane.
 // Orbit: orbit the camera around its target along the Z axis.
 // Pivot: raise or lower the camera angle relative to its target.
+// Distance: moves towards/away from the camera target.
 //
 // @author Raffaele D. Facendola - February 2021.
 UCLASS()
@@ -37,6 +38,9 @@ public:
 	// Maximum pivot value, in degrees.
 	static constexpr auto kMaxPivot = 90.0f;
 
+	// Create a new free camera component.
+	UFreeCameraComponent();
+
 	// Called whenever a strafe input is detected.
 	void OnStrafeInput(const FVector2D& InStrafe);
 
@@ -46,11 +50,16 @@ public:
 	// Called whenever a pivot input is detected.
 	void OnPivotInput(float InPivot);
 
+	// Called whenever a distance input is detected.
+	void OnDistanceInput(float InDistance);
+
 	// Advance the component status.
 	void Advance(float InDeltaTime);
 
-private:
+	void BeginPlay() override;
 
+private:
+	
 	// Desired distance of the camera from the target, in world units.
 	UPROPERTY(Category = Configuration, EditAnywhere)
 	float Distance{ 200.0f };
@@ -71,6 +80,10 @@ private:
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float PivotSpeed{ 45.0f };
 
+	// Distance speed, in world units per second.
+	UPROPERTY(Category = Camera, EditAnywhere)
+	float DistanceSpeed{ 10.0f };
+
 	// Movement smoothing.
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float StrafeSmooth{ 0.0f };
@@ -83,6 +96,10 @@ private:
 	UPROPERTY(Category = Camera, EditAnywhere)
 	float PivotSmooth{ 0.0f };
 
+	// Distance smoothing.
+	UPROPERTY(Category = Camera, EditAnywhere)
+	float DistanceSmooth{ 0.0f };
+
 	// Movement in the XY plane.
 	FVector2D StrafeInput;
 
@@ -91,6 +108,9 @@ private:
 
 	// Pivot input.
 	float PivotInput{ 0.0f };
+
+	// Distance input.
+	float DistanceInput{ 0.0f };
 
 	// Target camera location, in world units.
 	FVector2D TargetLocation;
@@ -101,6 +121,8 @@ private:
 	// Target camera pivot, in degrees.
 	float TargetPivot{ 0.0f };
 
+	// Target camera distance, in world units.
+	float TargetDistance{ 200.0f };
 };
 
 // ==================================================================== //

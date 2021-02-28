@@ -13,6 +13,7 @@ void UFreeCameraInputComponent::Bind(UInputComponent& InInputComponent)
 	InInputComponent.BindAxis(FCameraInputs::kCameraRight, this, &UFreeCameraInputComponent::OnRightInput);
 	InInputComponent.BindAxis(FCameraInputs::kCameraOrbit, this, &UFreeCameraInputComponent::OnOrbitInput);
 	InInputComponent.BindAxis(FCameraInputs::kCameraPivot, this, &UFreeCameraInputComponent::OnPivotInput);
+	InInputComponent.BindAxis(FCameraInputs::kCameraDistance, this, &UFreeCameraInputComponent::OnDistanceInput);
 }
 
 void UFreeCameraInputComponent::Bind(APawn& InPawn)
@@ -24,29 +25,20 @@ void UFreeCameraInputComponent::Advance(float InDeltaSeconds)
 {
 	if (FreeCameraComponent)
 	{
-		FreeCameraComponent->OnStrafeInput(StrafeInput);
+		FreeCameraComponent->OnStrafeInput(GetStrafeInput());
 		FreeCameraComponent->OnOrbitInput(OrbitInput);
 		FreeCameraComponent->OnPivotInput(PivotInput);
+		FreeCameraComponent->OnDistanceInput(DistanceInput);
 	}
 
 	ConsumeInputs();
 }
 
-FVector2D UFreeCameraInputComponent::GetStrafe() const
+FVector2D UFreeCameraInputComponent::GetStrafeInput() const
 {
 	auto Size2 = StrafeInput.SizeSquared();
 
 	return (Size2 < 1.0f) ? (StrafeInput) : (StrafeInput * FMath::InvSqrt(Size2));
-}
-
-float UFreeCameraInputComponent::GetOrbit() const
-{
-	return OrbitInput;
-}
-
-float UFreeCameraInputComponent::GetPivot() const
-{
-	return PivotInput;
 }
 
 void UFreeCameraInputComponent::ConsumeInputs()
@@ -54,6 +46,7 @@ void UFreeCameraInputComponent::ConsumeInputs()
 	StrafeInput = {};
 	OrbitInput = 0.0f;
 	PivotInput = 0.0f;
+	DistanceInput = 0.0f;
 }
 
 void UFreeCameraInputComponent::OnForwardInput(float InValue)
@@ -74,6 +67,13 @@ void UFreeCameraInputComponent::OnOrbitInput(float InValue)
 void UFreeCameraInputComponent::OnPivotInput(float InValue)
 {
 	PivotInput += InValue;
+}
+
+void UFreeCameraInputComponent::OnDistanceInput(float InValue)
+{
+	// Inverted as moving towards the target (positive) reduces its distance from the camera.
+
+	DistanceInput -= InValue;
 }
 
 // ==================================================================== //

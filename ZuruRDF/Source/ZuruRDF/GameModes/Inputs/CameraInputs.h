@@ -27,6 +27,9 @@ struct ZURURDF_API FCameraInputs
 
 	// Name of the axis used to tilt the camera above\below its target up to 90 degrees.
 	static const FName kCameraPivot;
+
+	// name of the axis used to move the camera towards its target.
+	static const FName kCameraDistance;
 };
 
 // ==================================================================== //

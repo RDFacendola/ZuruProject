@@ -5,6 +5,11 @@
 
 // ==================================================================== //
 
+UFreeCameraComponent::UFreeCameraComponent()
+{
+	
+}
+
 void UFreeCameraComponent::OnStrafeInput(const FVector2D& InStrafe)
 {
 	StrafeInput = InStrafe;
@@ -20,6 +25,11 @@ void UFreeCameraComponent::OnPivotInput(float InPivot)
 	PivotInput = InPivot;
 }
 
+void UFreeCameraComponent::OnDistanceInput(float InDistance)
+{
+	DistanceInput = InDistance;
+}
+
 void UFreeCameraComponent::Advance(float InDeltaTime)
 {
 	// Evaluate movement from input.
@@ -29,7 +39,7 @@ void UFreeCameraComponent::Advance(float InDeltaTime)
 	TargetLocation += NormalizedStrafeInput * StrafeSpeed * InDeltaTime;
 	TargetOrbit += OrbitInput * OrbitSpeed * InDeltaTime;
 	TargetPivot += PivotInput * PivotSpeed * InDeltaTime;
-
+	TargetDistance += DistanceInput * DistanceSpeed * InDeltaTime;
 	TargetPivot = FMath::Clamp(TargetPivot, kMinPivot, kMaxPivot);
 
 	// Smoothly move towards target values.
@@ -39,10 +49,18 @@ void UFreeCameraComponent::Advance(float InDeltaTime)
 	//Location = FMath::Lerp(TargetLocation, Location, StrafeSmooth * InvDeltaTime);
 	//Orbit = FMath::Lerp(TargetOrbit, Orbit, OrbitSmooth * InvDeltaTime);
 	//Pivot = FMath::Lerp(TargetPivot, Pivot, PivotSmooth * InvDeltaTime);
+	Distance = FMath::Lerp(TargetDistance, Distance, DistanceSmooth * InDeltaTime);
 
 	// Update camera distance and vertical offset.
 
 	SetRelativeLocation(FVector{ -Distance, 0.0f, VerticalOffset });
+}
+
+void UFreeCameraComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	TargetDistance = Distance;
 }
 
 // ==================================================================== //
