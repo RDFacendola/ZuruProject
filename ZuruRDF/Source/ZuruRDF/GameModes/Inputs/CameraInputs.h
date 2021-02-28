@@ -25,7 +25,7 @@ struct ZURURDF_API FCameraInputs
 	// Name of the axis used to move the camera left\right on the world XY plane.
 	static const FName kCameraRight;
 
-	// Name of the axis used to tilt the camera above\below its target up to 90 degrees.
+	// Name of the axis used to tilt the camera above\below its target.
 	static const FName kCameraPivot;
 
 	// Name of the axis used to move the camera towards its target.
@@ -36,6 +36,12 @@ struct ZURURDF_API FCameraInputs
 
 	// Name of the action used to snap camera orbit 90 degrees to the left.
 	static const FName kCameraOrbitSnapLeftAction;
+
+	// name of the action used to snap camera pivot to the top.
+	static const FName kCameraPivotSnapTopAction;
+
+	// Name of the action used to snap camera pivot to the front.
+	static const FName kCameraPivotSnapFrontAction;
 };
 
 // ==================================================================== //

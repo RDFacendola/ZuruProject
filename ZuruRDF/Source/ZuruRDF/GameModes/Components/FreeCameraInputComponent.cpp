@@ -17,9 +17,13 @@ void UFreeCameraInputComponent::Bind(UInputComponent& InInputComponent)
 
 	InInputComponent.BindAction(FCameraInputs::kCameraOrbitSnapRightAction, IE_Pressed, this, &UFreeCameraInputComponent::OnOrbitSnapRightPressed);
 	InInputComponent.BindAction(FCameraInputs::kCameraOrbitSnapLeftAction, IE_Pressed, this, &UFreeCameraInputComponent::OnOrbitSnapLeftPressed);
-
 	InInputComponent.BindAction(FCameraInputs::kCameraOrbitSnapRightAction, IE_Released, this, &UFreeCameraInputComponent::OnOrbitSnapRightReleased);
 	InInputComponent.BindAction(FCameraInputs::kCameraOrbitSnapLeftAction, IE_Released, this, &UFreeCameraInputComponent::OnOrbitSnapLeftReleased);
+
+	InInputComponent.BindAction(FCameraInputs::kCameraPivotSnapTopAction, IE_Pressed, this, &UFreeCameraInputComponent::OnPivotSnapTopPressed);
+	InInputComponent.BindAction(FCameraInputs::kCameraPivotSnapFrontAction, IE_Pressed, this, &UFreeCameraInputComponent::OnPivotSnapFrontPressed);
+	InInputComponent.BindAction(FCameraInputs::kCameraPivotSnapTopAction, IE_Released, this, &UFreeCameraInputComponent::OnPivotSnapTopReleased);
+	InInputComponent.BindAction(FCameraInputs::kCameraPivotSnapFrontAction, IE_Released, this, &UFreeCameraInputComponent::OnPivotSnapFrontReleased);
 }
 
 void UFreeCameraInputComponent::Bind(APawn& InPawn)
@@ -32,9 +36,10 @@ void UFreeCameraInputComponent::Advance(float InDeltaSeconds)
 	if (FreeCameraComponent)
 	{
 		FreeCameraComponent->OnStrafeInput(GetStrafeInput());
-		FreeCameraComponent->OnPivotInput(PivotInput);
 		FreeCameraComponent->OnDistanceInput(DistanceInput);
 		
+		// Either rotate right or snap right.
+
 		if (bOrbitSnapRight)
 		{
 			FreeCameraComponent->OnOrbitSnapRightInput();
@@ -44,6 +49,8 @@ void UFreeCameraInputComponent::Advance(float InDeltaSeconds)
 			FreeCameraComponent->OnOrbitInput(OrbitInput);
 		}
 
+		// Either rotate left or snap left.
+
 		if (bOrbitSnapLeft)
 		{
 			FreeCameraComponent->OnOrbitSnapLeftInput();
@@ -51,6 +58,28 @@ void UFreeCameraInputComponent::Advance(float InDeltaSeconds)
 		else if ((OrbitInput < 0.0f) && bOrbitSnapLeftEnabled)
 		{
 			FreeCameraComponent->OnOrbitInput(OrbitInput);
+		}
+
+		// Either raise or snap top.
+
+		if (bPivotSnapTop)
+		{
+			FreeCameraComponent->OnPivotSnapTopInput();
+		}
+		else if ((PivotInput > 0.0f) && bPivotSnapTopEnabled)
+		{
+			FreeCameraComponent->OnPivotInput(PivotInput);
+		}
+
+		// Either lower or snap front.
+
+		if (bPivotSnapFront)
+		{
+			FreeCameraComponent->OnPivotSnapFrontInput();
+		}
+		else if ((PivotInput < 0.0f) && bPivotSnapFrontEnabled)
+		{
+			FreeCameraComponent->OnPivotInput(PivotInput);
 		}
 	}
 
@@ -72,6 +101,8 @@ void UFreeCameraInputComponent::ConsumeInputs()
 	DistanceInput = 0.0f;
 	bOrbitSnapRight = false;
 	bOrbitSnapLeft = false;
+	bPivotSnapFront = false;
+	bPivotSnapTop = false;
 }
 
 void UFreeCameraInputComponent::OnForwardInput(float InValue)
@@ -121,6 +152,28 @@ void UFreeCameraInputComponent::OnOrbitSnapRightReleased()
 void UFreeCameraInputComponent::OnOrbitSnapLeftReleased()
 {
 	bOrbitSnapLeftEnabled = true;
+}
+
+void UFreeCameraInputComponent::OnPivotSnapTopPressed()
+{
+	bPivotSnapTop = bPivotSnapTopEnabled;
+	bPivotSnapTopEnabled = false;
+}
+
+void UFreeCameraInputComponent::OnPivotSnapFrontPressed()
+{
+	bPivotSnapFront = bPivotSnapFrontEnabled;
+	bPivotSnapFrontEnabled = false;
+}
+
+void UFreeCameraInputComponent::OnPivotSnapTopReleased()
+{
+	bPivotSnapTopEnabled = true;
+}
+
+void UFreeCameraInputComponent::OnPivotSnapFrontReleased()
+{
+	bPivotSnapFrontEnabled = true;
 }
 
 // ==================================================================== //

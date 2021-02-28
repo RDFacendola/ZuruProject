@@ -53,6 +53,12 @@ public:
 	// Called whenever an orbit snap left input is detected.
 	void OnOrbitSnapLeftInput();
 
+	// Called whenever an pivot snap top input is detected.
+	void OnPivotSnapTopInput();
+
+	// Called whenever an pivot snap front input is detected.
+	void OnPivotSnapFrontInput();
+
 	// Advance the component status.
 	void Advance(float InDeltaTime);
 
@@ -154,6 +160,12 @@ private:
 
 	// Orbit snap left input.
 	bool bOrbitSnapLeftInput{ false };
+
+	// Orbit pivot top input.
+	bool bPivotSnapTopInput{ false };
+
+	// Orbit pivot front input.
+	bool bPivotSnapFrontInput{ false };
 
 	// Target camera location, in world units.
 	FVector2D TargetLocation;

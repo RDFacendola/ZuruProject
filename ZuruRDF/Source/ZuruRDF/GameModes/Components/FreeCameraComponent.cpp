@@ -51,6 +51,16 @@ void UFreeCameraComponent::OnOrbitSnapLeftInput()
 	bOrbitSnapLeftInput = true;
 }
 
+void UFreeCameraComponent::OnPivotSnapTopInput()
+{
+	bPivotSnapTopInput = true;
+}
+
+void UFreeCameraComponent::OnPivotSnapFrontInput()
+{
+	bPivotSnapFrontInput = true;
+}
+
 void UFreeCameraComponent::Advance(float InDeltaTime)
 {
 	IntegrateInputs(InDeltaTime);
@@ -85,6 +95,16 @@ void UFreeCameraComponent::IntegrateInputs(float InDeltaTime)
 	{
 		TargetOrbit = FMath::FloorToInt(TargetOrbit / 90.0f) * 90.0f;
 		TargetOrbit -= 90.0f;
+	}
+
+	if (bPivotSnapTopInput)
+	{
+		TargetPivot = 90.0f;
+	}
+
+	if (bPivotSnapFrontInput)
+	{
+		TargetPivot = 0.0f;
 	}
 }
 
@@ -138,6 +158,8 @@ void UFreeCameraComponent::ConsumeInputs()
 	DistanceInput = 0.0f;
 	bOrbitSnapRightInput = false;
 	bOrbitSnapLeftInput = false;
+	bPivotSnapTopInput = false;
+	bPivotSnapFrontInput = false;
 }
 
 void UFreeCameraComponent::BeginPlay()

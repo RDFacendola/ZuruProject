@@ -72,6 +72,18 @@ private:
 	// Called whenever the camera orbit snap left input is released.
 	void OnOrbitSnapLeftReleased();
 
+	// Called whenever the camera pivot snap top input is pressed.
+	void OnPivotSnapTopPressed();
+
+	// Called whenever the camera pivot snap top input is pressed.
+	void OnPivotSnapFrontPressed();
+
+	// Called whenever the camera pivot snap right input is released.
+	void OnPivotSnapTopReleased();
+
+	// Called whenever the camera pivot snap front input is released.
+	void OnPivotSnapFrontReleased();
+
 	// The free-camera component counterpart on the pawn.
 	UPROPERTY()
 	UFreeCameraComponent* FreeCameraComponent{ nullptr };
@@ -99,6 +111,18 @@ private:
 
 	// Enable the actual orbit snap right action. Avoids repeating the action while the keys are pressed.
 	bool bOrbitSnapLeftEnabled{ true };
+
+	// Snap top.
+	bool bPivotSnapTop{ false };
+
+	// Snap front.
+	bool bPivotSnapFront{ false };
+
+	// Enable the actual pivot snap top action. Avoids repeating the action while the keys are pressed.
+	bool bPivotSnapTopEnabled{ true };
+
+	// Enable the actual pivot snap front action. Avoids repeating the action while the keys are pressed.
+	bool bPivotSnapFrontEnabled{ true };
 
 };
 

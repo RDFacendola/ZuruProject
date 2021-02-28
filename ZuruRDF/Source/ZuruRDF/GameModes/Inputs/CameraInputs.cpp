@@ -12,6 +12,8 @@ const FName FCameraInputs::kCameraPivot = TEXT("CameraPivot");
 const FName FCameraInputs::kCameraDistance = TEXT("CameraDistance");
 const FName FCameraInputs::kCameraOrbitSnapRightAction = TEXT("CameraOrbitSnapRight");
 const FName FCameraInputs::kCameraOrbitSnapLeftAction = TEXT("CameraOrbitSnapLeft");
+const FName FCameraInputs::kCameraPivotSnapTopAction = TEXT("CameraPivotSnapTop");
+const FName FCameraInputs::kCameraPivotSnapFrontAction = TEXT("CameraPivotSnapFront");
 
 // ==================================================================== //
 
