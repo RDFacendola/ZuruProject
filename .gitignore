@@ -72,6 +72,7 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
-ZuruRDF/Saved/
-ZuruRDF/Binaries/
-ZuruRDF/Intermediate/
+ZuruRDF/Saved/*
+ZuruRDF/Binaries/*
+ZuruRDF/Intermediate/*
+ZuruRDF/enc_temp_folder/*
