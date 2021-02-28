@@ -6,8 +6,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Info.h"
-#include "ProjectEntity.h"
 #include "Engine/DataTable.h"
+
+#include "ZuruEntity.h"
 
 #include "ZuruDatabase.generated.h"
 
@@ -43,8 +44,8 @@ class ZURURDF_API UZuruDatabase : public UObject
 	
 public:
 
-	// Find a project entity class from key.
-	TSubclassOf<AProjectEntity> FindEntity(const FName& InKey) const;
+	// Find a Zuru entity class from key.
+	TSubclassOf<AZuruEntity> FindEntity(const FName& InKey) const;
 
 private:
 

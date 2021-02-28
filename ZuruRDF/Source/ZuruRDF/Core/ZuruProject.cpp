@@ -1,15 +1,15 @@
 
 // ==================================================================== //
 
-#include "Project.h"
+#include "ZuruProject.h"
 
 // ==================================================================== //
 
 /************************************************************************/
-/* PROJECT                                                              */
+/* ZURU PROJECT                                                         */
 /************************************************************************/
 
-FName AProject::SpawnEntity(TSubclassOf<AProjectEntity> InEntityClass)
+FName AZuruProject::SpawnEntity(TSubclassOf<AZuruEntity> InEntityClass)
 {
 	return NAME_None;
 }

@@ -7,19 +7,19 @@
 #include "GameFramework/Actor.h"
 #include "GameFramework/Info.h"
 
-#include "ProjectEntity.generated.h"
+#include "ZuruEntity.generated.h"
 
 // ==================================================================== //
 
 /************************************************************************/
-/* PROJECT ENTITY                                                       */
+/* ZURU ENTITY                                                          */
 /************************************************************************/
 
-// Represents a physical object in a project environment.
+// Represents a physical object in the project.
 //
 // @author Raffaele D. Facendola - February 2021.
 UCLASS()
-class ZURURDF_API AProjectEntity : public AActor
+class ZURURDF_API AZuruEntity: public AActor
 {
 	GENERATED_BODY()
 	
