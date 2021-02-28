@@ -17,7 +17,7 @@
 /* CREATIVE PLAYER CONTROLLER                                           */
 /************************************************************************/
 
-// Models a player's will the "creative" game mode.
+// Models a player's will in "creative" game mode.
 //
 // @author Raffaele D. Facendola - February 2021.
 UCLASS()
