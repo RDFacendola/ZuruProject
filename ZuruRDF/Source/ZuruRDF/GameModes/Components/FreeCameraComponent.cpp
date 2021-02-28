@@ -8,6 +8,8 @@
 
 // ==================================================================== //
 
+PRAGMA_DISABLE_OPTIMIZATION
+
 UFreeCameraComponent::UFreeCameraComponent()
 {
 	
@@ -39,11 +41,22 @@ void UFreeCameraComponent::OnDistanceInput(float InDistance)
 	DistanceInput = InDistance;
 }
 
+void UFreeCameraComponent::OnOrbitSnapRightInput()
+{
+	bOrbitSnapRightInput = true;
+}
+
+void UFreeCameraComponent::OnOrbitSnapLeftInput()
+{
+	bOrbitSnapLeftInput = true;
+}
+
 void UFreeCameraComponent::Advance(float InDeltaTime)
 {
 	IntegrateInputs(InDeltaTime);
 	FilterInputs(InDeltaTime);
 	ApplyInputs(InDeltaTime);
+	ConsumeInputs();
 }
 
 void UFreeCameraComponent::IntegrateInputs(float InDeltaTime)
@@ -59,6 +72,20 @@ void UFreeCameraComponent::IntegrateInputs(float InDeltaTime)
 
 	TargetPivot = FMath::Clamp(TargetPivot, MinPivot, MaxPivot);
 	TargetDistance = FMath::Clamp(TargetDistance, MinDistance, MaxDistance);
+
+	// Apply snap orbit if requested.
+
+	if (bOrbitSnapRightInput)
+	{
+		TargetOrbit = FMath::CeilToInt(TargetOrbit / 90.0f) * 90.0f;
+		TargetOrbit += 90.0f;
+	}
+
+	if (bOrbitSnapLeftInput)
+	{
+		TargetOrbit = FMath::FloorToInt(TargetOrbit / 90.0f) * 90.0f;
+		TargetOrbit -= 90.0f;
+	}
 }
 
 void UFreeCameraComponent::FilterInputs(float InDeltaTime)
@@ -103,6 +130,16 @@ void UFreeCameraComponent::ApplyInputs(float InDeltaTime)
 	}
 }
 
+void UFreeCameraComponent::ConsumeInputs()
+{
+	StrafeInput = FVector2D::ZeroVector;
+	OrbitInput = 0.0f;
+	PivotInput = 0.0f;
+	DistanceInput = 0.0f;
+	bOrbitSnapRightInput = false;
+	bOrbitSnapLeftInput = false;
+}
+
 void UFreeCameraComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -119,6 +156,8 @@ void UFreeCameraComponent::BeginPlay()
 	TargetPivot = CurrentPivot;
 	TargetDistance = CurrentDistance;
 }
+
+PRAGMA_ENABLE_OPTIMIZATION
 
 // ==================================================================== //
 

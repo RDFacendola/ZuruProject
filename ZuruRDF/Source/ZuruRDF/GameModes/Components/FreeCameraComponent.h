@@ -47,6 +47,12 @@ public:
 	// Called whenever a distance input is detected.
 	void OnDistanceInput(float InDistance);
 
+	// Called whenever an orbit snap right input is detected.
+	void OnOrbitSnapRightInput();
+
+	// Called whenever an orbit snap left input is detected.
+	void OnOrbitSnapLeftInput();
+
 	// Advance the component status.
 	void Advance(float InDeltaTime);
 
@@ -62,6 +68,9 @@ private:
 
 	// Update actors and components to reflect latest component movements.
 	void ApplyInputs(float InDeltaTime);
+
+	// Consume pending inputs.
+	void ConsumeInputs();
 
 	// Minimum angle between the camera and its target, in degrees.
 	UPROPERTY(Category = Camera, EditAnywhere)
@@ -139,6 +148,12 @@ private:
 
 	// Distance input.
 	float DistanceInput{ 0.0f };
+
+	// Orbit snap right input.
+	bool bOrbitSnapRightInput{ false };
+
+	// Orbit snap left input.
+	bool bOrbitSnapLeftInput{ false };
 
 	// Target camera location, in world units.
 	FVector2D TargetLocation;

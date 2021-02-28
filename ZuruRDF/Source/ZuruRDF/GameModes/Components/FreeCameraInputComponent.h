@@ -17,8 +17,8 @@
 /************************************************************************/
 
 // A component used to read free-camera inputs on a player controller.
-//
-// This component automatically binds to a FreeCameraComponent counterpart upon pawn possession and sends relevant commands.
+// This component is meant to aggregate raw inputs from the user and send relative actions to the pawn.
+// This component automatically binds to a FreeCameraComponent counterpart upon pawn possession.
 //
 // @author Raffaele D. Facendola - February 2021.
 UCLASS()
@@ -60,6 +60,18 @@ private:
 	// Called whenever the camera distance input is detected.
 	void OnDistanceInput(float InValue);
 
+	// Called whenever the camera orbit snap right input is pressed.
+	void OnOrbitSnapRightPressed();
+
+	// Called whenever the camera orbit snap left input is pressed.
+	void OnOrbitSnapLeftPressed();
+
+	// Called whenever the camera orbit snap right input is released.
+	void OnOrbitSnapRightReleased();
+
+	// Called whenever the camera orbit snap left input is released.
+	void OnOrbitSnapLeftReleased();
+
 	// The free-camera component counterpart on the pawn.
 	UPROPERTY()
 	UFreeCameraComponent* FreeCameraComponent{ nullptr };
@@ -75,6 +87,18 @@ private:
 
 	// Distance input.
 	float DistanceInput{ 0.0f };
+
+	// Orbit snap right.
+	bool bOrbitSnapRight{ false };
+
+	// Orbit snap left.
+	bool bOrbitSnapLeft{ false };
+
+	// Enable the actual orbit snap left action. Avoids repeating the action while the keys are pressed.
+	bool bOrbitSnapRightEnabled{ true };
+
+	// Enable the actual orbit snap right action. Avoids repeating the action while the keys are pressed.
+	bool bOrbitSnapLeftEnabled{ true };
 
 };
 
