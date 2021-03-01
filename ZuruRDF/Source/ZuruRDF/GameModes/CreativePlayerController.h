@@ -6,8 +6,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Math/Vector.h"
-#include "Components/FreeCameraInputComponent.h"
 #include "CreativePawn.h"
+
+#include "Components/FreeCameraInputComponent.h"
+#include "Components/ManipulationInputComponent.h"
 
 #include "CreativePlayerController.generated.h"
 
@@ -31,6 +33,8 @@ public:
 
 	void Tick(float InDeltaSeconds) override;
 
+	bool ProcessConsoleExec(const TCHAR* InCommand, FOutputDevice& InOutputDevice, UObject* InExecutor) override;
+
 protected:
 	
 	void SetupInputComponent() override;
@@ -39,9 +43,13 @@ protected:
 
 private:
 
-	// Handles camera-specific inputs.
+	// Handles camera-related inputs.
 	UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	UFreeCameraInputComponent* CameraInputComponent{ nullptr };
+
+	// Handles manipulation-related inputs.
+	UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	UManipulationInputComponent* ManipulationInputComponent{ nullptr };
 
 };
 
