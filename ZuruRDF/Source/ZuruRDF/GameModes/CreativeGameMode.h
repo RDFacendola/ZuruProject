@@ -28,6 +28,8 @@ public:
 
 	ACreativeGameMode();
 
+	void InitGameState() override;
+
 private:
 	
 	// Handles entity-manipulation-related commands.

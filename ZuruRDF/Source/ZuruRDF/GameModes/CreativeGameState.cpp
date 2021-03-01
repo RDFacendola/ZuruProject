@@ -9,27 +9,14 @@
 /* CREATIVE GAME STATE                                                  */
 /************************************************************************/
 
-AZuruProject& ACreativeGameState::GetProject()
+ACreativeGameState::ACreativeGameState()
 {
-	return *Project;
+	ProjectComponent = CreateDefaultSubobject<UProjectComponent>(TEXT("Project"));
 }
 
 void ACreativeGameState::HandleBeginPlay()
 {
 	Super::HandleBeginPlay();
-
-	NewProject();
-}
-
-AZuruProject& ACreativeGameState::NewProject()
-{
-	auto SpawnParameters = FActorSpawnParameters{};
-
-	SpawnParameters.bNoFail = true;
-
-	Project = GetWorld()->SpawnActor<AZuruProject>(SpawnParameters);
-
-	return *Project;
 }
 
 // ==================================================================== //
