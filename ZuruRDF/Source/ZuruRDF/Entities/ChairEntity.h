@@ -6,22 +6,24 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
-#include "ZuruEntity.generated.h"
+#include "ZuruRDF/Core/ZuruEntity.h"
+
+#include "ChairEntity.generated.h"
 
 // ==================================================================== //
 
 /************************************************************************/
-/* ZURU ENTITY                                                          */
+/* CHAIR ENTITY                                                         */
 /************************************************************************/
 
 // Represents a physical object in the project.
 //
 // @author Raffaele D. Facendola - February 2021.
-UCLASS(Blueprintable, BlueprintType, ClassGroup = Entites)
-class ZURURDF_API AZuruEntity: public AActor
+UCLASS(Blueprintable, BlueprintType, ClassGroup = Chairs)
+class ZURURDF_API AChairEntity : public AZuruEntity
 {
 	GENERATED_BODY()
-	
+
 public:
 
 

@@ -7,6 +7,10 @@
 
 // ==================================================================== //
 
+/************************************************************************/
+/* CREATIVE PLAYER CONTROLLER                                           */
+/************************************************************************/
+
 ACreativePlayerController::ACreativePlayerController()
 {
 	CameraInputComponent = CreateDefaultSubobject<UFreeCameraInputComponent>(TEXT("CameraInput"));

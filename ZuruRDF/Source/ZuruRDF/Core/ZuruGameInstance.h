@@ -27,6 +27,9 @@ public:
 
 	virtual void Init() override;
 
+	// Get the singleton database instance.
+	const UZuruDatabase& GetDatabase() const;
+
 private:
 
 	// The concrete database class.

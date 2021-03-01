@@ -26,10 +26,6 @@ struct FZuruDatabaseEntityRecord : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	// Entity key.
-	UPROPERTY(EditAnywhere)
-	FName Key;
-
 	// Entity class.
 	// NOTE: This is not a brilliant idea as it would cause all subclasses being loaded
 	//       at once, causing massive stalls. It's way better to use a soft class reference

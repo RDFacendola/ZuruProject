@@ -9,8 +9,6 @@
 /* ZURU GAME INSTANCE                                                   */
 /************************************************************************/
 
-PRAGMA_DISABLE_OPTIMIZATION
-
 void UZuruGameInstance::Init()
 {
 	Super::Init();
@@ -20,7 +18,12 @@ void UZuruGameInstance::Init()
 	Database = NewObject<UZuruDatabase>(this, DatabaseClass, TEXT("ZuruDatabase"), RF_Transient);
 }
 
-PRAGMA_ENABLE_OPTIMIZATION
+const UZuruDatabase& UZuruGameInstance::GetDatabase() const
+{
+	check(Database);
+
+	return *Database;
+}
 
 // ==================================================================== //
 
