@@ -27,9 +27,9 @@ ACreativePawn::ACreativePawn()
 
 	// Camera component.
 
-	CameraComponent = CreateDefaultSubobject<UFreeCameraComponent>(TEXT("Camera"));
+	FreeCameraComponent = CreateDefaultSubobject<UFreeCameraComponent>(TEXT("Camera"));
 
-	CameraComponent->SetupAttachment(PivotComponent);
+	FreeCameraComponent->SetupAttachment(PivotComponent);
 
 }
 
@@ -42,8 +42,7 @@ void ACreativePawn::Tick(float InDeltaTime)
 {
 	Super::Tick(InDeltaTime);
 
-	CameraComponent->Advance(InDeltaTime);
-
+	FreeCameraComponent->Advance(InDeltaTime);
 }
 
 // ==================================================================== //

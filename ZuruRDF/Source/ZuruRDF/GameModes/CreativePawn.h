@@ -48,7 +48,7 @@ private:
 
 	// Main camera.
 	UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	UFreeCameraComponent* CameraComponent{ nullptr };
+	UFreeCameraComponent* FreeCameraComponent{ nullptr };
 
 };
 
