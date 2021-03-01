@@ -34,6 +34,19 @@ bool ACreativePlayerController::ProcessConsoleExec(const TCHAR* InCommand, FOutp
 	return Handled;
 }
 
+void ACreativePlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	// Game mode doesn't exists on the client.
+
+	if (auto GameMode = GetWorld()->GetAuthGameMode())
+	{
+		CameraInputComponent->Bind(*GameMode);
+		ManipulationInputComponent->Bind(*GameMode);
+	}
+}
+
 void ACreativePlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -53,6 +66,8 @@ void ACreativePlayerController::OnPossess(APawn* InPawn)
 	CameraInputComponent->Bind(*InPawn);
 	ManipulationInputComponent->Bind(*InPawn);
 }
+
+
 
 // ==================================================================== //
 

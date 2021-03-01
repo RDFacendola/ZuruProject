@@ -11,6 +11,11 @@
 /* FREE CAMERA INPUT COMPONENT                                          */
 /************************************************************************/
 
+void UFreeCameraInputComponent::Bind(AGameModeBase& InGameMode)
+{
+	// Camera has no business with the game mode.
+}
+
 void UFreeCameraInputComponent::Bind(UInputComponent& InInputComponent)
 {
 	InInputComponent.BindAxis(FCameraInputs::kCameraForward, this, &UFreeCameraInputComponent::OnForwardAxis);

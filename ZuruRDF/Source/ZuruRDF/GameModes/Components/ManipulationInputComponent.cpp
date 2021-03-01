@@ -12,6 +12,11 @@
 /* MANIPULATION INPUT COMPONENT                                         */
 /************************************************************************/
 
+void UManipulationInputComponent::Bind(AGameModeBase& InGameMode)
+{
+	ManipulationComponent = InGameMode.FindComponentByClass<UManipulationComponent>();
+}
+
 void UManipulationInputComponent::Bind(UInputComponent& InInputComponent)
 {
 
@@ -19,37 +24,20 @@ void UManipulationInputComponent::Bind(UInputComponent& InInputComponent)
 
 void UManipulationInputComponent::Bind(APawn& InPawn)
 {
-
+	Pawn = &InPawn;
 }
 
 void UManipulationInputComponent::SpawnEntity(const FName& InEntityKey)
 {
-	auto World = GetWorld();
+	SpawnEntityAt(InEntityKey, Pawn->GetActorTransform());
+}
 
-	check(World);
-
-	auto GameInstance = World->GetGameInstance<UZuruGameInstance>();
-
-	check(GameInstance);
-
-	auto& Database = GameInstance->GetDatabase();
-
-	if (auto EntityClass = Database.FindEntity(InEntityKey))
+void UManipulationInputComponent::SpawnEntityAt(const FName& InEntityKey, const FTransform& InEntityTransform)
+{
+	if (ManipulationComponent)
 	{
-		// Entity found.
-
-
-
+		ManipulationComponent->SpawnEntityAt(InEntityKey, InEntityTransform);
 	}
-	else
-	{
-		// No such entity.
-
-		auto Message = FString::Printf(TEXT("No entity with key '%s'."), *InEntityKey.ToString());
-
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 3.0f, FColor::Red, *Message);
-	}
-	
 }
 
 // ==================================================================== //

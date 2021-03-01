@@ -6,6 +6,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 
+#include "Components/ManipulationComponent.h"
+
 #include "CreativeGameMode.generated.h"
 
 // ==================================================================== //
@@ -24,8 +26,14 @@ class ZURURDF_API ACreativeGameMode : public AGameModeBase
 
 public:
 
+	ACreativeGameMode();
+
 private:
 	
+	// Handles entity-manipulation-related commands.
+	UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	UManipulationComponent* ManipulationComponent{ nullptr };
+
 };
 
 // ==================================================================== //

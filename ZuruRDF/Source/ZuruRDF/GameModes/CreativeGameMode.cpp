@@ -9,5 +9,10 @@
 /* CREATIVE GAME MODE                                                   */
 /************************************************************************/
 
+ACreativeGameMode::ACreativeGameMode()
+{
+	ManipulationComponent = CreateDefaultSubobject<UManipulationComponent>(TEXT("Manipulation"));
+}
+
 // ==================================================================== //
 

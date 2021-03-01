@@ -28,6 +28,9 @@ class ZURURDF_API UFreeCameraInputComponent : public UActorComponent
 
 public:
 
+	// Bind to the game mode. Server-side only.
+	void Bind(AGameModeBase& InGameMode);
+
 	// Bind to an input component.
 	void Bind(UInputComponent& InInputComponent);
 

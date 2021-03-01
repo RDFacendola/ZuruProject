@@ -37,6 +37,8 @@ public:
 
 protected:
 	
+	void BeginPlay() override;
+
 	void SetupInputComponent() override;
 
 	void OnPossess(APawn* InPawn) override;
