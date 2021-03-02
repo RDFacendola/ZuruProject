@@ -94,10 +94,10 @@ void FProceduralGizmo::SetTransform(const FTransform& InTransform)
 	auto MaxTranslation = Translation0.ComponentMax(Translation1);
 
 	auto MinRotation = Rotation0.ComponentMin(Rotation1);
-	auto MaxRotation = Rotation0.ComponentMin(Rotation1);
+	auto MaxRotation = Rotation0.ComponentMax(Rotation1);
 
 	auto MinScale = Scale0.ComponentMin(Scale1);
-	auto MaxScale = Scale0.ComponentMin(Scale1);
+	auto MaxScale = Scale0.ComponentMax(Scale1);
 
 	// Clamp.
 	
