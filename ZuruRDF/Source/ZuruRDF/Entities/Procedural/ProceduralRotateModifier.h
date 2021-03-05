@@ -17,7 +17,7 @@
 /* PROCEDURAL ROTATE MODIFIER                                           */
 /************************************************************************/
 
-//  A modifier that translate vertices passed through it.
+//  A modifier that rotates vertices and normals passed through it.
 //
 // @author Raffaele D. Facendola - March 2021.
 struct ZURURDF_API FProceduralRotateModifier : public FProceduralGeometryModifier
