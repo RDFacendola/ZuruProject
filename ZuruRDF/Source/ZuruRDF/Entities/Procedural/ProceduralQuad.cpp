@@ -9,12 +9,6 @@
 /* PROCEDURAL QUAD                                                      */
 /************************************************************************/
 
-FProceduralQuad::FProceduralQuad(float InWidth, float InHeight)
-    : FProceduralQuad(FVector2D{ InWidth, InHeight })
-{
-
-}
-
 FProceduralQuad::FProceduralQuad(const FVector2D& InSize)
     : Size(InSize.X, InSize.Y, 0.0f)
 {

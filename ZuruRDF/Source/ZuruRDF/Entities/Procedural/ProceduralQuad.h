@@ -23,9 +23,6 @@ struct ZURURDF_API FProceduralQuad : public FProceduralMesh
 public:
 
     // Create a new quad.
-    FProceduralQuad(float InWidth, float InHeight);
-
-    // Create a new quad.
     FProceduralQuad(const FVector2D& InSize);
 
     // Default copy constructor.

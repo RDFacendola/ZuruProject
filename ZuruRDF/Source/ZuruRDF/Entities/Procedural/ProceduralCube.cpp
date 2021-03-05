@@ -25,9 +25,6 @@ FProceduralCube::FProceduralCube(const FVector& InSize)
 
 void FProceduralCube::Build(FProceduralGeometryStream& OutGeometryStream) const
 {
-    auto FrontFace = FProceduralQuad{ Size.Y, Size.Z };
-    auto RightFace = FProceduralQuad{ Size.X, Size.Z };
-    auto TopFace = FProceduralQuad{ Size.Y, Size.X };
 
 
 }

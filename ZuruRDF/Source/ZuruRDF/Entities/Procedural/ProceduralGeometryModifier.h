@@ -43,8 +43,8 @@ public:
 /* PROCEDURAL GEOMETRY MODIFIER STREAM                                  */
 /************************************************************************/
 
-// A decorator that forwards procedurally-generated geometry through a modifier
-// and to an underlying geometry stream.
+// A decorator that forwards procedurally-generated geometry to an underlying
+// geometry stream through a modifier function.
 //
 // @remarks This class is an implementation detail and shall not be used directly.
 // @see operator<<(FProceduralGeometryStream, FProceduralGeometryModifier).

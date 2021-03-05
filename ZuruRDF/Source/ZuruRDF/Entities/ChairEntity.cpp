@@ -8,6 +8,7 @@
 #include "Procedural/ProceduralQuad.h"
 #include "Procedural/ProceduralNullModifier.h"
 #include "Procedural/ProceduralIdentityModifier.h"
+#include "Procedural/ProceduralTranslateModifier.h"
 
 // ==================================================================== //
 
@@ -68,10 +69,9 @@ void AChairEntity::BeginPlay()
     
     auto ProceduralMeshBuilder = FProceduralMeshBuilder{};
 
-    ProceduralMeshBuilder << FProceduralIdentityModifier{}
-                          << FProceduralIdentityModifier{}
-                          << FProceduralQuad{ 100.0f, 200.0f }
-                          << FProceduralQuad{ 200.0f, 100.0f };
+    ProceduralMeshBuilder << FProceduralTranslateModifier{ {500.0f, 25.0f} }
+                          << FProceduralQuad{ { 100.0f, 200.0f } }
+                          << FProceduralQuad{ { 200.0f, 100.0f } };
 
     // Convert to Unreal procedural mesh component.
 
