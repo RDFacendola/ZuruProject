@@ -11,6 +11,7 @@
 #include "Procedural/ProceduralTranslateModifier.h"
 #include "Procedural/ProceduralRotateModifier.h"
 #include "Procedural/ProceduralScaleModifier.h"
+#include "Procedural/ProceduralMirrorModifier.h"
 
 // ==================================================================== //
 
@@ -71,12 +72,10 @@ void AChairEntity::BeginPlay()
     
     auto ProceduralMeshBuilder = FProceduralMeshBuilder{};
 
-    ProceduralMeshBuilder << FProceduralRotateModifier{ { 0.0f, 45.0f, 0.0f } }
-                          << FProceduralQuad{ { 100.0f, 200.0f } }
-                          << FProceduralRotateModifier{ { 0.0f, 45.0f, 0.0f } }
-                          << FProceduralTranslateModifier{ { 0.0f, 0.0f, 100.0f } }
-                          << FProceduralScaleModifier{ { 0.1f } }
-                          << FProceduralQuad{ { 200.0f, 100.0f } };
+    ProceduralMeshBuilder << FProceduralMirrorModifier{ FVector::LeftVector }
+                          << FProceduralMirrorModifier{ FVector::ForwardVector }
+                          << FProceduralTranslateModifier{ { -100.0f, -100.0f, 0.0f } }
+                          << FProceduralQuad{ { 10.0f, 10.0f } };
 
     // Convert to Unreal procedural mesh component.
 
