@@ -43,7 +43,7 @@ struct ZURURDF_API FProceduralGeometryStream
 public:
 
     // Default virtual destructor.
-    ~FProceduralGeometryStream() = default;
+    virtual ~FProceduralGeometryStream() = default;
 
     // Append a new vertex to the stream.
     virtual void AppendVertex(const FProceduralVertex& InVertex) = 0;
