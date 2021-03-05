@@ -35,11 +35,18 @@ void FProceduralMesh::AppendTo(FProceduralGeometryStream& OutGeometryStream) con
 /* NON-MEMBER FUNCTIONS                                                 */
 /************************************************************************/
 
-FProceduralGeometryStream& operator<<(FProceduralGeometryStream& OutGeometryStream, const FProceduralMesh& InItem)
+FProceduralGeometryStream& operator<<(FProceduralGeometryStream& OutProceduralGeometryStream, const FProceduralMesh& InProceduralMesh)
 {
-    InItem.AppendTo(OutGeometryStream);
+    InProceduralMesh.AppendTo(OutProceduralGeometryStream);
 
-    return OutGeometryStream;
+    return OutProceduralGeometryStream;
+}
+
+FProceduralGeometryStream&& operator<<(FProceduralGeometryStream&& OutProceduralGeometryStream, const FProceduralMesh& InProceduralMesh)
+{
+    InProceduralMesh.AppendTo(OutProceduralGeometryStream);
+
+    return MoveTempIfPossible(OutProceduralGeometryStream);
 }
 
 // ==================================================================== //

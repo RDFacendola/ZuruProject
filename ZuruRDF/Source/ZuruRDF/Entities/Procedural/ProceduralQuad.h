@@ -15,7 +15,7 @@
 /* PROCEDURAL QUAD                                                      */
 /************************************************************************/
 
-// Represents a procedurally-generated front-facing quad.
+// Represents a procedurally-generated quad on the XY plane.
 //
 // @author Raffaele D. Facendola - March 2021.
 struct ZURURDF_API FProceduralQuad : public FProceduralMesh

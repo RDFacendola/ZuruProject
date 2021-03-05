@@ -16,20 +16,20 @@ FProceduralQuad::FProceduralQuad(float InWidth, float InHeight)
 }
 
 FProceduralQuad::FProceduralQuad(const FVector2D& InSize)
-    : Size(0.0f, InSize.X, InSize.Y)
+    : Size(InSize.X, InSize.Y, 0.0f)
 {
 
 }
 
 void FProceduralQuad::Build(FProceduralGeometryStream& OutGeometryStream) const
 {
-    OutGeometryStream.AppendVertex({ Size * FVector(-1.0f, -1.0f, -1.0f) });
-    OutGeometryStream.AppendVertex({ Size * FVector(-1.0f, +1.0f, +1.0f) });
-    OutGeometryStream.AppendVertex({ Size * FVector(-1.0f, -1.0f, +1.0f) });
+    OutGeometryStream.AppendVertex({ Size * FVector{ -1.0f, -1.0f, 0.0f } });
+    OutGeometryStream.AppendVertex({ Size * FVector{ -1.0f, +1.0f, 0.0f } });
+    OutGeometryStream.AppendVertex({ Size * FVector{ +1.0f, +1.0f, 0.0f } });
 
-    OutGeometryStream.AppendVertex({ Size * FVector(-1.0f, -1.0f, -1.0f) });
-    OutGeometryStream.AppendVertex({ Size * FVector(-1.0f, +1.0f, -1.0f) });
-    OutGeometryStream.AppendVertex({ Size * FVector(-1.0f, +1.0f, +1.0f) });
+    OutGeometryStream.AppendVertex({ Size * FVector{ -1.0f, -1.0f, 0.0f } });
+    OutGeometryStream.AppendVertex({ Size * FVector{ +1.0f, +1.0f, 0.0f } });
+    OutGeometryStream.AppendVertex({ Size * FVector{ +1.0f, -1.0f, 0.0f } });
 }
 
 // ==================================================================== //

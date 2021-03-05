@@ -42,7 +42,11 @@ private:
 /************************************************************************/
 
 // Append a procedural geometry item to a geometry stream.
-FProceduralGeometryStream& operator<<(FProceduralGeometryStream& OutGeometryStream, const FProceduralMesh& InItem);
+FProceduralGeometryStream& operator<<(FProceduralGeometryStream& OutProceduralGeometryStream,
+                                      const FProceduralMesh& InProceduralMesh);
 
+// Append a procedural geometry item to a geometry stream.
+FProceduralGeometryStream&& operator<<(FProceduralGeometryStream&& OutProceduralGeometryStream,
+                                       const FProceduralMesh& InProceduralMesh);
 
 // ==================================================================== //
