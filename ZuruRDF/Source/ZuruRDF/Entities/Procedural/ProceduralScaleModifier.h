@@ -59,13 +59,6 @@ private:
     // Scale applied to each vertex.
     FVector Scale{ FVector::OneVector };
 
-    // Scale applied to each normal (before normalization).
-    // Normal transform is done by means of the transpose of the inverse of the
-    // roto-translation 3x3 sub-matrix, ignoring any translation contributions.
-    // Since we have no rotation and scale matrix are diagonal, this boils down to a
-    // scaling factor which is the reciprocal of the desired scale.
-    FVector InvScale{ FVector::OneVector };
-
 };
 
 

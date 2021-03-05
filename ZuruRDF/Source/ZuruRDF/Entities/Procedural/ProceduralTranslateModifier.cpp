@@ -28,7 +28,7 @@ void FProceduralTranslateModifier::Bind(FProceduralGeometryStream& OutProcedural
 
 void FProceduralTranslateModifier::AppendVertex(const FProceduralVertex& InVertex, FProceduralGeometryStream& OutProceduralGeometryStream)
 {
-    OutProceduralGeometryStream.AppendVertex({ InVertex.Position + Translation, InVertex.Normal, InVertex.UV });
+    OutProceduralGeometryStream.AppendVertex(InVertex + Translation);
 }
 
 void FProceduralTranslateModifier::Unbind(FProceduralGeometryStream& OutProceduralGeometryStream)

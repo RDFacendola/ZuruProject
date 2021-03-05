@@ -22,7 +22,7 @@ void FProceduralRotateModifier::Bind(FProceduralGeometryStream& OutProceduralGeo
 
 void FProceduralRotateModifier::AppendVertex(const FProceduralVertex& InVertex, FProceduralGeometryStream& OutProceduralGeometryStream)
 {
-    OutProceduralGeometryStream.AppendVertex({ Rotation.RotateVector(InVertex.Position), Rotation.RotateVector(InVertex.Normal), InVertex.UV });
+    OutProceduralGeometryStream.AppendVertex(InVertex * Rotation);
 }
 
 void FProceduralRotateModifier::Unbind(FProceduralGeometryStream& OutProceduralGeometryStream)

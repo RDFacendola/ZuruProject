@@ -29,4 +29,20 @@ struct ZURURDF_API FProceduralVertex
     FVector2D UV{ FVector2D::ZeroVector };
 };
 
+/************************************************************************/
+/* NON-MEMBER FUNCTIONS                                                 */
+/************************************************************************/
+
+// Add an offset to a vertex position.
+FProceduralVertex operator+(const FProceduralVertex& InLHS, const FVector& InRHS);
+
+// Subtract an offset to a vertex position.
+FProceduralVertex operator-(const FProceduralVertex& InLHS, const FVector& InRHS);
+
+// Scale a vertex position and normal.
+FProceduralVertex operator*(const FProceduralVertex& InLHS, const FVector& InRHS);
+
+// Rotate a vertex position and normal.
+FProceduralVertex operator*(const FProceduralVertex& InLHS, const FRotator& InRHS);
+
 // ==================================================================== //

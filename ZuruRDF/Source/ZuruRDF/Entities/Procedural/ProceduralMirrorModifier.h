@@ -17,7 +17,8 @@
 /* PROCEDURAL MIRROR MODIFIER                                           */
 /************************************************************************/
 
-//  A modifier that translate vertices passed through it.
+//  A modifier that duplicates and mirrors primitives passed through it.
+//  Mirroring is performed with respect to a user-defined plane.
 //
 // @author Raffaele D. Facendola - March 2021.
 struct ZURURDF_API FProceduralMirrorModifier : public FProceduralGeometryModifier

@@ -11,7 +11,6 @@
 
 FProceduralScaleModifier::FProceduralScaleModifier(const FVector& InScale)
     : Scale(InScale)
-    , InvScale(FVector::OneVector / InScale)
 {
 
 }
@@ -35,9 +34,7 @@ void FProceduralScaleModifier::Bind(FProceduralGeometryStream& OutProceduralGeom
 
 void FProceduralScaleModifier::AppendVertex(const FProceduralVertex& InVertex, FProceduralGeometryStream& OutProceduralGeometryStream)
 {
-    OutProceduralGeometryStream.AppendVertex({ InVertex.Position * Scale,
-                                               (InVertex.Normal * InvScale).GetSafeNormal(),
-                                               InVertex.UV });
+    OutProceduralGeometryStream.AppendVertex(InVertex * Scale);
 }
 
 void FProceduralScaleModifier::Unbind(FProceduralGeometryStream& OutProceduralGeometryStream)
