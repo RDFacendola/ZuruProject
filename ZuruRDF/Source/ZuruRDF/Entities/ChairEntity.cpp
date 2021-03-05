@@ -25,9 +25,11 @@ public:
 
     virtual ~FProceduralMeshBuilder() = default;
 
-    virtual void AppendVertex(const FProceduralVertex& InVertex) override
+    virtual FProceduralGeometryStream& AppendVertex(const FProceduralVertex& InVertex) override
     {
         Vertices.Emplace(InVertex);
+
+        return *this;
     }
 
     virtual const FProceduralVertex& GetVertex(int32 InIndex) const override

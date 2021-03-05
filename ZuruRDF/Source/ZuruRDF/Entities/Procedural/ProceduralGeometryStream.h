@@ -28,8 +28,8 @@ public:
     // Default virtual destructor.
     virtual ~FProceduralGeometryStream() = default;
 
-    // Append a new vertex to the stream.
-    virtual void AppendVertex(const FProceduralVertex& InVertex) = 0;
+    // Append a new vertex to the stream and return a reference to self.
+    virtual FProceduralGeometryStream& AppendVertex(const FProceduralVertex& InVertex) = 0;
 
     // Get a vertex by index.
     // Negative index access the underlying stream in reverse order.

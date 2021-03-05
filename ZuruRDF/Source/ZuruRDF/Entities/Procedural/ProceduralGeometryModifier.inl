@@ -43,9 +43,11 @@ FProceduralGeometryModifierStream<TProceduralGeometryModifier>& FProceduralGeome
 }
 
 template <typename TProceduralGeometryModifier>
-void FProceduralGeometryModifierStream<TProceduralGeometryModifier>::AppendVertex(const FProceduralVertex& InVertex)
+FProceduralGeometryStream& FProceduralGeometryModifierStream<TProceduralGeometryModifier>::AppendVertex(const FProceduralVertex& InVertex)
 {
     ProceduralGeometryModifier.AppendVertex(InVertex, *ProceduralGeometryStream);
+
+    return *this;
 }
 
 template <typename TProceduralGeometryModifier>

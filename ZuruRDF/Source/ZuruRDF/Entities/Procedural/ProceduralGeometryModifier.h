@@ -81,7 +81,7 @@ public:
               typename = TEnableIf<std::is_move_assignable<UProceduralGeometryModifier>::value>::Type>
     FProceduralGeometryModifierStream& operator=(FProceduralGeometryModifierStream<UProceduralGeometryModifier>&& InRHS);
 
-    virtual void AppendVertex(const FProceduralVertex& InVertex) override;
+    virtual FProceduralGeometryStream& AppendVertex(const FProceduralVertex& InVertex) override;
 
     virtual const FProceduralVertex& GetVertex(int32 InIndex) const override;
 
