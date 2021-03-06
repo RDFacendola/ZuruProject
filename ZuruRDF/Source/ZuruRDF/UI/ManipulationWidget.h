@@ -4,7 +4,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+
+#include "ZuruWidget.h"
 
 #include "ManipulationWidget.generated.h"
 
@@ -18,7 +19,7 @@
 //
 // @author Raffaele D. Facendola - March 2021.
 UCLASS(Blueprintable, BlueprintType, ClassGroup = ViewComponents)
-class ZURURDF_API UManipulationWidget : public UUserWidget
+class ZURURDF_API UManipulationWidget : public UZuruWidget
 {
     GENERATED_BODY()
 

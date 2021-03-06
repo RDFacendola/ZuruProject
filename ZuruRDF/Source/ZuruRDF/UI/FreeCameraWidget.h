@@ -4,7 +4,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "Components/Button.h"
+
+#include "ZuruWidget.h"
 
 #include "FreeCameraWidget.generated.h"
 
@@ -18,20 +20,45 @@
 //
 // @author Raffaele D. Facendola - March 2021.
 UCLASS(Blueprintable, BlueprintType, ClassGroup = ViewComponents)
-class ZURURDF_API UFreeCameraWidget : public UUserWidget
+class ZURURDF_API UFreeCameraWidget : public UZuruWidget
 {
     GENERATED_BODY()
 
 public:
 
-    // Bind to the player controller.
-    void Bind(APlayerController& InPlayerController);
+    void Bind(APlayerController& InPlayerController) override;
 
-    // Bind to a pawn.
-    void Bind(APawn& InPawn);
+    void Bind(APawn& InPawn) override;
 
-private:
+    // Event notified whenever the clockwise button is clicked.
+    FOnButtonClickedEvent& OnClockwiseClicked();
 
+    // Event notified whenever the counter-clockwise button is detected.
+    FOnButtonClickedEvent& OnCounterClockwiseClicked();
+
+    // Event notified whenever the front-view button is clicked.
+    FOnButtonClickedEvent& OnFrontViewClicked();
+
+    // Event notified whenever the top-view button is notified.
+    FOnButtonClickedEvent& OnTopViewClicked();
+
+protected:
+
+    // Button 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
+    UButton* ClockwiseWidget{ nullptr };
+
+    // Button 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
+    UButton* CounterClockwiseWidget { nullptr };
+
+    // Button 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
+    UButton* FrontViewWidget { nullptr };
+
+    // Button 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
+    UButton* TopViewWidget { nullptr };
 
 };
 

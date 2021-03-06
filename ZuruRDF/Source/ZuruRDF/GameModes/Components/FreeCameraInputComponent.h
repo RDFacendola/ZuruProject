@@ -68,35 +68,55 @@ private:
     // Called whenever the camera right/left drag input is detected.
     void OnRightDragAxis(float InValue);
 
-    // Called whenever the camera pivot snap top input is pressed.
+    // Called whenever the camera pivot top view input is pressed.
     void OnTopViewPressed();
 
-    // Called whenever the camera pivot snap top input is released.
+    // Called whenever the camera pivot top view input is released.
     void OnTopViewReleased();
 
-    // Called whenever the camera pivot snap front input is pressed.
+    // Called whenever the camera pivot top view input is clicked.
+    UFUNCTION()
+    void OnTopViewClicked();
+
+    // Called whenever the camera pivot front view input is pressed.
     void OnFrontViewPressed();
 
-    // Called whenever the camera pivot snap front input is released.
+    // Called whenever the camera pivot front view input is released.
     void OnFrontViewReleased();
 
-    // Called whenever the camera orbit snap right input is pressed.
+    // Called whenever the camera pivot front view input is clicked.
+    UFUNCTION()
+    void OnFrontViewClicked();
+
+    // Called whenever the camera orbit clockwise input is pressed.
     void OnClockwisePressed();
 
-    // Called whenever the camera orbit snap right input is released.
+    // Called whenever the camera orbit clockwise input is released.
     void OnClockwiseReleased();
 
-    // Called whenever the camera orbit snap left input is pressed.
+    // Called whenever the camera orbit clockwise input is clicked.
+    UFUNCTION()
+    void OnClockwiseClicked();
+
+    // Called whenever the camera orbit counter-clockwise input is pressed.
     void OnCounterClockwisePressed();
 
-    // Called whenever the camera orbit snap left input is released.
+    // Called whenever the camera orbit counter-clockwise input is released.
     void OnCounterClockwiseReleased();
+
+    // Called whenever the camera orbit counter-clockwise input is clicked.
+    UFUNCTION()
+    void OnCounterClockwiseClicked();
 
     // Called whenever the camera enable drag input is pressed.
     void OnDragCameraPressed();
 
     // Called whenever the camera enable drag input is released.
     void OnDragCameraReleased();
+
+    // Called whenever the widget is constructed.
+    UFUNCTION()
+    void OnWidgetConstructed();
 
     // Get the widget associated to this component.
     UFreeCameraWidget& GetWidget();

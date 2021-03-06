@@ -7,6 +7,8 @@
 
 // ==================================================================== //
 
+PRAGMA_DISABLE_OPTIMIZATION
+
 /************************************************************************/
 /* FREE CAMERA INPUT COMPONENT                                          */
 /************************************************************************/
@@ -21,6 +23,8 @@ void UFreeCameraInputComponent::Bind(APlayerController& InPlayerController)
     InPlayerController.bShowMouseCursor = true;
 
     GetWidget().Bind(InPlayerController);
+
+    // Widget->OnRotateClockwiseClicked().AddDynamic(this, &UFreeCameraInputComponent::OnTopViewClicked);
 }
 
 void UFreeCameraInputComponent::Bind(UInputComponent& InInputComponent)
@@ -127,6 +131,12 @@ void UFreeCameraInputComponent::OnTopViewReleased()
     bTopViewEnabled = true;
 }
 
+void UFreeCameraInputComponent::OnTopViewClicked()
+{
+    OnTopViewPressed();
+    OnTopViewReleased();
+}
+
 void UFreeCameraInputComponent::OnFrontViewPressed()
 {
     Actions.bFrontView = bFrontViewEnabled;
@@ -136,6 +146,12 @@ void UFreeCameraInputComponent::OnFrontViewPressed()
 void UFreeCameraInputComponent::OnFrontViewReleased()
 {
     bFrontViewEnabled = true;
+}
+
+void UFreeCameraInputComponent::OnFrontViewClicked()
+{
+    OnFrontViewPressed();
+    OnFrontViewReleased();
 }
 
 void UFreeCameraInputComponent::OnClockwisePressed()
@@ -149,6 +165,12 @@ void UFreeCameraInputComponent::OnClockwiseReleased()
     bClockwiseEnabled = true;
 }
 
+void UFreeCameraInputComponent::OnClockwiseClicked()
+{
+    OnClockwisePressed();
+    OnClockwiseReleased();
+}
+
 void UFreeCameraInputComponent::OnCounterClockwisePressed()
 {
     Actions.bCounterClockwise = bCounterClockwiseEnabled;
@@ -158,6 +180,12 @@ void UFreeCameraInputComponent::OnCounterClockwisePressed()
 void UFreeCameraInputComponent::OnCounterClockwiseReleased()
 {
     bCounterClockwiseEnabled = true;
+}
+
+void UFreeCameraInputComponent::OnCounterClockwiseClicked()
+{
+    OnCounterClockwisePressed();
+    OnCounterClockwiseReleased();
 }
 
 void UFreeCameraInputComponent::OnDragCameraPressed()
@@ -170,6 +198,16 @@ void UFreeCameraInputComponent::OnDragCameraReleased()
     bDragEnabled = false;
 }
 
+void UFreeCameraInputComponent::OnWidgetConstructed()
+{
+    // Bind to widget inputs.
+
+    Widget->OnTopViewClicked().AddDynamic(this, &UFreeCameraInputComponent::OnTopViewClicked);
+    Widget->OnFrontViewClicked().AddDynamic(this, &UFreeCameraInputComponent::OnFrontViewClicked);
+    Widget->OnClockwiseClicked().AddDynamic(this, &UFreeCameraInputComponent::OnClockwiseClicked);
+    Widget->OnCounterClockwiseClicked().AddDynamic(this, &UFreeCameraInputComponent::OnCounterClockwiseClicked);
+}
+
 UFreeCameraWidget& UFreeCameraInputComponent::GetWidget()
 {
     if (!Widget)
@@ -177,10 +215,13 @@ UFreeCameraWidget& UFreeCameraInputComponent::GetWidget()
         auto WidgetConcreteClass = WidgetClass ? WidgetClass : UFreeCameraWidget::StaticClass();
 
         Widget = CreateWidget<UFreeCameraWidget>(GetWorld(), WidgetConcreteClass);
+
+        Widget->OnConstructed.AddDynamic(this, &UFreeCameraInputComponent::OnWidgetConstructed);
     }
 
     return *Widget;
 }
 
-// ==================================================================== //
+PRAGMA_ENABLE_OPTIMIZATION
 
+// ==================================================================== //
