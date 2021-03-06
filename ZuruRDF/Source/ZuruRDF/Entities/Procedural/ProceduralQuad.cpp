@@ -18,14 +18,14 @@ FProceduralQuad::FProceduralQuad(const FVector2D& InSize)
 void FProceduralQuad::Build(FProceduralGeometryStream& OutGeometryStream) const
 {
     OutGeometryStream
-        .AppendVertex({ Size * FVector{ -1.0f, -1.0f, 0.0f } })
-        .AppendVertex({ Size * FVector{ -1.0f, +1.0f, 0.0f } })
-        .AppendVertex({ Size * FVector{ +1.0f, +1.0f, 0.0f } });
+        .AppendVertex({ Size * FVector{ -1.0f, -1.0f, 0.0f } * 0.5f })
+        .AppendVertex({ Size * FVector{ -1.0f, +1.0f, 0.0f } * 0.5f })
+        .AppendVertex({ Size * FVector{ +1.0f, +1.0f, 0.0f } * 0.5f });
 
     OutGeometryStream
-        .AppendVertex({ Size * FVector{ -1.0f, -1.0f, 0.0f } })
-        .AppendVertex({ Size * FVector{ +1.0f, +1.0f, 0.0f } })
-        .AppendVertex({ Size * FVector{ +1.0f, -1.0f, 0.0f } });
+        .AppendVertex({ Size * FVector{ -1.0f, -1.0f, 0.0f } * 0.5f })
+        .AppendVertex({ Size * FVector{ +1.0f, +1.0f, 0.0f } * 0.5f })
+        .AppendVertex({ Size * FVector{ +1.0f, -1.0f, 0.0f } * 0.5f });
 }
 
 // ==================================================================== //

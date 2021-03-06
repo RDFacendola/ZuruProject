@@ -53,9 +53,10 @@ void FProceduralMirrorModifier::AppendVertex(const FProceduralVertex& InVertex, 
     {
         // Mirrored vertices needs to be resorted as the mirroring process flips the primitive's backface.
 
-        OutProceduralGeometryStream.AppendVertex(Primitive[0]);
-        OutProceduralGeometryStream.AppendVertex(Primitive[2]);
-        OutProceduralGeometryStream.AppendVertex(Primitive[1]);
+        OutProceduralGeometryStream
+            .AppendVertex(Primitive[0])
+            .AppendVertex(Primitive[2])
+            .AppendVertex(Primitive[1]);
 
         Primitive.Reset();
     }
