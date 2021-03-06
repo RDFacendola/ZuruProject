@@ -18,6 +18,8 @@
 
 // ==================================================================== //
 
+PRAGMA_DISABLE_OPTIMIZATION
+
 /************************************************************************/
 /* CHAIR ENTITY                                                         */
 /************************************************************************/
@@ -31,32 +33,44 @@ AChairEntity::AChairEntity()
     SetRootComponent(ProceduralComponent);
 }
 
-void AChairEntity::BeginPlay()
+void AChairEntity::Generate()
 {
-    Super::BeginPlay();
-    
     auto ProceduralMeshBuilder = FProceduralGeometryBuilder{};
 
     // Legs.
 
     ProceduralMeshBuilder << FProceduralMirror{ FVector::RightVector }
                           << FProceduralMirror{ FVector::ForwardVector }
-                          << FProceduralExtrude{ FVector::UpVector * 45.0f }
-                          << FProceduralTranslate{ { 25.0f, 25.0f } }
-                          << FProceduralCircle{ { 5.0f, 5.0f } };
+                          << FProceduralExtrude{ FVector::UpVector * LegsHeight }
+                          << FProceduralTranslate{ { SeatSize * 0.5f, SeatSize * 0.5f } }
+                          << FProceduralTranslate{ { -LegsThickness * 0.5f, -LegsThickness * 0.5f } }
+                          << FProceduralCircle{ { LegsThickness, LegsThickness } };
 
     // Base.
 
-    ProceduralMeshBuilder << FProceduralExtrude{ FVector::UpVector * 5.0f }
-                          << FProceduralTranslate{ FVector::UpVector * 45.0f }
-                          << FProceduralQuad{ { 60.0f, 60.0f } };
+    ProceduralMeshBuilder << FProceduralExtrude{ FVector::UpVector * SeatThickness }
+                          << FProceduralTranslate{ FVector::UpVector * LegsHeight }
+                          << FProceduralQuad{ { SeatSize, SeatSize } };
 
     // Backseat.
 
     ProceduralMeshBuilder << FProceduralMirror{ FVector::RightVector }
-                          << FProceduralExtrude{ FVector::UpVector * 100.0f }
-                          << FProceduralTranslate{ FVector::BackwardVector * 25.0f + FVector::UpVector * 45.0f + FVector::RightVector * 25.0f }
-                          << FProceduralCircle{ { 5.0f, 5.0f } };
+                          << FProceduralExtrude{ FVector::UpVector * BackSeatHeight }
+                          << FProceduralTranslate{ FVector::UpVector * LegsHeight }
+                          << FProceduralTranslate{ FVector::UpVector * SeatThickness }
+                          << FProceduralTranslate{ { -SeatSize * 0.5f, -SeatSize * 0.5f } }
+                          << FProceduralTranslate{ { +BackSeatThickness * 0.5f, +BackSeatThickness * 0.5f } }
+                          << FProceduralCircle{ { BackSeatThickness, BackSeatThickness } };
+
+    // Backrest.
+
+    ProceduralMeshBuilder << FProceduralTranslate{ FVector::UpVector * LegsHeight }
+                          << FProceduralTranslate{ FVector::UpVector * SeatThickness }
+                          << FProceduralTranslate{ FVector::UpVector * BackRestOffset }
+                          << FProceduralExtrude{ FVector::UpVector * BackRestHeight }
+                          << FProceduralTranslate{ FVector::BackwardVector * (SeatSize * 0.5f) }
+                          << FProceduralTranslate{ FVector::ForwardVector * (BackSeatThickness * 0.5f) }
+                          << FProceduralQuad{ { BackSeatThickness, SeatSize - BackSeatThickness } };
 
     // Prefab.
 
@@ -71,5 +85,26 @@ void AChairEntity::BeginPlay()
     ProceduralComponent->SetMaterial(0, Material);
 }
 
-// ==================================================================== //
 
+
+void AChairEntity::PostInitProperties()
+{
+    Super::PostInitProperties();
+
+    Generate();
+}
+
+#if WITH_EDITOR
+
+void AChairEntity::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+    Super::PostEditChangeProperty(PropertyChangedEvent);
+    
+    Generate();
+}
+
+#endif
+
+PRAGMA_ENABLE_OPTIMIZATION
+
+// ==================================================================== //

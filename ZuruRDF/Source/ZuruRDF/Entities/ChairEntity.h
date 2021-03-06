@@ -31,9 +31,44 @@ public:
     // Default constructor.
     AChairEntity();
 
-    void BeginPlay() override;
+    // (Re)generate chair geometry.
+    void Generate();
+
+    void PostInitProperties() override;
 
 private:
+
+    // Legs' height.
+    UPROPERTY(EditAnywhere, Category = Chair)
+    float LegsHeight{ 40.0f };
+
+    // Legs' thickness.
+    UPROPERTY(EditAnywhere, Category = Chair)
+    float LegsThickness{ 3.5f };
+
+    // Seat size, assuming a square shape.
+    UPROPERTY(EditAnywhere, Category = Chair)
+    float SeatSize{ 40.0f };
+
+    // Seat thickness.
+    UPROPERTY(EditAnywhere, Category = Chair)
+    float SeatThickness{ 6.0f };
+
+    // Back-seat height from the base.
+    UPROPERTY(EditAnywhere, Category = Chair)
+    float BackSeatHeight{ 50.0f };
+
+    // Back-seat thickness.
+    UPROPERTY(EditAnywhere, Category = Chair)
+    float BackSeatThickness{ 3.5f };
+
+    // Back-rest height.
+    UPROPERTY(EditAnywhere, Category = Chair)
+    float BackRestHeight{ 20.0f };
+
+    // Back-rest height.
+    UPROPERTY(EditAnywhere, Category = Chair)
+    float BackRestOffset{ 25.0f };
 
     // Test procedural mesh.
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
@@ -42,6 +77,14 @@ private:
     // Test material
     UPROPERTY(Category = Components, EditAnywhere)
     UMaterialInterface* Material{ nullptr };
+
+#if WITH_EDITOR
+
+private:
+
+    void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+
+#endif
 
 };
 
