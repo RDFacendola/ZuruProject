@@ -31,6 +31,9 @@ public:
     // Bind to the game mode. Server-side only.
     void Bind(AGameModeBase& InGameMode);
 
+    // Bind to the player controller.
+    void Bind(APlayerController& InPlayerController);
+
     // Bind to an input component.
     void Bind(UInputComponent& InInputComponent);
 

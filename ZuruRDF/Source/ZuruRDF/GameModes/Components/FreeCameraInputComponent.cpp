@@ -16,6 +16,11 @@ void UFreeCameraInputComponent::Bind(AGameModeBase& InGameMode)
     // Camera has no business with the game mode.
 }
 
+void UFreeCameraInputComponent::Bind(APlayerController& InPlayerController)
+{
+    InPlayerController.bShowMouseCursor = true;
+}
+
 void UFreeCameraInputComponent::Bind(UInputComponent& InInputComponent)
 {
     InInputComponent.BindAxis(FCameraInputs::kCameraForward, this, &UFreeCameraInputComponent::OnForwardAxis);

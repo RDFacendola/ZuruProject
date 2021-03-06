@@ -13,58 +13,63 @@
 
 ACreativePlayerController::ACreativePlayerController()
 {
-	CameraInputComponent = CreateDefaultSubobject<UFreeCameraInputComponent>(TEXT("CameraInput"));
-	ManipulationInputComponent = CreateDefaultSubobject<UManipulationInputComponent>(TEXT("ManipulationInput"));
+    CameraInputComponent = CreateDefaultSubobject<UFreeCameraInputComponent>(TEXT("CameraInput"));
+    ManipulationInputComponent = CreateDefaultSubobject<UManipulationInputComponent>(TEXT("ManipulationInput"));
 }
 
 void ACreativePlayerController::Tick(float InDeltaSeconds)
 {
-	Super::Tick(InDeltaSeconds);
+    Super::Tick(InDeltaSeconds);
 
-	CameraInputComponent->Advance(InDeltaSeconds);
+    CameraInputComponent->Advance(InDeltaSeconds);
 }
 
 bool ACreativePlayerController::ProcessConsoleExec(const TCHAR* InCommand, FOutputDevice& InOutputDevice, UObject* InExecutor)
 {
-	auto Handled = Super::ProcessConsoleExec(InCommand, InOutputDevice, InExecutor);
-	
-	Handled |= CameraInputComponent->ProcessConsoleExec(InCommand, InOutputDevice, InExecutor);
-	Handled |= ManipulationInputComponent->ProcessConsoleExec(InCommand, InOutputDevice, InExecutor);
-	
-	return Handled;
+    auto Handled = Super::ProcessConsoleExec(InCommand, InOutputDevice, InExecutor);
+    
+    Handled |= CameraInputComponent->ProcessConsoleExec(InCommand, InOutputDevice, InExecutor);
+    Handled |= ManipulationInputComponent->ProcessConsoleExec(InCommand, InOutputDevice, InExecutor);
+    
+    return Handled;
 }
 
 void ACreativePlayerController::BeginPlay()
 {
-	Super::BeginPlay();
-	
-	// Game mode doesn't exists on the client.
+    Super::BeginPlay();
+    
+    // Bind input components to the player controller.
 
-	if (auto GameMode = GetWorld()->GetAuthGameMode())
-	{
-		CameraInputComponent->Bind(*GameMode);
-		ManipulationInputComponent->Bind(*GameMode);
-	}
+    CameraInputComponent->Bind(*this);
+    ManipulationInputComponent->Bind(*this);
+
+    // Game mode doesn't exists on the client.
+
+    if (auto GameMode = GetWorld()->GetAuthGameMode())
+    {
+        CameraInputComponent->Bind(*GameMode);
+        ManipulationInputComponent->Bind(*GameMode);
+    }
 }
 
 void ACreativePlayerController::SetupInputComponent()
 {
-	Super::SetupInputComponent();
+    Super::SetupInputComponent();
 
-	ensure(InputComponent);
+    ensure(InputComponent);
 
-	CameraInputComponent->Bind(*InputComponent);
-	ManipulationInputComponent->Bind(*InputComponent);
+    CameraInputComponent->Bind(*InputComponent);
+    ManipulationInputComponent->Bind(*InputComponent);
 }
 
 void ACreativePlayerController::OnPossess(APawn* InPawn)
 {
-	Super::OnPossess(InPawn);
+    Super::OnPossess(InPawn);
 
-	ensure(InPawn);
+    ensure(InPawn);
 
-	CameraInputComponent->Bind(*InPawn);
-	ManipulationInputComponent->Bind(*InPawn);
+    CameraInputComponent->Bind(*InPawn);
+    ManipulationInputComponent->Bind(*InPawn);
 }
 
 
