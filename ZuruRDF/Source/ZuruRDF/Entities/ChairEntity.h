@@ -18,7 +18,7 @@
 /* CHAIR ENTITY                                                         */
 /************************************************************************/
 
-// Represents a physical object in the project.
+// A procedurally-generated chair.
 //
 // @author Raffaele D. Facendola - February 2021.
 UCLASS(Blueprintable, BlueprintType, ClassGroup = Chairs)
@@ -71,7 +71,7 @@ private:
     float BackRestOffset{ 25.0f };
 
     // Test procedural mesh.
-    UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(Category = Components, DisplayName = Chair, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
     UProceduralMeshComponent* ProceduralComponent{ nullptr };
 
     // Test material

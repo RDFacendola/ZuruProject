@@ -28,64 +28,65 @@ AChairEntity::AChairEntity()
 {
     // Root component.
 
-    ProceduralComponent = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("Root"));
+    ProceduralComponent = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("ChairRoot"));
 
     SetRootComponent(ProceduralComponent);
 }
 
 void AChairEntity::Generate()
 {
-    auto ProceduralMeshBuilder = FProceduralGeometryBuilder{};
+    if (ProceduralComponent)
+    {
+        auto ProceduralMeshBuilder = FProceduralGeometryBuilder{};
 
-    // Legs.
+        // Legs.
 
-    ProceduralMeshBuilder << FProceduralMirror{ FVector::RightVector }
-                          << FProceduralMirror{ FVector::ForwardVector }
-                          << FProceduralExtrude{ FVector::UpVector * LegsHeight }
-                          << FProceduralTranslate{ { SeatSize * 0.5f, SeatSize * 0.5f } }
-                          << FProceduralTranslate{ { -LegsThickness * 0.5f, -LegsThickness * 0.5f } }
-                          << FProceduralCircle{ { LegsThickness, LegsThickness } };
+        ProceduralMeshBuilder << FProceduralMirror{ FVector::RightVector }
+                              << FProceduralMirror{ FVector::ForwardVector }
+                              << FProceduralExtrude{ FVector::UpVector * LegsHeight }
+                              << FProceduralTranslate{ { SeatSize * 0.5f, SeatSize * 0.5f } }
+                              << FProceduralTranslate{ { -LegsThickness * 0.5f, -LegsThickness * 0.5f } }
+                              << FProceduralCircle{ { LegsThickness, LegsThickness } };
 
-    // Base.
+        // Base.
 
-    ProceduralMeshBuilder << FProceduralExtrude{ FVector::UpVector * SeatThickness }
-                          << FProceduralTranslate{ FVector::UpVector * LegsHeight }
-                          << FProceduralQuad{ { SeatSize, SeatSize } };
+        ProceduralMeshBuilder << FProceduralExtrude{ FVector::UpVector * SeatThickness }
+                              << FProceduralTranslate{ FVector::UpVector * LegsHeight }
+                              << FProceduralQuad{ { SeatSize, SeatSize } };
 
-    // Backseat.
+        // Backseat.
 
-    ProceduralMeshBuilder << FProceduralMirror{ FVector::RightVector }
-                          << FProceduralExtrude{ FVector::UpVector * BackSeatHeight }
-                          << FProceduralTranslate{ FVector::UpVector * LegsHeight }
-                          << FProceduralTranslate{ FVector::UpVector * SeatThickness }
-                          << FProceduralTranslate{ { -SeatSize * 0.5f, -SeatSize * 0.5f } }
-                          << FProceduralTranslate{ { +BackSeatThickness * 0.5f, +BackSeatThickness * 0.5f } }
-                          << FProceduralCircle{ { BackSeatThickness, BackSeatThickness } };
+        ProceduralMeshBuilder << FProceduralMirror{ FVector::RightVector }
+                              << FProceduralExtrude{ FVector::UpVector * BackSeatHeight }
+                              << FProceduralTranslate{ FVector::UpVector * LegsHeight }
+                              << FProceduralTranslate{ FVector::UpVector * SeatThickness }
+                              << FProceduralTranslate{ { -SeatSize * 0.5f, -SeatSize * 0.5f } }
+                              << FProceduralTranslate{ { +BackSeatThickness * 0.5f, +BackSeatThickness * 0.5f } }
+                              << FProceduralCircle{ { BackSeatThickness, BackSeatThickness } };
 
-    // Backrest.
+        // Backrest.
 
-    ProceduralMeshBuilder << FProceduralTranslate{ FVector::UpVector * LegsHeight }
-                          << FProceduralTranslate{ FVector::UpVector * SeatThickness }
-                          << FProceduralTranslate{ FVector::UpVector * BackRestOffset }
-                          << FProceduralExtrude{ FVector::UpVector * BackRestHeight }
-                          << FProceduralTranslate{ FVector::BackwardVector * (SeatSize * 0.5f) }
-                          << FProceduralTranslate{ FVector::ForwardVector * (BackSeatThickness * 0.5f) }
-                          << FProceduralQuad{ { BackSeatThickness, SeatSize - BackSeatThickness } };
+        ProceduralMeshBuilder << FProceduralTranslate{ FVector::UpVector * LegsHeight }
+                              << FProceduralTranslate{ FVector::UpVector * SeatThickness }
+                              << FProceduralTranslate{ FVector::UpVector * BackRestOffset }
+                              << FProceduralExtrude{ FVector::UpVector * BackRestHeight }
+                              << FProceduralTranslate{ FVector::BackwardVector * (SeatSize * 0.5f) }
+                              << FProceduralTranslate{ FVector::ForwardVector * (BackSeatThickness * 0.5f) }
+                              << FProceduralQuad{ { BackSeatThickness, SeatSize - BackSeatThickness } };
 
-    // Prefab.
+        // Prefab.
 
-    auto Prefab = ProceduralMeshBuilder.Build();
+        auto Prefab = ProceduralMeshBuilder.Build();
 
-    // Generate.
+        // Generate.
 
-    ProceduralComponent->ClearAllMeshSections();
+        ProceduralComponent->ClearAllMeshSections();
     
-    Prefab.Generate(*ProceduralComponent, 0);
+        Prefab.Generate(*ProceduralComponent, 0);
 
-    ProceduralComponent->SetMaterial(0, Material);
+        ProceduralComponent->SetMaterial(0, Material);
+    }
 }
-
-
 
 void AChairEntity::PostInitProperties()
 {
