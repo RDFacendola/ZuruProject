@@ -7,6 +7,8 @@
 
 // ==================================================================== //
 
+PRAGMA_DISABLE_OPTIMIZATION
+
 /************************************************************************/
 /* MANIPULATION INPUT COMPONENT                                         */
 /************************************************************************/
@@ -41,6 +43,10 @@ void UManipulationInputComponent::OnSelectEntityPressed()
     if (bSelectEntityEnabled)
     {
         bSelectEntityEnabled = false;
+
+        SelectedEntities.Reset();
+
+        SelectAdditionalEntity();
     }
 }
 
@@ -54,12 +60,27 @@ void UManipulationInputComponent::OnSelectAdditionalEntityPressed()
     if (bSelectAdditionalEntityEnabled)
     {
         bSelectAdditionalEntityEnabled = false;
+
+        SelectAdditionalEntity();
     }
 }
 
 void UManipulationInputComponent::OnSelectAdditionalEntityReleased()
 {
     bSelectAdditionalEntityEnabled = true;
+}
+
+void UManipulationInputComponent::SelectAdditionalEntity()
+{
+    auto HitResult = FHitResult{};
+
+    if (PlayerController->GetHitResultUnderCursorForObjects({ EntityObjectType }, false, HitResult))
+    {
+        if (auto ZuruEntity = Cast<AZuruEntity>(HitResult.Actor.Get()))
+        {
+            SelectedEntities.Add(ZuruEntity);
+        }
+    }
 }
 
 void UManipulationInputComponent::SpawnEntity(const FName& InEntityKey)
@@ -77,3 +98,4 @@ void UManipulationInputComponent::SpawnEntityAt(const FName& InEntityKey, const 
 
 // ==================================================================== //
 
+PRAGMA_ENABLE_OPTIMIZATION

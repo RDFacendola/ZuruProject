@@ -28,9 +28,9 @@ AChairEntity::AChairEntity()
 {
     // Root component.
 
-    ProceduralComponent = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("ChairRoot"));
-
-    SetRootComponent(ProceduralComponent);
+    ProceduralComponent = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("TableGeometry"));
+    
+    ProceduralComponent->SetupAttachment(GetRootComponent());
 }
 
 void AChairEntity::Generate()

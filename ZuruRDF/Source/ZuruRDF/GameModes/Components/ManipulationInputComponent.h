@@ -53,12 +53,19 @@ private:
     // Called whenever the select additional entity input is released.
     void OnSelectAdditionalEntityReleased();
 
+    // Add the entity under mouse cursor to the selection, if possible.
+    void SelectAdditionalEntity();
+
     // Spawn an entity by key.
     UFUNCTION(Exec)
     void SpawnEntity(const FName& InEntityKey);
 
     // Spawn an entity by key at given coordinates.
     void SpawnEntityAt(const FName& InEntityKey, const FTransform& InEntityTransform);
+
+    // Object type used to filter out selected entities.
+    UPROPERTY(EditAnywhere, Category = Input)
+    TEnumAsByte<EObjectTypeQuery> EntityObjectType{ EObjectTypeQuery::ObjectTypeQuery1 };
 
     // Controlled pawn.
     UPROPERTY()
@@ -71,6 +78,10 @@ private:
     // Owning player controller.
     UPROPERTY()
     APlayerController* PlayerController{ nullptr };
+
+    // List of selected entities.
+    UPROPERTY()
+    TArray<AZuruEntity*> SelectedEntities;
 
     // Enable the select-entity action. Avoids repeating the action while the key's pressed.
     bool bSelectEntityEnabled{ true };

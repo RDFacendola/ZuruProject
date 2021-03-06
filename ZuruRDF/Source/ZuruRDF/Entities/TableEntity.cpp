@@ -28,9 +28,9 @@ ATableEntity::ATableEntity()
 {
     // Root component.
 
-    ProceduralComponent = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("TableRoot"));
+    ProceduralComponent = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("TableGeometry"));
 
-    SetRootComponent(ProceduralComponent);
+    ProceduralComponent->SetupAttachment(GetRootComponent());
 }
 
 void ATableEntity::Generate()
