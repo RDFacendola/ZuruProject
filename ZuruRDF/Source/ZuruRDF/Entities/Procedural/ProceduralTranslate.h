@@ -14,30 +14,33 @@
 // ==================================================================== //
 
 /************************************************************************/
-/* PROCEDURAL EXTRUDE MODIFIER                                          */
+/* PROCEDURAL TRANSLATE                                                 */
 /************************************************************************/
 
-//  A modifier that extrudes primitives passed through it.
+//  A modifier that translate vertices passed through it.
 //
 // @author Raffaele D. Facendola - March 2021.
-struct ZURURDF_API FProceduralExtrudeModifier : public FProceduralGeometryModifier
+struct ZURURDF_API FProceduralTranslate : public FProceduralGeometryModifier
 {
 public:
 
-    // Create a new modifier by specifying the 3D extrusion direction and length.
-    FProceduralExtrudeModifier(const FVector& InExtrusion);
+    // Default constructor.
+    FProceduralTranslate() = default;
 
-    // Create a new modifier by specifying the 2D extrusion length along the Z axis.
-    FProceduralExtrudeModifier(float InExtrusion);
+    // Create a new modifier from a 3D translation vector.
+    FProceduralTranslate(const FVector& InTranslation);
+
+    // Create a new modifier from a 2D translation vector.
+    FProceduralTranslate(const FVector2D& InTranslation);
 
     // Default copy-constructor.
-    FProceduralExtrudeModifier(const FProceduralExtrudeModifier& InRHS) = default;
+    FProceduralTranslate(const FProceduralTranslate& InRHS) = default;
 
     // Default virtual destructor.
-    virtual ~FProceduralExtrudeModifier() = default;
+    virtual ~FProceduralTranslate() = default;
 
     // Default copy-assignment operator.
-    FProceduralExtrudeModifier& operator=(const FProceduralExtrudeModifier& InRHS) = default;
+    FProceduralTranslate& operator=(const FProceduralTranslate& InRHS) = default;
 
     // Bind the modifier to a geometry stream.
     virtual void Bind(FProceduralGeometryStream& OutProceduralGeometryStream) override;
@@ -50,14 +53,8 @@ public:
 
 private:
 
-    // Extrusion direction and length.
-    FVector Extrusion{ FVector::UpVector };
-
-    // Pending primitive.
-    TArray<FProceduralVertex, TFixedAllocator<3>> Primitive;
-
-    // Pending extruded primitive.
-    TArray<FProceduralVertex, TFixedAllocator<3>> ExtrudedPrimitive;
+    // Translation applied to each vertex.
+    FVector Translation{ FVector::ZeroVector };
 
 };
 

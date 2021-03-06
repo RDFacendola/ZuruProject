@@ -1,32 +1,32 @@
 
 // ==================================================================== //
 
-#include "ProceduralExtrudeModifier.h"
+#include "ProceduralExtrude.h"
 
 // ==================================================================== //
 
 /************************************************************************/
-/* PROCEDURAL EXTRUDE MODIFIER                                          */
+/* PROCEDURAL EXTRUDE                                                   */
 /************************************************************************/
 
-FProceduralExtrudeModifier::FProceduralExtrudeModifier(const FVector& InExtrusion)
+FProceduralExtrude::FProceduralExtrude(const FVector& InExtrusion)
     : Extrusion(InExtrusion)
 {
 
 }
 
-FProceduralExtrudeModifier::FProceduralExtrudeModifier(float InExtrusion)
-    : FProceduralExtrudeModifier(FVector::UpVector * InExtrusion)
+FProceduralExtrude::FProceduralExtrude(float InExtrusion)
+    : FProceduralExtrude(FVector::UpVector * InExtrusion)
 {
 
 }
 
-void FProceduralExtrudeModifier::Bind(FProceduralGeometryStream& OutProceduralGeometryStream)
+void FProceduralExtrude::Bind(FProceduralGeometryStream& OutProceduralGeometryStream)
 {
 
 }
 
-void FProceduralExtrudeModifier::AppendVertex(const FProceduralVertex& InVertex, FProceduralGeometryStream& OutProceduralGeometryStream)
+void FProceduralExtrude::AppendVertex(const FProceduralVertex& InVertex, FProceduralGeometryStream& OutProceduralGeometryStream)
 {
     // Store a copy of the vertex and its extrusion.
 
@@ -56,7 +56,7 @@ void FProceduralExtrudeModifier::AppendVertex(const FProceduralVertex& InVertex,
     }
 }
 
-void FProceduralExtrudeModifier::Unbind(FProceduralGeometryStream& OutProceduralGeometryStream)
+void FProceduralExtrude::Unbind(FProceduralGeometryStream& OutProceduralGeometryStream)
 {
 
 }

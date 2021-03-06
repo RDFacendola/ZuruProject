@@ -14,34 +14,34 @@
 // ==================================================================== //
 
 /************************************************************************/
-/* PROCEDURAL MIRROR MODIFIER                                           */
+/* PROCEDURAL MIRROR                                                    */
 /************************************************************************/
 
 //  A modifier that duplicates and mirrors primitives passed through it.
 //  Mirroring is performed with respect to a user-defined plane.
 //
 // @author Raffaele D. Facendola - March 2021.
-struct ZURURDF_API FProceduralMirrorModifier : public FProceduralGeometryModifier
+struct ZURURDF_API FProceduralMirror : public FProceduralGeometryModifier
 {
 public:
 
     // Create a new modifier by specifying the 3D mirroring plane by its normal.
-    FProceduralMirrorModifier(const FPlane& InMirrorPlane);
+    FProceduralMirror(const FPlane& InMirrorPlane);
 
     // Create a new modifier by specifying the 3D mirroring plane by its normal.
-    FProceduralMirrorModifier(const FVector& InMirrorPlaneNormal);
+    FProceduralMirror(const FVector& InMirrorPlaneNormal);
     
     // Create a new modifier by specifying the 2D mirroring plane by its normal.
-    FProceduralMirrorModifier(const FVector2D& InMirrorPlaneNormal);
+    FProceduralMirror(const FVector2D& InMirrorPlaneNormal);
 
     // Default copy-constructor.
-    FProceduralMirrorModifier(const FProceduralMirrorModifier& InRHS) = default;
+    FProceduralMirror(const FProceduralMirror& InRHS) = default;
 
     // Default virtual destructor.
-    virtual ~FProceduralMirrorModifier() = default;
+    virtual ~FProceduralMirror() = default;
 
     // Default copy-assignment operator.
-    FProceduralMirrorModifier& operator=(const FProceduralMirrorModifier& InRHS) = default;
+    FProceduralMirror& operator=(const FProceduralMirror& InRHS) = default;
 
     // Bind the modifier to a geometry stream.
     virtual void Bind(FProceduralGeometryStream& OutProceduralGeometryStream) override;

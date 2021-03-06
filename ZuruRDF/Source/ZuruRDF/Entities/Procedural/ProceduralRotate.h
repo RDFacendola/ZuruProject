@@ -14,30 +14,30 @@
 // ==================================================================== //
 
 /************************************************************************/
-/* PROCEDURAL ROTATE MODIFIER                                           */
+/* PROCEDURAL ROTATE                                                    */
 /************************************************************************/
 
 //  A modifier that rotates vertices and normals passed through it.
 //
 // @author Raffaele D. Facendola - March 2021.
-struct ZURURDF_API FProceduralRotateModifier : public FProceduralGeometryModifier
+struct ZURURDF_API FProceduralRotate : public FProceduralGeometryModifier
 {
 public:
 
     // Default constructor.
-    FProceduralRotateModifier() = default;
+    FProceduralRotate() = default;
 
     // Create a new modifier from a rotation.
-    FProceduralRotateModifier(const FRotator& InRotation);
+    FProceduralRotate(const FRotator& InRotation);
 
     // Default copy-constructor.
-    FProceduralRotateModifier(const FProceduralRotateModifier& InRHS) = default;
+    FProceduralRotate(const FProceduralRotate& InRHS) = default;
 
     // Default virtual destructor.
-    virtual ~FProceduralRotateModifier() = default;
+    virtual ~FProceduralRotate() = default;
 
     // Default copy-assignment operator.
-    FProceduralRotateModifier& operator=(const FProceduralRotateModifier& InRHS) = default;
+    FProceduralRotate& operator=(const FProceduralRotate& InRHS) = default;
 
     // Bind the modifier to a geometry stream.
     virtual void Bind(FProceduralGeometryStream& OutProceduralGeometryStream) override;

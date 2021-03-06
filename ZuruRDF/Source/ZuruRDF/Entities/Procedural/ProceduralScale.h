@@ -14,27 +14,36 @@
 // ==================================================================== //
 
 /************************************************************************/
-/* PROCEDURAL NULL MODIFIER                                             */
+/* PROCEDURAL SCALE                                                     */
 /************************************************************************/
 
-//  A simple modifier that discard all geometry passed through.
+//  A modifier that scales vertices and normals passed through it.
 //
 // @author Raffaele D. Facendola - March 2021.
-struct ZURURDF_API FProceduralNullModifier : public FProceduralGeometryModifier
+struct ZURURDF_API FProceduralScale : public FProceduralGeometryModifier
 {
 public:
 
     // Default constructor.
-    FProceduralNullModifier() = default;
+    FProceduralScale() = default;
+
+    // Create a new modifier from a 3D scale.
+    FProceduralScale(const FVector& InScale);
+
+    // Create a new modifier from a 2D scale.
+    FProceduralScale(const FVector2D& InScale);
+
+    // Create a new modifier from an uniform scale.
+    FProceduralScale(float InScale);
 
     // Default copy-constructor.
-    FProceduralNullModifier(const FProceduralNullModifier& InRHS) = default;
+    FProceduralScale(const FProceduralScale& InRHS) = default;
 
     // Default virtual destructor.
-    virtual ~FProceduralNullModifier() = default;
+    virtual ~FProceduralScale() = default;
 
     // Default copy-assignment operator.
-    FProceduralNullModifier& operator=(const FProceduralNullModifier& InRHS) = default;
+    FProceduralScale& operator=(const FProceduralScale& InRHS) = default;
 
     // Bind the modifier to a geometry stream.
     virtual void Bind(FProceduralGeometryStream& OutProceduralGeometryStream) override;
@@ -44,6 +53,11 @@ public:
 
     // Unbind the modifier from a geometry stream.
     virtual void Unbind(FProceduralGeometryStream& OutProceduralGeometryStream) override;
+
+private:
+
+    // Scale applied to each vertex.
+    FVector Scale{ FVector::OneVector };
 
 };
 

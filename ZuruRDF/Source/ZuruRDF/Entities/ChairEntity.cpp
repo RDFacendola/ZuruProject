@@ -6,13 +6,13 @@
 #include "Procedural/ProceduralGeometryStream.h"
 #include "Procedural/ProceduralMesh.h"
 #include "Procedural/ProceduralQuad.h"
-#include "Procedural/ProceduralNullModifier.h"
-#include "Procedural/ProceduralIdentityModifier.h"
-#include "Procedural/ProceduralTranslateModifier.h"
-#include "Procedural/ProceduralRotateModifier.h"
-#include "Procedural/ProceduralScaleModifier.h"
-#include "Procedural/ProceduralMirrorModifier.h"
-#include "Procedural/ProceduralExtrudeModifier.h"
+#include "Procedural/ProceduralNull.h"
+#include "Procedural/ProceduralIdentity.h"
+#include "Procedural/ProceduralTranslate.h"
+#include "Procedural/ProceduralRotate.h"
+#include "Procedural/ProceduralScale.h"
+#include "Procedural/ProceduralMirror.h"
+#include "Procedural/ProceduralExtrude.h"
 
 // ==================================================================== //
 
@@ -75,8 +75,11 @@ void AChairEntity::BeginPlay()
     
     auto ProceduralMeshBuilder = FProceduralMeshBuilder{};
 
-    ProceduralMeshBuilder << FProceduralExtrudeModifier{ FVector::UpVector * 100.0f }
-                          << FProceduralQuad{ { 100.0f, 100.0f } };
+    ProceduralMeshBuilder << FProceduralMirror{ FVector::RightVector }
+                          << FProceduralMirror{ FVector::ForwardVector }
+                          << FProceduralExtrude{ FVector::UpVector * 45.0f }
+                          << FProceduralTranslate{ { 25.0f, 25.0f } }
+                          << FProceduralQuad{ { 5.0f, 5.0f } };
 
     // Convert to Unreal procedural mesh component.
 

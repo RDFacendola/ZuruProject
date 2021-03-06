@@ -14,36 +14,30 @@
 // ==================================================================== //
 
 /************************************************************************/
-/* PROCEDURAL SCALE MODIFIER                                            */
+/* PROCEDURAL EXTRUDE                                                   */
 /************************************************************************/
 
-//  A modifier that scales vertices and normals passed through it.
+//  A modifier that extrudes primitives passed through it.
 //
 // @author Raffaele D. Facendola - March 2021.
-struct ZURURDF_API FProceduralScaleModifier : public FProceduralGeometryModifier
+struct ZURURDF_API FProceduralExtrude : public FProceduralGeometryModifier
 {
 public:
 
-    // Default constructor.
-    FProceduralScaleModifier() = default;
+    // Create a new modifier by specifying the 3D extrusion direction and length.
+    FProceduralExtrude(const FVector& InExtrusion);
 
-    // Create a new modifier from a 3D scale.
-    FProceduralScaleModifier(const FVector& InScale);
-
-    // Create a new modifier from a 2D scale.
-    FProceduralScaleModifier(const FVector2D& InScale);
-
-    // Create a new modifier from an uniform scale.
-    FProceduralScaleModifier(float InScale);
+    // Create a new modifier by specifying the 2D extrusion length along the Z axis.
+    FProceduralExtrude(float InExtrusion);
 
     // Default copy-constructor.
-    FProceduralScaleModifier(const FProceduralScaleModifier& InRHS) = default;
+    FProceduralExtrude(const FProceduralExtrude& InRHS) = default;
 
     // Default virtual destructor.
-    virtual ~FProceduralScaleModifier() = default;
+    virtual ~FProceduralExtrude() = default;
 
     // Default copy-assignment operator.
-    FProceduralScaleModifier& operator=(const FProceduralScaleModifier& InRHS) = default;
+    FProceduralExtrude& operator=(const FProceduralExtrude& InRHS) = default;
 
     // Bind the modifier to a geometry stream.
     virtual void Bind(FProceduralGeometryStream& OutProceduralGeometryStream) override;
@@ -56,8 +50,14 @@ public:
 
 private:
 
-    // Scale applied to each vertex.
-    FVector Scale{ FVector::OneVector };
+    // Extrusion direction and length.
+    FVector Extrusion{ FVector::UpVector };
+
+    // Pending primitive.
+    TArray<FProceduralVertex, TFixedAllocator<3>> Primitive;
+
+    // Pending extruded primitive.
+    TArray<FProceduralVertex, TFixedAllocator<3>> ExtrudedPrimitive;
 
 };
 

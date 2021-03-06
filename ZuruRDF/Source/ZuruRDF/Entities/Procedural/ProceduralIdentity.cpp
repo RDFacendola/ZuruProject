@@ -1,26 +1,25 @@
 
 // ==================================================================== //
 
-
-#include "ProceduralIdentityModifier.h"
+#include "ProceduralIdentity.h"
 
 // ==================================================================== //
 
 /************************************************************************/
-/* PROCEDURAL IDENTITY MODIFIER                                         */
+/* PROCEDURAL IDENTITY                                                  */
 /************************************************************************/
 
-void FProceduralIdentityModifier::Bind(FProceduralGeometryStream& OutProceduralGeometryStream)
+void FProceduralIdentity::Bind(FProceduralGeometryStream& OutProceduralGeometryStream)
 {
 
 }
 
-void FProceduralIdentityModifier::AppendVertex(const FProceduralVertex& InVertex, FProceduralGeometryStream& OutProceduralGeometryStream)
+void FProceduralIdentity::AppendVertex(const FProceduralVertex& InVertex, FProceduralGeometryStream& OutProceduralGeometryStream)
 {
     OutProceduralGeometryStream.AppendVertex(InVertex);
 }
 
-void FProceduralIdentityModifier::Unbind(FProceduralGeometryStream& OutProceduralGeometryStream)
+void FProceduralIdentity::Unbind(FProceduralGeometryStream& OutProceduralGeometryStream)
 {
 
 }

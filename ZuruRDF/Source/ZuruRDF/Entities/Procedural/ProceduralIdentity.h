@@ -14,27 +14,27 @@
 // ==================================================================== //
 
 /************************************************************************/
-/* PROCEDURAL IDENTITY MODIFIER                                         */
+/* PROCEDURAL IDENTITY                                                  */
 /************************************************************************/
 
 //  A simple modifier that acts a pass-through.
 //
 // @author Raffaele D. Facendola - March 2021.
-struct ZURURDF_API FProceduralIdentityModifier : public FProceduralGeometryModifier
+struct ZURURDF_API FProceduralIdentity : public FProceduralGeometryModifier
 {
 public:
 
     // Default constructor.
-    FProceduralIdentityModifier() = default;
+    FProceduralIdentity() = default;
 
     // Default copy-constructor.
-    FProceduralIdentityModifier(const FProceduralIdentityModifier& InRHS) = default;
+    FProceduralIdentity(const FProceduralIdentity& InRHS) = default;
 
     // Default virtual destructor.
-    virtual ~FProceduralIdentityModifier() = default;
+    virtual ~FProceduralIdentity() = default;
 
     // Default copy-assignment operator.
-    FProceduralIdentityModifier& operator=(const FProceduralIdentityModifier& InRHS) = default;
+    FProceduralIdentity& operator=(const FProceduralIdentity& InRHS) = default;
 
     // Bind the modifier to a geometry stream.
     virtual void Bind(FProceduralGeometryStream& OutProceduralGeometryStream) override;

@@ -1,38 +1,38 @@
 
 // ==================================================================== //
 
-#include "ProceduralMirrorModifier.h"
+#include "ProceduralMirror.h"
 
 // ==================================================================== //
 
 /************************************************************************/
-/* PROCEDURAL MIRROR MODIFIER                                           */
+/* PROCEDURAL MIRROR                                                    */
 /************************************************************************/
 
-FProceduralMirrorModifier::FProceduralMirrorModifier(const FPlane& InMirrorPlane)
+FProceduralMirror::FProceduralMirror(const FPlane& InMirrorPlane)
     : MirrorPlane(InMirrorPlane)
 {
 
 }
 
-FProceduralMirrorModifier::FProceduralMirrorModifier(const FVector& InMirrorPlaneNormal)
-    : FProceduralMirrorModifier(FPlane{ InMirrorPlaneNormal, 0.0f })
+FProceduralMirror::FProceduralMirror(const FVector& InMirrorPlaneNormal)
+    : FProceduralMirror(FPlane{ InMirrorPlaneNormal, 0.0f })
 {
 
 }
 
-FProceduralMirrorModifier::FProceduralMirrorModifier(const FVector2D& InMirrorPlaneNormal)
-    : FProceduralMirrorModifier(FVector{ InMirrorPlaneNormal.X, InMirrorPlaneNormal.Y, 0.0f })
+FProceduralMirror::FProceduralMirror(const FVector2D& InMirrorPlaneNormal)
+    : FProceduralMirror(FVector{ InMirrorPlaneNormal.X, InMirrorPlaneNormal.Y, 0.0f })
 {
 
 }
 
-void FProceduralMirrorModifier::Bind(FProceduralGeometryStream& OutProceduralGeometryStream)
+void FProceduralMirror::Bind(FProceduralGeometryStream& OutProceduralGeometryStream)
 {
 
 }
 
-void FProceduralMirrorModifier::AppendVertex(const FProceduralVertex& InVertex, FProceduralGeometryStream& OutProceduralGeometryStream)
+void FProceduralMirror::AppendVertex(const FProceduralVertex& InVertex, FProceduralGeometryStream& OutProceduralGeometryStream)
 {
     // Append the desired vertex.
 
@@ -62,7 +62,7 @@ void FProceduralMirrorModifier::AppendVertex(const FProceduralVertex& InVertex, 
     }
 }
 
-void FProceduralMirrorModifier::Unbind(FProceduralGeometryStream& OutProceduralGeometryStream)
+void FProceduralMirror::Unbind(FProceduralGeometryStream& OutProceduralGeometryStream)
 {
 
 }

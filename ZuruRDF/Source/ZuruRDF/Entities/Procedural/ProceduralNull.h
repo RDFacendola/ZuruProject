@@ -14,33 +14,27 @@
 // ==================================================================== //
 
 /************************************************************************/
-/* PROCEDURAL TRANSLATE MODIFIER                                        */
+/* PROCEDURAL NULL                                                      */
 /************************************************************************/
 
-//  A modifier that translate vertices passed through it.
+//  A simple modifier that discard all geometry passed through.
 //
 // @author Raffaele D. Facendola - March 2021.
-struct ZURURDF_API FProceduralTranslateModifier : public FProceduralGeometryModifier
+struct ZURURDF_API FProceduralNull : public FProceduralGeometryModifier
 {
 public:
 
     // Default constructor.
-    FProceduralTranslateModifier() = default;
-
-    // Create a new modifier from a 3D translation vector.
-    FProceduralTranslateModifier(const FVector& InTranslation);
-
-    // Create a new modifier from a 2D translation vector.
-    FProceduralTranslateModifier(const FVector2D& InTranslation);
+    FProceduralNull() = default;
 
     // Default copy-constructor.
-    FProceduralTranslateModifier(const FProceduralTranslateModifier& InRHS) = default;
+    FProceduralNull(const FProceduralNull& InRHS) = default;
 
     // Default virtual destructor.
-    virtual ~FProceduralTranslateModifier() = default;
+    virtual ~FProceduralNull() = default;
 
     // Default copy-assignment operator.
-    FProceduralTranslateModifier& operator=(const FProceduralTranslateModifier& InRHS) = default;
+    FProceduralNull& operator=(const FProceduralNull& InRHS) = default;
 
     // Bind the modifier to a geometry stream.
     virtual void Bind(FProceduralGeometryStream& OutProceduralGeometryStream) override;
@@ -50,11 +44,6 @@ public:
 
     // Unbind the modifier from a geometry stream.
     virtual void Unbind(FProceduralGeometryStream& OutProceduralGeometryStream) override;
-
-private:
-
-    // Translation applied to each vertex.
-    FVector Translation{ FVector::ZeroVector };
 
 };
 
