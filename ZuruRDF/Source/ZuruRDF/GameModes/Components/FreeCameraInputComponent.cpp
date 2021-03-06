@@ -20,7 +20,7 @@ void UFreeCameraInputComponent::Bind(APlayerController& InPlayerController)
 {
     InPlayerController.bShowMouseCursor = true;
 
-    GetViewComponent().Bind(InPlayerController);
+    GetWidget().Bind(InPlayerController);
 }
 
 void UFreeCameraInputComponent::Bind(UInputComponent& InInputComponent)
@@ -49,7 +49,7 @@ void UFreeCameraInputComponent::Bind(APawn& InPawn)
 {
     FreeCameraComponent = InPawn.FindComponentByClass<UFreeCameraComponent>();
 
-    GetViewComponent().Bind(InPawn);
+    GetWidget().Bind(InPawn);
 }
 
 void UFreeCameraInputComponent::Advance(float InDeltaSeconds)
@@ -170,18 +170,16 @@ void UFreeCameraInputComponent::OnDragCameraReleased()
     bDragEnabled = false;
 }
 
-UFreeCameraViewComponent& UFreeCameraInputComponent::GetViewComponent()
+UFreeCameraWidget& UFreeCameraInputComponent::GetWidget()
 {
-    if (!ViewComponent)
+    if (!Widget)
     {
-        auto ViewComponentClass = ViewClass ? ViewClass : UFreeCameraViewComponent::StaticClass();
+        auto WidgetConcreteClass = WidgetClass ? WidgetClass : UFreeCameraWidget::StaticClass();
 
-        ViewComponent = NewObject<UFreeCameraViewComponent>(GetOwner(), ViewComponentClass, TEXT("FreeCameraView"));
-
-        ViewComponent->RegisterComponent();
+        Widget = CreateWidget<UFreeCameraWidget>(GetWorld(), WidgetConcreteClass);
     }
 
-    return *ViewComponent;
+    return *Widget;
 }
 
 // ==================================================================== //

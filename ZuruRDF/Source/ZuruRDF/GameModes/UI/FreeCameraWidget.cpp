@@ -1,22 +1,22 @@
 
 // ==================================================================== //
 
-#include "FreeCameraViewComponent.h"
+#include "FreeCameraWidget.h"
 
 // ==================================================================== //
 
 /************************************************************************/
-/* FREE CAMERA VIEW COMPONENT                                           */
+/* FREE CAMERA WIDGET                                                   */
 /************************************************************************/
 
-void UFreeCameraViewComponent::Bind(APlayerController& InPlayerController)
+void UFreeCameraWidget::Bind(APlayerController& InPlayerController)
 {
 
 }
 
-void UFreeCameraViewComponent::Bind(APawn& InPawn)
+void UFreeCameraWidget::Bind(APawn& InPawn)
 {
-
+    AddToViewport();
 }
 
 // ==================================================================== //

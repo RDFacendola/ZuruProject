@@ -4,23 +4,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "Blueprint/UserWidget.h"
 
-#include "FreeCameraComponent.h"
-
-#include "FreeCameraViewComponent.generated.h"
+#include "FreeCameraWidget.generated.h"
 
 // ==================================================================== //
 
 /************************************************************************/
-/* FREE CAMERA VIEW COMPONENT                                           */
+/* FREE CAMERA WIDGET                                                   */
 /************************************************************************/
 
 // Represents a view associated to a free-camera input component.
 //
 // @author Raffaele D. Facendola - March 2021.
 UCLASS(Blueprintable, BlueprintType, ClassGroup = ViewComponents)
-class ZURURDF_API UFreeCameraViewComponent : public UActorComponent
+class ZURURDF_API UFreeCameraWidget : public UUserWidget
 {
     GENERATED_BODY()
 
