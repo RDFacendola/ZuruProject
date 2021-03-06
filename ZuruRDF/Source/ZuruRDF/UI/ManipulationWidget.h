@@ -4,21 +4,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+#include "Blueprint/UserWidget.h"
 
-#include "ManipulationViewComponent.generated.h"
+#include "ManipulationWidget.generated.h"
 
 // ==================================================================== //
 
 /************************************************************************/
-/* MANIPULATION VIEW COMPONENT                                          */
+/* MANIPULATION WIDGET                                                  */
 /************************************************************************/
 
 // Represents a view associated to a manipulation input component.
 //
 // @author Raffaele D. Facendola - March 2021.
 UCLASS(Blueprintable, BlueprintType, ClassGroup = ViewComponents)
-class ZURURDF_API UManipulationViewComponent : public UActorComponent
+class ZURURDF_API UManipulationWidget : public UUserWidget
 {
     GENERATED_BODY()
 
@@ -44,8 +44,6 @@ public:
 
     // Remove all selected entities.
     void ClearSelection();
-
-    void BeginPlay() override;
 
 private:
 

@@ -24,7 +24,7 @@ void UManipulationInputComponent::Bind(APlayerController& InPlayerController)
     
     PlayerController = &InPlayerController;
 
-    GetViewComponent().Bind(InPlayerController);
+    GetWidget().Bind(InPlayerController);
 }
 
 void UManipulationInputComponent::Bind(UInputComponent& InInputComponent)
@@ -39,7 +39,7 @@ void UManipulationInputComponent::Bind(APawn& InPawn)
 {
     Pawn = &InPawn;
 
-    GetViewComponent().Bind(InPawn);
+    GetWidget().Bind(InPawn);
 }
 
 void UManipulationInputComponent::OnSelectEntityPressed()
@@ -50,7 +50,7 @@ void UManipulationInputComponent::OnSelectEntityPressed()
 
         SelectedEntities.Reset();
 
-        GetViewComponent().ClearSelection();
+        GetWidget().ClearSelection();
 
         SelectAdditionalEntity();
     }
@@ -80,8 +80,6 @@ void UManipulationInputComponent::SelectAdditionalEntity()
 {
     auto HitResult = FHitResult{};
 
-    auto& View = GetViewComponent();
-
     if (PlayerController->GetHitResultUnderCursorForObjects({ EntityObjectType }, false, HitResult))
     {
         if (auto ZuruEntity = Cast<AZuruEntity>(HitResult.Actor.Get()))
@@ -92,7 +90,7 @@ void UManipulationInputComponent::SelectAdditionalEntity()
 
                 SelectedEntities.Add(ZuruEntity);
 
-                View.SelectEntity(*ZuruEntity);
+                GetWidget().SelectEntity(*ZuruEntity);
             }
             else
             {
@@ -100,24 +98,22 @@ void UManipulationInputComponent::SelectAdditionalEntity()
 
                 SelectedEntities.Remove(ZuruEntity);
 
-                View.DeselectEntity(*ZuruEntity);
+                GetWidget().DeselectEntity(*ZuruEntity);
             }
         }
     }
 }
 
-UManipulationViewComponent& UManipulationInputComponent::GetViewComponent()
+UManipulationWidget& UManipulationInputComponent::GetWidget()
 {
-    if (!ViewComponent)
+    if (!Widget)
     {
-        auto ViewComponentClass = ViewClass ? ViewClass : UManipulationInputComponent::StaticClass();
+        auto WidgetConcreteClass = WidgetClass ? WidgetClass : UManipulationWidget::StaticClass();
 
-        ViewComponent = NewObject<UManipulationViewComponent>(GetOwner(), ViewComponentClass, TEXT("ManipulationView"));
-
-        ViewComponent->RegisterComponent();
+        Widget = CreateWidget<UManipulationWidget>(GetWorld(), WidgetConcreteClass);
     }
 
-    return *ViewComponent;
+    return *Widget;
 }
 
 void UManipulationInputComponent::SpawnEntity(const FName& InEntityKey)

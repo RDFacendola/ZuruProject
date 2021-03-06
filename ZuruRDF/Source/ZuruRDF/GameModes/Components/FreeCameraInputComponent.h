@@ -8,7 +8,7 @@
 
 #include "FreeCameraComponent.h"
 
-#include "ZuruRDF/GameModes/UI/FreeCameraWidget.h"
+#include "ZuruRDF/UI/FreeCameraWidget.h"
 
 #include "FreeCameraInputComponent.generated.h"
 

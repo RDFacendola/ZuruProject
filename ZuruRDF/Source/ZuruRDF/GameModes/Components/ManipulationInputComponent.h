@@ -8,7 +8,8 @@
 #include "GameFramework/GameModeBase.h"
 
 #include "ManipulationComponent.h"
-#include "ManipulationViewComponent.h"
+
+#include "ZuruRDF/UI/ManipulationWidget.h"
 
 #include "ManipulationInputComponent.generated.h"
 
@@ -57,8 +58,8 @@ private:
     // Add the entity under mouse cursor to the selection, if possible.
     void SelectAdditionalEntity();
 
-    // Get the view component associated to this component, eventually creating a new one if none exists.
-    UManipulationViewComponent& GetViewComponent();
+    // Get the widget associated to this component.
+    UManipulationWidget& GetWidget();
 
     // Spawn an entity by key.
     UFUNCTION(Exec)
@@ -71,9 +72,9 @@ private:
     UPROPERTY(EditAnywhere, Category = Input)
     TEnumAsByte<EObjectTypeQuery> EntityObjectType{ EObjectTypeQuery::ObjectTypeQuery1 };
 
-    // Class of the view component associated to the input component.
+    // Widget class.
     UPROPERTY(EditAnywhere, Category = View)
-    TSubclassOf<UManipulationViewComponent> ViewClass{ UManipulationViewComponent::StaticClass() };
+    TSubclassOf<UManipulationWidget> WidgetClass{ UManipulationWidget::StaticClass() };
 
     // Controlled pawn.
     UPROPERTY()
@@ -87,9 +88,9 @@ private:
     UPROPERTY()
     APlayerController* PlayerController{ nullptr };
 
-    // View component associated to this one.
+    // Widget instance.
     UPROPERTY()
-    UManipulationViewComponent* ViewComponent{ nullptr };
+    UManipulationWidget* Widget{ nullptr };
 
     // List of selected entities.
     UPROPERTY()

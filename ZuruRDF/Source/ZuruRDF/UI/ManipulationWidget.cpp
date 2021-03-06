@@ -1,7 +1,7 @@
 
 // ==================================================================== //
 
-#include "ManipulationViewComponent.h"
+#include "ManipulationWidget.h"
 
 #include "Camera/CameraComponent.h"
 
@@ -10,15 +10,15 @@
 PRAGMA_DISABLE_OPTIMIZATION
 
 /************************************************************************/
-/* MANIPULATION VIEW COMPONENT                                          */
+/* MANIPULATION WIDGET                                                  */
 /************************************************************************/
 
-void UManipulationViewComponent::Bind(APlayerController& InPlayerController)
+void UManipulationWidget::Bind(APlayerController& InPlayerController)
 {
-
+    AddToViewport();
 }
 
-void UManipulationViewComponent::Bind(APawn& InPawn)
+void UManipulationWidget::Bind(APawn& InPawn)
 {
     if (auto CameraComponent = InPawn.FindComponentByClass<UCameraComponent>())
     {
@@ -29,7 +29,7 @@ void UManipulationViewComponent::Bind(APawn& InPawn)
     }
 }
 
-void UManipulationViewComponent::SelectEntity(AZuruEntity& InEntity)
+void UManipulationWidget::SelectEntity(AZuruEntity& InEntity)
 {
     auto bAlreadySelected = false;
 
@@ -41,7 +41,7 @@ void UManipulationViewComponent::SelectEntity(AZuruEntity& InEntity)
     }
 }
 
-void UManipulationViewComponent::DeselectEntity(AZuruEntity& InEntity)
+void UManipulationWidget::DeselectEntity(AZuruEntity& InEntity)
 {
     if(SelectedEntities.Remove(&InEntity) > 0)
     {
@@ -49,7 +49,7 @@ void UManipulationViewComponent::DeselectEntity(AZuruEntity& InEntity)
     }
 }
 
-void UManipulationViewComponent::ClearSelection()
+void UManipulationWidget::ClearSelection()
 {
     for (auto&& SelectedEntity : SelectedEntities)
     {
@@ -59,12 +59,7 @@ void UManipulationViewComponent::ClearSelection()
     SelectedEntities.Reset();
 }
 
-void UManipulationViewComponent::BeginPlay()
-{
-    Super::BeginPlay();
-}
-
-void UManipulationViewComponent::SetEntityStencilValue(AZuruEntity& InEntity, int32 InValue)
+void UManipulationWidget::SetEntityStencilValue(AZuruEntity& InEntity, int32 InValue)
 {
     InEntity.ForEach<UPrimitiveComponent>([InValue](auto& InPrimitiveComponent)
     {
