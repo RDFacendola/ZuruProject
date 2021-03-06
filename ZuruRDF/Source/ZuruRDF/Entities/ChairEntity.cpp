@@ -6,6 +6,7 @@
 #include "Procedural/ProceduralGeometryStream.h"
 #include "Procedural/ProceduralMesh.h"
 #include "Procedural/ProceduralQuad.h"
+#include "Procedural/ProceduralCircle.h"
 #include "Procedural/ProceduralNull.h"
 #include "Procedural/ProceduralIdentity.h"
 #include "Procedural/ProceduralTranslate.h"
@@ -79,7 +80,7 @@ void AChairEntity::BeginPlay()
                           << FProceduralMirror{ FVector::ForwardVector }
                           << FProceduralExtrude{ FVector::UpVector * 45.0f }
                           << FProceduralTranslate{ { 25.0f, 25.0f } }
-                          << FProceduralQuad{ { 5.0f, 5.0f } };
+                          << FProceduralCircle{ { 5.0f, 5.0f } };
 
     // Convert to Unreal procedural mesh component.
 
