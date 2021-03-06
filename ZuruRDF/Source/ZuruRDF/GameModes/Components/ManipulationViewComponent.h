@@ -24,6 +24,12 @@ class ZURURDF_API UManipulationViewComponent : public UActorComponent
 
 public:
 
+    // Stencil value which disables custom stencil write.
+    static const int32 kDisableCustomStencil = -1;
+
+    // Stencil value for selected entities.
+    static const int32 kSelectedEntityCustomDepth = 1;
+    
     // Bind to the player controller.
     void Bind(APlayerController& InPlayerController);
 
@@ -33,6 +39,9 @@ public:
     // Add a new entity to the selection.
     void SelectEntity(AZuruEntity& InEntity);
 
+    // Remove an entity from the selection.
+    void DeselectEntity(AZuruEntity& InEntity);
+
     // Remove all selected entities.
     void ClearSelection();
 
@@ -40,9 +49,13 @@ public:
 
 private:
 
+    // Set the custom stencil value written by primitives in the provided entity.
+    // Negative value disable the custom stencil write.
+    void SetEntityStencilValue(AZuruEntity& InEntity, int32 InValue);
+
     // Selected entity set.
     UPROPERTY()
-    TArray<AZuruEntity*> SelectedEntities;
+    TSet<AZuruEntity*> SelectedEntities;
 
     // A post process material applied to the player camera to show the current view status with 3D visual clues.
     UPROPERTY(EditAnywhere, Category = View)

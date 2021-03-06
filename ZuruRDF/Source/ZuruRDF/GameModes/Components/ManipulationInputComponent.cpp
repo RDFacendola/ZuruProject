@@ -53,6 +53,8 @@ void UManipulationInputComponent::OnSelectEntityPressed()
 
         SelectedEntities.Reset();
 
+        GetViewComponent().ClearSelection();
+
         SelectAdditionalEntity();
     }
 }
@@ -81,11 +83,28 @@ void UManipulationInputComponent::SelectAdditionalEntity()
 {
     auto HitResult = FHitResult{};
 
+    auto& View = GetViewComponent();
+
     if (PlayerController->GetHitResultUnderCursorForObjects({ EntityObjectType }, false, HitResult))
     {
         if (auto ZuruEntity = Cast<AZuruEntity>(HitResult.Actor.Get()))
         {
-            SelectedEntities.Add(ZuruEntity);
+            if (!SelectedEntities.Contains(ZuruEntity))
+            {
+                // Select the entity.
+
+                SelectedEntities.Add(ZuruEntity);
+
+                View.SelectEntity(*ZuruEntity);
+            }
+            else
+            {
+                // Deselect the entity.
+
+                SelectedEntities.Remove(ZuruEntity);
+
+                View.DeselectEntity(*ZuruEntity);
+            }
         }
     }
 }

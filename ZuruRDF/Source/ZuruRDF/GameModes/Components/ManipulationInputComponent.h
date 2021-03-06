@@ -93,7 +93,7 @@ private:
 
     // List of selected entities.
     UPROPERTY()
-    TArray<AZuruEntity*> SelectedEntities;
+    TSet<AZuruEntity*> SelectedEntities;
 
     // Enable the select-entity action. Avoids repeating the action while the key's pressed.
     bool bSelectEntityEnabled{ true };

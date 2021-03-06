@@ -28,6 +28,10 @@ public:
     // Create a new entity.
     AZuruEntity();
 
+    // Execute a function on each component of type TComponent owned by the entity.
+    template <typename TComponent, typename TFunction>
+    void ForEach(TFunction&& InFunction);
+
 protected:
 
     // Set the entity collision bounds.
@@ -42,3 +46,25 @@ private:
 };
 
 // ==================================================================== //
+
+/************************************************************************/
+/* IMPLEMENTATION                                                       */
+/************************************************************************/
+
+// ZuruEntity.
+// ===========
+
+template <typename TComponent, typename TFunction>
+inline void AZuruEntity::ForEach(TFunction&& InFunction)
+{
+    for (auto&& EntityComponent : GetComponents())
+    {
+        if (auto PrimitiveComponent = Cast<TComponent>(EntityComponent))
+        {
+            InFunction(*PrimitiveComponent);
+        }
+    }
+}
+
+// ==================================================================== //
+
