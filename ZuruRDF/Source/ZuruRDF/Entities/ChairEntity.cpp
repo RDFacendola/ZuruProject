@@ -3,10 +3,11 @@
 
 #include "ChairEntity.h"
 
-#include "Procedural/ProceduralGeometryStream.h"
-#include "Procedural/ProceduralMesh.h"
+#include "Procedural/ProceduralGeometryBuilder.h"
+
 #include "Procedural/ProceduralQuad.h"
 #include "Procedural/ProceduralCircle.h"
+
 #include "Procedural/ProceduralNull.h"
 #include "Procedural/ProceduralIdentity.h"
 #include "Procedural/ProceduralTranslate.h"
@@ -16,46 +17,6 @@
 #include "Procedural/ProceduralExtrude.h"
 
 // ==================================================================== //
-
-PRAGMA_DISABLE_OPTIMIZATION
-
-struct FProceduralMeshBuilder : public FProceduralGeometryStream
-{
-public:
-
-    FProceduralMeshBuilder() = default;
-
-    virtual ~FProceduralMeshBuilder() = default;
-
-    virtual FProceduralGeometryStream& AppendVertex(const FProceduralVertex& InVertex) override
-    {
-        Vertices.Emplace(InVertex);
-
-        return *this;
-    }
-
-    virtual const FProceduralVertex& GetVertex(int32 InIndex) const override
-    {
-        if (InIndex >= 0)
-        {
-            return Vertices[InIndex];                       // Forward.
-        }
-        else
-        {
-            return Vertices[Vertices.Num() + InIndex];      // Reverse.
-        }
-    }
-
-    virtual int32 GetVertexCount() const override
-    {
-        return Vertices.Num();
-    }
-
-// private:
-
-    TArray<FProceduralVertex> Vertices;
-
-};
 
 /************************************************************************/
 /* CHAIR ENTITY                                                         */
@@ -74,7 +35,9 @@ void AChairEntity::BeginPlay()
 {
     Super::BeginPlay();
     
-    auto ProceduralMeshBuilder = FProceduralMeshBuilder{};
+    auto ProceduralMeshBuilder = FProceduralGeometryBuilder{};
+
+    // Legs.
 
     ProceduralMeshBuilder << FProceduralMirror{ FVector::RightVector }
                           << FProceduralMirror{ FVector::ForwardVector }
@@ -82,32 +45,31 @@ void AChairEntity::BeginPlay()
                           << FProceduralTranslate{ { 25.0f, 25.0f } }
                           << FProceduralCircle{ { 5.0f, 5.0f } };
 
-    // Convert to Unreal procedural mesh component.
+    // Base.
 
-    auto Vertices = TArray<FVector>{};
-    auto Normals = TArray<FVector>{};
-    auto UVs = TArray<FVector2D>{};
-    auto Indices = TArray<int32>{};
+    ProceduralMeshBuilder << FProceduralExtrude{ FVector::UpVector * 5.0f }
+                          << FProceduralTranslate{ FVector::UpVector * 45.0f }
+                          << FProceduralQuad{ { 60.0f, 60.0f } };
 
-    Vertices.Reserve(ProceduralMeshBuilder.GetVertexCount());
-    Normals.Reserve(ProceduralMeshBuilder.GetVertexCount());
-    UVs.Reserve(ProceduralMeshBuilder.GetVertexCount());
-    Indices.Reserve(ProceduralMeshBuilder.GetVertexCount());
+    // Backseat.
 
-    for (auto&& Vertex : ProceduralMeshBuilder.Vertices)
-    {
-        Vertices.Emplace(Vertex.Position);
-        Normals.Emplace(Vertex.Normal);
-        UVs.Emplace(Vertex.UV);
-        Indices.Emplace(Indices.Num());
-    }
+    ProceduralMeshBuilder << FProceduralMirror{ FVector::RightVector }
+                          << FProceduralExtrude{ FVector::UpVector * 100.0f }
+                          << FProceduralTranslate{ FVector::BackwardVector * 25.0f + FVector::UpVector * 45.0f + FVector::RightVector * 25.0f }
+                          << FProceduralCircle{ { 5.0f, 5.0f } };
+
+    // Prefab.
+
+    auto Prefab = ProceduralMeshBuilder.Build();
+
+    // Generate.
 
     ProceduralComponent->ClearAllMeshSections();
-    ProceduralComponent->CreateMeshSection(0, Vertices, Indices, Normals, UVs, TArray<FColor>{}, TArray<FProcMeshTangent>{}, false);
+    
+    Prefab.Generate(*ProceduralComponent, 0);
+
     ProceduralComponent->SetMaterial(0, Material);
 }
-
-PRAGMA_ENABLE_OPTIMIZATION
 
 // ==================================================================== //
 

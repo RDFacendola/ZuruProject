@@ -32,7 +32,7 @@ public:
     virtual FProceduralGeometryStream& AppendVertex(const FProceduralVertex& InVertex) = 0;
 
     // Get a vertex by index.
-    // Negative index access the underlying stream in reverse order.
+    // Negative indices are used to access the underlying stream in reverse order.
     // If the provided index exceeds stream range, the behavior of this method is undefined.
     virtual const FProceduralVertex& GetVertex(int32 InIndex) const = 0;
 
