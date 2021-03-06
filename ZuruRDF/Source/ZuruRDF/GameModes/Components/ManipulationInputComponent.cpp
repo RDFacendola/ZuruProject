@@ -23,6 +23,11 @@ void UManipulationInputComponent::Bind(APlayerController& InPlayerController)
     InPlayerController.bShowMouseCursor = true;
     
     PlayerController = &InPlayerController;
+
+    ViewClass = ViewClass ? ViewClass : UManipulationInputComponent::StaticClass();
+
+    GetViewComponent().Bind(InPlayerController);
+
 }
 
 void UManipulationInputComponent::Bind(UInputComponent& InInputComponent)
@@ -36,6 +41,8 @@ void UManipulationInputComponent::Bind(UInputComponent& InInputComponent)
 void UManipulationInputComponent::Bind(APawn& InPawn)
 {
     Pawn = &InPawn;
+
+    GetViewComponent().Bind(InPawn);
 }
 
 void UManipulationInputComponent::OnSelectEntityPressed()
@@ -81,6 +88,20 @@ void UManipulationInputComponent::SelectAdditionalEntity()
             SelectedEntities.Add(ZuruEntity);
         }
     }
+}
+
+UManipulationViewComponent& UManipulationInputComponent::GetViewComponent()
+{
+    if (!ViewComponent)
+    {
+        auto ViewComponentClass = ViewClass ? ViewClass : UManipulationInputComponent::StaticClass();
+
+        ViewComponent = NewObject<UManipulationViewComponent>(GetOwner(), ViewComponentClass, TEXT("ManipulationView"));
+
+        ViewComponent->RegisterComponent();
+    }
+
+    return *ViewComponent;
 }
 
 void UManipulationInputComponent::SpawnEntity(const FName& InEntityKey)

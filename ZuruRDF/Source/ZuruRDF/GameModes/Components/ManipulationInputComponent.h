@@ -8,6 +8,7 @@
 #include "GameFramework/GameModeBase.h"
 
 #include "ManipulationComponent.h"
+#include "ManipulationViewComponent.h"
 
 #include "ManipulationInputComponent.generated.h"
 
@@ -56,6 +57,9 @@ private:
     // Add the entity under mouse cursor to the selection, if possible.
     void SelectAdditionalEntity();
 
+    // Get the view component associated to this component, eventually creating a new one if none exists.
+    UManipulationViewComponent& GetViewComponent();
+
     // Spawn an entity by key.
     UFUNCTION(Exec)
     void SpawnEntity(const FName& InEntityKey);
@@ -66,6 +70,10 @@ private:
     // Object type used to filter out selected entities.
     UPROPERTY(EditAnywhere, Category = Input)
     TEnumAsByte<EObjectTypeQuery> EntityObjectType{ EObjectTypeQuery::ObjectTypeQuery1 };
+
+    // Class of the view component associated to the input component.
+    UPROPERTY(EditAnywhere, Category = View)
+    TSubclassOf<UManipulationViewComponent> ViewClass{ UManipulationViewComponent::StaticClass() };
 
     // Controlled pawn.
     UPROPERTY()
@@ -78,6 +86,10 @@ private:
     // Owning player controller.
     UPROPERTY()
     APlayerController* PlayerController{ nullptr };
+
+    // View component associated to this one.
+    UPROPERTY()
+    UManipulationViewComponent* ViewComponent{ nullptr };
 
     // List of selected entities.
     UPROPERTY()
