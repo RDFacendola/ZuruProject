@@ -19,6 +19,8 @@ void UFreeCameraInputComponent::Bind(AGameModeBase& InGameMode)
 void UFreeCameraInputComponent::Bind(APlayerController& InPlayerController)
 {
     InPlayerController.bShowMouseCursor = true;
+
+    GetViewComponent().Bind(InPlayerController);
 }
 
 void UFreeCameraInputComponent::Bind(UInputComponent& InInputComponent)
@@ -46,6 +48,8 @@ void UFreeCameraInputComponent::Bind(UInputComponent& InInputComponent)
 void UFreeCameraInputComponent::Bind(APawn& InPawn)
 {
     FreeCameraComponent = InPawn.FindComponentByClass<UFreeCameraComponent>();
+
+    GetViewComponent().Bind(InPawn);
 }
 
 void UFreeCameraInputComponent::Advance(float InDeltaSeconds)
@@ -166,6 +170,19 @@ void UFreeCameraInputComponent::OnDragCameraReleased()
     bDragEnabled = false;
 }
 
+UFreeCameraViewComponent& UFreeCameraInputComponent::GetViewComponent()
+{
+    if (!ViewComponent)
+    {
+        auto ViewComponentClass = ViewClass ? ViewClass : UFreeCameraViewComponent::StaticClass();
+
+        ViewComponent = NewObject<UFreeCameraViewComponent>(GetOwner(), ViewComponentClass, TEXT("FreeCameraView"));
+
+        ViewComponent->RegisterComponent();
+    }
+
+    return *ViewComponent;
+}
 
 // ==================================================================== //
 

@@ -7,6 +7,7 @@
 #include "Components/ActorComponent.h"
 
 #include "FreeCameraComponent.h"
+#include "FreeCameraViewComponent.h"
 
 #include "FreeCameraInputComponent.generated.h"
 
@@ -95,6 +96,17 @@ private:
 
     // Called whenever the camera enable drag input is released.
     void OnDragCameraReleased();
+
+    // Get the view component associated to this component, eventually creating a new one if none exists.
+    UFreeCameraViewComponent& GetViewComponent();
+
+    // Class of the view component associated to this.
+    UPROPERTY(EditAnywhere, Category = View)
+    TSubclassOf<UFreeCameraViewComponent> ViewClass{ UFreeCameraViewComponent::StaticClass() };
+
+    // View component associated to this one.
+    UPROPERTY()
+    UFreeCameraViewComponent* ViewComponent{ nullptr };
 
     // The free-camera component counterpart on the pawn.
     UPROPERTY()

@@ -24,10 +24,7 @@ void UManipulationInputComponent::Bind(APlayerController& InPlayerController)
     
     PlayerController = &InPlayerController;
 
-    ViewClass = ViewClass ? ViewClass : UManipulationInputComponent::StaticClass();
-
     GetViewComponent().Bind(InPlayerController);
-
 }
 
 void UManipulationInputComponent::Bind(UInputComponent& InInputComponent)
