@@ -16,7 +16,7 @@
 
 // Represents a view associated to a manipulation input component.
 //
-// @author Raffaele D. Facendola - February 2021.
+// @author Raffaele D. Facendola - March 2021.
 UCLASS(Blueprintable, BlueprintType, ClassGroup = ViewComponents)
 class ZURURDF_API UManipulationViewComponent : public UActorComponent
 {
