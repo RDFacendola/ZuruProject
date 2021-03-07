@@ -24,5 +24,10 @@ void AZuruEntity::SetCollisionBounds(const FBox& InCollisionBounds)
 
 }
 
+void AZuruEntity::RegisterGizmo(FZuruGizmo& InGizmo)
+{
+    Gizmos.AddUnique(&InGizmo);
+}
+
 // ==================================================================== //
 
