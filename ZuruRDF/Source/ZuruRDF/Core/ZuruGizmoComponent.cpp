@@ -11,46 +11,53 @@
 
 PRAGMA_DISABLE_OPTIMIZATION
 
-void UZuruGizmoComponent::Bind(const FZuruGizmo& InGizmo, AZuruEntity& InEntity)
+void UZuruGizmoComponent::Bind(AZuruEntity& InEntity, int32 InGizmoIndex)
 {
-    Gizmo = &InGizmo;
     Entity = &InEntity;
+    GizmoIndex = InGizmoIndex;
 
-    Rebind();
+    Synchronize();
 
     SetHiddenInGame(false);
 }
 
 void UZuruGizmoComponent::Unbind()
 {
-    Gizmo = nullptr;
+    Entity = nullptr;
+    GizmoIndex = -1;
 
     SetHiddenInGame(true);
 }
 
-void UZuruGizmoComponent::Rebind()
+void UZuruGizmoComponent::Synchronize()
 {
-    if (Gizmo)
+    if (Entity)
     {
-        auto WorldLocation = GetOwner()->GetActorTransform().TransformPosition(Gizmo->GetLocation());
+        if (auto Gizmo = Entity->GetGizmo(GizmoIndex))
+        {
+            auto EntityToWorld = Entity->GetActorTransform();
 
-        SetWorldLocation(WorldLocation, false, nullptr, ETeleportType::None);
+            auto GizmoLocationLS = Gizmo->GetLocation();
+            auto GizmoLocationWS = EntityToWorld.TransformPosition(GizmoLocationLS);
+
+            SetWorldLocation(GizmoLocationWS, false, nullptr, ETeleportType::None);
+        }
     }
 }
 
 bool UZuruGizmoComponent::IsProceduralGizmo()
 {
-    return !!Gizmo;
+    return GizmoIndex > -1;
 }
 
-void UZuruGizmoComponent::ModifyGizmoLocation(const FVector2D& InLocation) const
+void UZuruGizmoComponent::ModifyGizmoLocation(const FVector2D& InLocationWS) const
 {
-
+    Entity->SetGizmoLocation(GizmoIndex, InLocationWS);
 }
 
-void UZuruGizmoComponent::ModifyGizmoRotation(const FRotator& InRotation) const
+void UZuruGizmoComponent::ModifyGizmoRotation(const FRotator& InRotationWS) const
 {
-
+    Entity->SetGizmoRotation(GizmoIndex, InRotationWS);
 }
 
 void UZuruGizmoComponent::SetGizmoType(EZuruGizmoType InGizmoType)

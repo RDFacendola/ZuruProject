@@ -82,54 +82,59 @@ int32 ATableEntity::GetNumGizmos() const
 
 FZuruGizmo* ATableEntity::GetGizmo(int32 InIndex)
 {
-    FZuruGizmo* Gizmos[4] = { &NorthWestGizmo, &NorthEastGizmo, &SouthEastGizmo, &SouthWestGizmo };
+    if ((InIndex >= 0) && (InIndex < 4))
+    {
+        FZuruGizmo* Gizmos[4] = { &NorthWestGizmo, &NorthEastGizmo, &SouthEastGizmo, &SouthWestGizmo };
 
-    return ((InIndex >= 0) && (InIndex < 4)) ? Gizmos[InIndex] : nullptr;
+        return Gizmos[InIndex];
+    }
+
+    return nullptr;
 }
 
-bool ATableEntity::UpdateGizmo(const FZuruGizmo& InGizmo, const FVector2D& InTranslation, const FRotator& InRotation)
+void ATableEntity::SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocationWS)
 {
-    if (&InGizmo == &NorthWestGizmo)
-    {
-        NorthWestGizmo.SetLocation(NorthWestGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
+    auto Gizmo = GetGizmo(InGizmoIndex);
 
-        NorthEastGizmo.SetLocation(Crossover(SouthEastGizmo, NorthWestGizmo));
-        SouthWestGizmo.SetLocation(Crossover(NorthWestGizmo, SouthEastGizmo));
+    ensure(Gizmo);
 
-        return true;
-    }
+    auto WorldToEntity = GetActorTransform().Inverse();
 
-    if (&InGizmo == &NorthEastGizmo)
-    {
-        NorthEastGizmo.SetLocation(NorthEastGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
+    auto LocationLS = WorldToEntity.TransformPosition(FVector{ InLocationWS.X, InLocationWS.Y, 0.0f });
 
-        NorthWestGizmo.SetLocation(Crossover(SouthWestGizmo, NorthEastGizmo));
-        SouthEastGizmo.SetLocation(Crossover(NorthEastGizmo, SouthWestGizmo));
+    Gizmo->SetLocation(FVector2D{ LocationLS });
 
-        return true;
-    }
+    //if (&InGizmo == &NorthWestGizmo)
+    //{
+    //    NorthWestGizmo.SetLocation(NorthWestGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
 
-    if (&InGizmo == &SouthEastGizmo)
-    {
-        SouthEastGizmo.SetLocation(SouthEastGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
+    //    NorthEastGizmo.SetLocation(Crossover(SouthEastGizmo, NorthWestGizmo));
+    //    SouthWestGizmo.SetLocation(Crossover(NorthWestGizmo, SouthEastGizmo));
+    //}
 
-        NorthEastGizmo.SetLocation(Crossover(SouthEastGizmo, NorthWestGizmo));
-        SouthWestGizmo.SetLocation(Crossover(NorthWestGizmo, SouthEastGizmo));
+    //if (&InGizmo == &NorthEastGizmo)
+    //{
+    //    NorthEastGizmo.SetLocation(NorthEastGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
 
-        return true;
-    }
+    //    NorthWestGizmo.SetLocation(Crossover(SouthWestGizmo, NorthEastGizmo));
+    //    SouthEastGizmo.SetLocation(Crossover(NorthEastGizmo, SouthWestGizmo));
+    //}
 
-    if (&InGizmo == &SouthWestGizmo)
-    {
-        SouthWestGizmo.SetLocation(SouthWestGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
+    //if (&InGizmo == &SouthEastGizmo)
+    //{
+    //    SouthEastGizmo.SetLocation(SouthEastGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
 
-        NorthWestGizmo.SetLocation(Crossover(SouthWestGizmo, NorthEastGizmo));
-        SouthEastGizmo.SetLocation(Crossover(NorthEastGizmo, SouthWestGizmo));
+    //    NorthEastGizmo.SetLocation(Crossover(SouthEastGizmo, NorthWestGizmo));
+    //    SouthWestGizmo.SetLocation(Crossover(NorthWestGizmo, SouthEastGizmo));
+    //}
 
-        return true;
-    }
+    //if (&InGizmo == &SouthWestGizmo)
+    //{
+    //    SouthWestGizmo.SetLocation(SouthWestGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
 
-    return false;
+    //    NorthWestGizmo.SetLocation(Crossover(SouthWestGizmo, NorthEastGizmo));
+    //    SouthEastGizmo.SetLocation(Crossover(NorthEastGizmo, SouthWestGizmo));
+    //}
 }
 
 FVector ATableEntity::Crossover(const FZuruGizmo& InX, const FZuruGizmo& InY) const

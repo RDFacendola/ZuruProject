@@ -37,14 +37,19 @@ int32 AZuruEntity::GetNumGizmos() const
     return 0;
 }
 
-FZuruGizmo*AZuruEntity::GetGizmo(int32 InIndex)
+FZuruGizmo* AZuruEntity::GetGizmo(int32 InIndex)
 {
     return nullptr;
 }
 
-bool AZuruEntity::UpdateGizmo(const FZuruGizmo& InGizmo, const FVector2D& InTranslation, const FRotator& InRotation)
+void AZuruEntity::SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocationWS)
 {
-    return false;
+    // To be defined in derived classes.
+}
+
+void AZuruEntity::SetGizmoRotation(int32 InGizmoIndex, const FRotator& InRotationWS)
+{
+    // To be defined in derived classes.
 }
 
 // ==================================================================== //

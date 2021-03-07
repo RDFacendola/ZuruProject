@@ -36,5 +36,11 @@ void FZuruGizmo::SetLocation(const FVector& InLocation)
     Location = InLocation;
 }
 
+void FZuruGizmo::SetLocation(const FVector2D& InLocation)
+{
+    Location.X = InLocation.X;
+    Location.Y = InLocation.Y;
+}
+
 // ==================================================================== //
 

@@ -40,7 +40,7 @@ public:
 
     virtual FZuruGizmo* GetGizmo(int32 InIndex) override;
 
-    virtual bool UpdateGizmo(const FZuruGizmo& InGizmo, const FVector2D& InTranslation, const FRotator& InRotation) override;
+    virtual void SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocationWS) override;
 
 private:
 

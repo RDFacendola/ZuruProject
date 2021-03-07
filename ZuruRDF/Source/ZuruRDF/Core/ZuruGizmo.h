@@ -39,6 +39,10 @@ public:
     // Set the gizmo location, in actor space.
     void SetLocation(const FVector& InLocation);
 
+    // Set the gizmo location, in actor space.
+    // This overload ignores the Z component.
+    void SetLocation(const FVector2D& InLocation);
+
 private:
 
     // Default gizmo location.

@@ -43,23 +43,23 @@ class ZURURDF_API UZuruGizmoComponent : public UStaticMeshComponent
 
 public:
 
-    // Bind this component to a gizmo-entity pair.
-    void Bind(const FZuruGizmo& InGizmo, AZuruEntity& InEntity);
+    // Bind this component to a gizmo within an entity.
+    void Bind(AZuruEntity& InEntity, int32 InGizmoIndex);
 
     // Unbind this component from an entity gizmo.
     void Unbind();
 
-    // Rebind the component with the underlying gizmo, updating its status.
-    void Rebind();
+    // Synchronize the gizmo component with the actual gizmo within an entity.
+    void Synchronize();
 
     // Whether the gizmo is an entity procedural gizmo.
     bool IsProceduralGizmo();
 
     // Update a gizmo location within an entity, in world space.
-    void ModifyGizmoLocation(const FVector2D& InLocation) const;
+    void ModifyGizmoLocation(const FVector2D& InLocationWS) const;
 
     // Update a gizmo rotation within an entity, in world space.
-    void ModifyGizmoRotation(const FRotator& InRotation) const;
+    void ModifyGizmoRotation(const FRotator& InRotationWS) const;
 
     // Set the gizmo type.
     void SetGizmoType(EZuruGizmoType InGizmoType);
@@ -73,11 +73,11 @@ private:
     UPROPERTY(EditAnywhere, Category = Gizmo)
     EZuruGizmoType GizmoType{ EZuruGizmoType::ZGT_Translation };
 
-    // Entity gizmo.
-    const FZuruGizmo* Gizmo{ nullptr };
-
     // Owning entity.
     AZuruEntity* Entity{ nullptr };
+
+    // Gizmo index.
+    int32 GizmoIndex{ -1 };
 };
 
 

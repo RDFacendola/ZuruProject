@@ -88,12 +88,9 @@ void AManipulationGizmo::RetrieveGizmos(const TSet<AZuruEntity*>& InSelectedEnti
     {
         for (auto GizmoIndex = 0; GizmoIndex < SelectedEntity->GetNumGizmos(); ++GizmoIndex)
         {
-            if (auto Gizmo = SelectedEntity->GetGizmo(GizmoIndex))
-            {
-                auto& GizmoComponent = SpawnProceduralGizmoComponent();
+            auto& GizmoComponent = SpawnProceduralGizmoComponent();
 
-                GizmoComponent.Bind(*Gizmo, *SelectedEntity);
-            }
+            GizmoComponent.Bind(*SelectedEntity, GizmoIndex);
         }
     }
 }
@@ -183,11 +180,11 @@ void AManipulationGizmo::Bind(UInputComponent& InInputComponent)
 
 void AManipulationGizmo::Advance(float InDeltaSeconds)
 {
-    // Update all gizmos.
+    // Synchronize with gizmo status.
 
     for (auto&& ProceduralGizmoComponent : ProceduralGizmoComponents)
     {
-        ProceduralGizmoComponent->Rebind();
+        ProceduralGizmoComponent->Synchronize();
     }
 
     // Gizmo translation.
