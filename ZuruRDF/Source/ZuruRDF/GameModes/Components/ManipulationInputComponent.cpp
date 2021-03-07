@@ -47,11 +47,29 @@ void UManipulationInputComponent::Bind(APawn& InPawn)
 
 void UManipulationInputComponent::Advance(float InDeltaSeconds)
 {
-    auto& Actions = GetGizmo().GetActions();
+    // Send the action to the component.
 
-    // Send gizmo actions over.
+    auto& GizmoActions = GetGizmo().GetActions();
+
+    Actions.ActiveGizmo = GizmoActions.ActiveGizmo;
+    Actions.GizmoTranslation = GizmoActions.Translation;
+    Actions.GizmoRotation = GizmoActions.Rotation;
+    Actions.AbsoluteGizmoPosition = GizmoActions.AbsolutePosition;
+    Actions.AbsoluteGizmoRotation = GizmoActions.AbsoluteRotation;
+
+    // IMPORTANT: This component only exists on the server! This method has to replicate the actions
+    //            on the remote ManipulationInputComponent and apply them there (and wait for synchronization
+    //            to see those actions remplicated on the clients).
+
+    ManipulationComponent->SetActions(Actions);
+
+    // Consume the inputs.
 
     GetGizmo().ConsumeActions();
+
+    Actions.ActiveGizmo = nullptr;
+    Actions.GizmoTranslation = FVector2D::ZeroVector;
+    Actions.GizmoRotation = FRotator::ZeroRotator;
 }
 
 void UManipulationInputComponent::OnSelectPressed()
@@ -66,7 +84,7 @@ void UManipulationInputComponent::OnSelectPressed()
 
         if (!GetGizmo().ConditionalActivateGizmo())
         {
-            SelectedEntities.Reset();
+            Actions.Entities.Reset();
 
             GetWidget().ClearSelection();
 
@@ -119,11 +137,11 @@ void UManipulationInputComponent::SelectAdditionalEntity()
     {
         if (auto ZuruEntity = Cast<AZuruEntity>(HitResult.Actor.Get()))
         {
-            if (!SelectedEntities.Contains(ZuruEntity))
+            if (!Actions.Entities.Contains(ZuruEntity))
             {
                 // Select the entity.
 
-                SelectedEntities.Add(ZuruEntity);
+                Actions.Entities.Add(ZuruEntity);
 
                 GetWidget().SelectEntity(*ZuruEntity);
             }
@@ -131,7 +149,7 @@ void UManipulationInputComponent::SelectAdditionalEntity()
             {
                 // Deselect the entity.
 
-                SelectedEntities.Remove(ZuruEntity);
+                Actions.Entities.Remove(ZuruEntity);
 
                 GetWidget().DeselectEntity(*ZuruEntity);
             }
@@ -139,7 +157,7 @@ void UManipulationInputComponent::SelectAdditionalEntity()
 
         // Update the gizmo status for the current selection set.
 
-        GetGizmo().SelectEntities(SelectedEntities);
+        GetGizmo().SelectEntities(Actions.Entities);
     }
 }
 

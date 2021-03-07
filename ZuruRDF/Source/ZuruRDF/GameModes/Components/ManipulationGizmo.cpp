@@ -65,6 +65,8 @@ void AManipulationGizmo::ConsumeActions()
 {
     GizmoActions.Translation = FVector2D::ZeroVector;
     GizmoActions.Rotation = FRotator::ZeroRotator;
+    GizmoActions.AbsolutePosition = TOptional<FVector2D>{};
+    GizmoActions.AbsoluteRotation = TOptional<FRotator>{};
 }
 
 void AManipulationGizmo::SelectEntities(const TSet<AZuruEntity*>& InSelectedEntities)
@@ -129,7 +131,12 @@ void AManipulationGizmo::OnForwardDragAxis(float InValue)
 {
     if (GizmoActions.ActiveGizmo)
     {
-        
+        auto HitResult = FHitResult{};
+
+        if (PlayerController->GetHitResultUnderCursorForObjects({ FloorObjectType }, false, HitResult))
+        {
+            GizmoActions.AbsolutePosition = FVector2D{ HitResult.ImpactPoint };
+        }
     }
 }
 
@@ -137,7 +144,8 @@ void AManipulationGizmo::OnRightDragAxis(float InValue)
 {
     if (GizmoActions.ActiveGizmo)
     {
-        
+        GizmoActions.Translation += FVector2D{ 0.0f, InValue };
+
     }
 }
 

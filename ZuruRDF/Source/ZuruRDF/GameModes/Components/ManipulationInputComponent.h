@@ -119,15 +119,14 @@ private:
     UPROPERTY()
     AManipulationGizmo* Gizmo{ nullptr };
 
-    // List of selected entities.
-    UPROPERTY()
-    TSet<AZuruEntity*> SelectedEntities;
-
     // Enable the select entity\gizmo action. Avoids repeating the action while the key's pressed.
     bool bSelectEnabled{ true };
 
     // Enable the select-additional-entity action. Avoids repeating the action while the key's pressed.
     bool bSelectAdditionalEntityEnabled{ true };
+
+    // Set of actions to send to the manipulation component.
+    FManipulationActions Actions;
 
 };
 

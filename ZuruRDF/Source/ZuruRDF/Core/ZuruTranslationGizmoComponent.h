@@ -22,7 +22,7 @@
 //
 // @author Raffaele D. Facendola - March 2021.
 UCLASS()
-class ZURURDF_API UZuruTranslationGizmoComponent : public UStaticMeshComponent
+class ZURURDF_API UZuruTranslationGizmoComponent : public UZuruGizmoComponent
 {
     GENERATED_BODY()
 

@@ -36,6 +36,12 @@ struct FManipulationGizmoActions
 
     // Gizmo rotation.
     FRotator Rotation{ FRotator::ZeroRotator };
+
+    // Absolute gizmo position.
+    TOptional<FVector2D> AbsolutePosition{};
+
+    // Absolute gizmo rotation.
+    TOptional<FRotator> AbsoluteRotation{};
 };
 
 /************************************************************************/
@@ -102,12 +108,17 @@ private:
     UPROPERTY(EditAnywhere, Category = Input)
     TEnumAsByte<EObjectTypeQuery> GizmoObjectType{ EObjectTypeQuery::ObjectTypeQuery3 };
 
+    // Object type used to filter out floors.
+    UPROPERTY(EditAnywhere, Category = Input)
+    TEnumAsByte<EObjectTypeQuery> FloorObjectType{ EObjectTypeQuery::ObjectTypeQuery2 };
+
     // Player controller this gizmo belongs to.
     UPROPERTY()
     APlayerController* PlayerController{ nullptr };
 
     // Pending gizmo actions.
     FManipulationGizmoActions GizmoActions;
+
 };
 
 // ==================================================================== //

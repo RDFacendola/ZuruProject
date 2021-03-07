@@ -22,19 +22,21 @@
 UCLASS()
 class ZURURDF_API ACreativeGameMode : public AGameModeBase
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
 
-	ACreativeGameMode();
+    ACreativeGameMode();
 
-	void InitGameState() override;
+    void InitGameState() override;
+
+    void Tick(float InDeltaSeconds) override;
 
 private:
-	
-	// Handles entity-manipulation-related commands.
-	UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	UManipulationComponent* ManipulationComponent{ nullptr };
+    
+    // Handles entity-manipulation-related commands.
+    UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+    UManipulationComponent* ManipulationComponent{ nullptr };
 
 };
 
