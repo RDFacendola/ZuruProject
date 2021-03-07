@@ -92,7 +92,7 @@ void AManipulationGizmo::RetrieveGizmos(const TSet<AZuruEntity*>& InSelectedEnti
             {
                 auto& GizmoComponent = SpawnProceduralGizmoComponent();
 
-                GizmoComponent.Bind(*Gizmo);
+                GizmoComponent.Bind(*Gizmo, *SelectedEntity);
             }
         }
     }

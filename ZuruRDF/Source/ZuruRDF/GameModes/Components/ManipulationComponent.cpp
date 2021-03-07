@@ -26,13 +26,21 @@ void UManipulationComponent::Advance(float InDeltaTime)
 {
     if (Actions.ActiveGizmo)
     {
-        if (Actions.ActiveGizmo->GetEntityGizmo())
-        {
-            // Search the entity the gizmo belongs to and update it.
+        // Gizmos are either used to move an entity or to move gizmos within an entity (procedural gizmos).
 
-            for (auto&& Entity : Actions.Entities)
+        if (Actions.ActiveGizmo->IsProceduralGizmo())
+        {
+            // Update gizmo position.
+
+            if (Actions.AbsolutePosition.IsSet())
             {
-                // Entity->UpdateGizmo(*Actions.ActiveGizmo->GetEntityGizmo(), Actions.GizmoTranslation, Actions.GizmoRotation);
+                Actions.ActiveGizmo->ModifyGizmoLocation(Actions.AbsolutePosition.GetValue());
+            }
+            // Update gizmo rotation.
+
+            if (Actions.AbsoluteRotation.IsSet())
+            {
+                Actions.ActiveGizmo->ModifyGizmoRotation(Actions.AbsoluteRotation.GetValue());
             }
         }
         else
