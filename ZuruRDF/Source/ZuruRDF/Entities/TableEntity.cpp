@@ -116,8 +116,8 @@ void ATableEntity::SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocat
 
     auto OpposingIndex = ((InGizmoIndex + 2) % 4);
 
-    auto MinBoundaryLS = FVector2D{ GetGizmo(OpposingIndex)->GetLocation() } + MinSize * OpposingCorner[OpposingIndex];
-    auto MaxBoundaryLS = FVector2D{ GetGizmo(OpposingIndex)->GetLocation() } + MaxSize * OpposingCorner[OpposingIndex];
+    auto MinBoundaryLS = FVector2D{ GetGizmo(OpposingIndex)->GetLocation() } +MinSize * OpposingCorner[OpposingIndex];
+    auto MaxBoundaryLS = FVector2D{ GetGizmo(OpposingIndex)->GetLocation() } +MaxSize * OpposingCorner[OpposingIndex];
 
     auto BoundaryLS = FBox2D{};
 
@@ -132,10 +132,10 @@ void ATableEntity::SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocat
 
     // Recompute other gizmos.
 
-    auto NorthWestLocation = NorthWestGizmo.GetLocation();
-    auto NorthEastLocation = NorthEastGizmo.GetLocation();
-    auto SouthEastLocation = SouthEastGizmo.GetLocation();
-    auto SouthWestLocation = SouthWestGizmo.GetLocation();
+    auto NorthWestLocation = FVector2D{ NorthWestGizmo.GetLocation() };
+    auto NorthEastLocation = FVector2D{ NorthEastGizmo.GetLocation() };
+    auto SouthEastLocation = FVector2D{ SouthEastGizmo.GetLocation() };
+    auto SouthWestLocation = FVector2D{ SouthWestGizmo.GetLocation() };
 
     if (InGizmoIndex == 0)
     {
@@ -161,11 +161,33 @@ void ATableEntity::SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocat
         NorthWestLocation.Y = SouthWestLocation.Y;
     }
 
+    // Recenter the table relative to its gizmos.
+
+    auto EntitySize = (NorthWestLocation - SouthWestLocation);
+    auto EntityCenterLS = (NorthWestLocation + SouthEastLocation) * 0.5f;
+
+    NorthWestLocation -= EntityCenterLS;
+    NorthEastLocation -= EntityCenterLS;
+    SouthEastLocation -= EntityCenterLS;
+    SouthWestLocation -= EntityCenterLS;
+
+    auto EntityCenterWS = GetActorTransform().TransformPosition(FVector{ EntityCenterLS.X, EntityCenterLS.Y, 0.0f });
+
+    auto TableLocation = GetActorLocation();
+
+    TableLocation.X = EntityCenterWS.X;
+    TableLocation.Y = EntityCenterWS.Y;
+
+    SetActorLocation(TableLocation);
+
+    // Update gizmos.
+
     NorthWestGizmo.SetLocation(NorthWestLocation);
     NorthEastGizmo.SetLocation(NorthEastLocation);
     SouthEastGizmo.SetLocation(SouthEastLocation);
     SouthWestGizmo.SetLocation(SouthWestLocation);
 
+    //Generate();
 }
 
 #if WITH_EDITOR
