@@ -148,6 +148,7 @@ void UFreeCameraComponent::IntegrateActions(float InDeltaTime)
 
     // Absolute inputs have precedence over anything.
 
+    TargetLocation = Actions.AbsoluteLocation.Get(TargetLocation);
     TargetOrbit.Yaw = Actions.AbsoluteOrbit.Get(TargetOrbit.Yaw);
     TargetPivot = Actions.AbsolutePivot.Get(TargetPivot);
     TargetDistance = Actions.AbsoluteDistance.Get(TargetDistance);

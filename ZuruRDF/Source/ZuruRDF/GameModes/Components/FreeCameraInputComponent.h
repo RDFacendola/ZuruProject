@@ -129,6 +129,12 @@ private:
     // Called whenever the camera enable drag input is released.
     void OnDragCameraReleased();
 
+    // Called whenever the camera teleport input is pressed.
+    void OnTeleportCameraPressed();
+
+    // Called whenever the camera teleport input is released.
+    void OnTeleportCameraReleased();
+
     // Called whenever the widget is constructed.
     UFUNCTION()
     void OnWidgetConstructed();
@@ -139,6 +145,14 @@ private:
     // Widget class.
     UPROPERTY(EditAnywhere, Category = View)
     TSubclassOf<UFreeCameraWidget> WidgetClass{ UFreeCameraWidget::StaticClass() };
+
+    // Object type used to filter out floors.
+    UPROPERTY(EditAnywhere, Category = Input)
+    TEnumAsByte<EObjectTypeQuery> FloorObjectType{ EObjectTypeQuery::ObjectTypeQuery2 };
+
+    // Owning player controller.
+    UPROPERTY()
+    APlayerController* PlayerController{ nullptr };
 
     // Widget instance.
     UPROPERTY()
@@ -165,6 +179,12 @@ private:
 
     // Enable the camera drag input.
     bool bDragEnabled{ false };
+
+    // Enable the teleport input.
+    bool bTeleportEnabled{ false };
+
+    // Last time the teleport input was detected. Used to detect a double-click to confirm the action.
+    float TeleportActionTimestamp{ 0.0f };
 
 };
 

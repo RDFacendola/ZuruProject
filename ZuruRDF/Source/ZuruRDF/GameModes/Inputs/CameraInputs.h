@@ -51,6 +51,11 @@ struct ZURURDF_API FCameraInputs
 
     // Name of the action used to drag the camera right and left via mouse movement.
     static const FName kCameraDragRight;
+
+    // Name of the action used to teleport the camera to a precise location.
+    static const FName kCameraTeleport;
+
+
 };
 
 // ==================================================================== //

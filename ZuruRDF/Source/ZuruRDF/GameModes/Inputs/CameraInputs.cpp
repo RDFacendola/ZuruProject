@@ -17,6 +17,7 @@ const FName FCameraInputs::kCameraCounterClockwise = TEXT("CameraCounterClockwis
 const FName FCameraInputs::kCameraDragEnabled = TEXT("CameraDragEnabled");
 const FName FCameraInputs::kCameraDragForward = TEXT("CameraDragForward");
 const FName FCameraInputs::kCameraDragRight = TEXT("CameraDragRight");
+const FName FCameraInputs::kCameraTeleport = TEXT("CameraTeleport");
 
 // ==================================================================== //
 

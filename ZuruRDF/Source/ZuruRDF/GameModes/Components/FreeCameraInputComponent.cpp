@@ -4,6 +4,7 @@
 #include "FreeCameraInputComponent.h"
 
 #include "ZuruRDF/GameModes/Inputs/CameraInputs.h"
+#include "ZuruRDF/GameModes/Inputs/ZuruInputs.h"
 
 // ==================================================================== //
 
@@ -21,6 +22,8 @@ void UFreeCameraInputComponent::Bind(AGameModeBase& InGameMode)
 void UFreeCameraInputComponent::Bind(APlayerController& InPlayerController)
 {
     InPlayerController.bShowMouseCursor = true;
+
+    PlayerController = &InPlayerController;
 
     GetWidget().Bind(InPlayerController);
 
@@ -47,6 +50,8 @@ void UFreeCameraInputComponent::Bind(UInputComponent& InInputComponent)
     InInputComponent.BindAction(FCameraInputs::kCameraCounterClockwise, IE_Released, this, &UFreeCameraInputComponent::OnCounterClockwiseReleased);
     InInputComponent.BindAction(FCameraInputs::kCameraDragEnabled, IE_Pressed, this, &UFreeCameraInputComponent::OnDragCameraPressed);
     InInputComponent.BindAction(FCameraInputs::kCameraDragEnabled, IE_Released, this, &UFreeCameraInputComponent::OnDragCameraReleased);
+    InInputComponent.BindAction(FCameraInputs::kCameraTeleport, IE_Pressed, this, &UFreeCameraInputComponent::OnTeleportCameraPressed);
+    InInputComponent.BindAction(FCameraInputs::kCameraTeleport, IE_Released, this, &UFreeCameraInputComponent::OnTeleportCameraReleased);
 }
 
 void UFreeCameraInputComponent::Bind(APawn& InPawn)
@@ -247,6 +252,29 @@ void UFreeCameraInputComponent::OnDragCameraPressed()
 void UFreeCameraInputComponent::OnDragCameraReleased()
 {
     bDragEnabled = false;
+}
+
+void UFreeCameraInputComponent::OnTeleportCameraPressed()
+{
+    if (!bTeleportEnabled)
+    {
+        bTeleportEnabled = true;
+
+        if (FZuruInputs::DetectDoubleClick(*GetWorld(), TeleportActionTimestamp))
+        {
+            auto HitResult = FHitResult{};
+
+            if (PlayerController->GetHitResultUnderCursorForObjects({ FloorObjectType }, false, HitResult))
+            {
+                Actions.AbsoluteLocation = FVector2D{ HitResult.ImpactPoint };
+            }
+        }
+    }
+}
+
+void UFreeCameraInputComponent::OnTeleportCameraReleased()
+{
+    bTeleportEnabled = false;
 }
 
 void UFreeCameraInputComponent::OnWidgetConstructed()

@@ -29,6 +29,9 @@ struct FFreeCameraActions
     // Move the camera close or far aways from its target.
     float Distance{ 0.0f };
 
+    // Target location.
+    TOptional<FVector2D> AbsoluteLocation;
+
     // Target orbit.
     TOptional<float> AbsoluteOrbit;
 
