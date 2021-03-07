@@ -22,6 +22,7 @@ void ACreativePlayerController::Tick(float InDeltaSeconds)
     Super::Tick(InDeltaSeconds);
 
     CameraInputComponent->Advance(InDeltaSeconds);
+    ManipulationInputComponent->Advance(InDeltaSeconds);
 }
 
 bool ACreativePlayerController::ProcessConsoleExec(const TCHAR* InCommand, FOutputDevice& InOutputDevice, UObject* InExecutor)

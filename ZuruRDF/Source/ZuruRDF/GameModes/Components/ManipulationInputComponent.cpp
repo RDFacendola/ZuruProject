@@ -45,6 +45,15 @@ void UManipulationInputComponent::Bind(APawn& InPawn)
     GetWidget().Bind(InPawn);
 }
 
+void UManipulationInputComponent::Advance(float InDeltaSeconds)
+{
+    auto& Actions = GetGizmo().GetActions();
+
+    // Send gizmo actions over.
+
+    GetGizmo().ConsumeActions();
+}
+
 void UManipulationInputComponent::OnSelectPressed()
 {
     if (bSelectEnabled)
@@ -60,7 +69,8 @@ void UManipulationInputComponent::OnSelectPressed()
             SelectedEntities.Reset();
 
             GetWidget().ClearSelection();
-            GetGizmo().ClearSelection();
+
+            GetGizmo().SelectEntities({});
 
             SelectAdditionalEntity();
         }
@@ -116,7 +126,6 @@ void UManipulationInputComponent::SelectAdditionalEntity()
                 SelectedEntities.Add(ZuruEntity);
 
                 GetWidget().SelectEntity(*ZuruEntity);
-                GetGizmo().SelectEntity(*ZuruEntity);
             }
             else
             {
@@ -125,9 +134,12 @@ void UManipulationInputComponent::SelectAdditionalEntity()
                 SelectedEntities.Remove(ZuruEntity);
 
                 GetWidget().DeselectEntity(*ZuruEntity);
-                GetGizmo().DeselectEntity(*ZuruEntity);
             }
         }
+
+        // Update the gizmo status for the current selection set.
+
+        GetGizmo().SelectEntities(SelectedEntities);
     }
 }
 

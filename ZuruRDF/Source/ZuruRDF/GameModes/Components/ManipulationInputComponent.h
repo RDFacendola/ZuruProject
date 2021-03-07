@@ -42,6 +42,9 @@ public:
     // Bind to a pawn.
     void Bind(APawn& InPawn);
 
+    // Advance the component status.
+    void Advance(float InDeltaSeconds);
+
 private:
 
     // Called whenever the select entity\gizmo input is pressed.

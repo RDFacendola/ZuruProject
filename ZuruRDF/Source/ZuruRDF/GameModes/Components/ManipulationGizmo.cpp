@@ -43,7 +43,7 @@ AManipulationGizmo::AManipulationGizmo()
 
     // Jump-start the gizmo.
 
-    MoveGizmo();
+    SelectEntities({});
 }
 
 void AManipulationGizmo::PostInitProperties()
@@ -56,47 +56,62 @@ void AManipulationGizmo::PostInitProperties()
     RotateGizmoComponent->SetCollisionObjectType(CollisionChannel);
 }
 
-void AManipulationGizmo::SelectEntity(AZuruEntity& InEntity)
+const FManipulationGizmoActions& AManipulationGizmo::GetActions() const
 {
-    SelectedEntities.Add(&InEntity);
-
-    MoveGizmo();
+    return GizmoActions;
 }
 
-void AManipulationGizmo::DeselectEntity(AZuruEntity& InEntity)
+void AManipulationGizmo::ConsumeActions()
 {
-    SelectedEntities.Remove(&InEntity);
-
-    MoveGizmo();
+    GizmoActions.Translation = FVector2D::ZeroVector;
+    GizmoActions.Rotation = FRotator::ZeroRotator;
 }
 
-void AManipulationGizmo::ClearSelection()
+void AManipulationGizmo::SelectEntities(const TSet<AZuruEntity*>& InSelectedEntities)
 {
-    SelectedEntities.Reset();
+    if (InSelectedEntities.Num() == 0)
+    {
+        SetActorHiddenInGame(true);
+    }
+    else
+    {
+        SetActorHiddenInGame(false);
 
-    MoveGizmo();
+        auto GizmoLocation = FVector::ZeroVector;
+
+        for (auto&& SelectedEntity : InSelectedEntities)
+        {
+            GizmoLocation += SelectedEntity->GetActorLocation();
+        }
+
+        GizmoLocation /= InSelectedEntities.Num();
+
+        SetActorLocation(GizmoLocation + FVector::UpVector);
+    }
+
+    // #TODO Show custom gizmos.
 }
 
 bool AManipulationGizmo::ConditionalActivateGizmo()
 {
     auto HitResult = FHitResult{};
 
-    ActiveGizmoComponent = nullptr;
+    GizmoActions.ActiveGizmo = nullptr;
 
     if (!IsHidden() && PlayerController->GetHitResultUnderCursorForObjects({ GizmoObjectType }, false, HitResult))
     {
-        if ((HitResult.Actor.Get() == this) &&  (HitResult.GetComponent()))
+        if (HitResult.Actor.Get() == this)
         {
-            ActiveGizmoComponent = HitResult.GetComponent();
+            GizmoActions.ActiveGizmo = Cast<UStaticMeshComponent>(HitResult.GetComponent());
         }
     }
 
-    return !!ActiveGizmoComponent;
+    return !!GizmoActions.ActiveGizmo;
 }
 
 void AManipulationGizmo::DeactivateGizmo()
 {
-    ActiveGizmoComponent = nullptr;
+    GizmoActions.ActiveGizmo = nullptr;
 }
 
 void AManipulationGizmo::Bind(APlayerController& InPlayerController)
@@ -110,42 +125,19 @@ void AManipulationGizmo::Bind(UInputComponent& InInputComponent)
     InInputComponent.BindAxis(FManipulationInputs::kManipulationGizmoDragRight, this, &AManipulationGizmo::OnRightDragAxis);
 }
 
-void AManipulationGizmo::MoveGizmo()
-{
-    if (SelectedEntities.Num() == 0)
-    {
-         SetActorHiddenInGame(true);
-    }
-    else
-    {
-        SetActorHiddenInGame(false);
-
-        auto GizmoLocation = FVector::ZeroVector;
-
-        for (auto&& SelectedEntity : SelectedEntities)
-        {
-            GizmoLocation += SelectedEntity->GetActorLocation();
-        }
-
-        GizmoLocation /= SelectedEntities.Num();
-
-        SetActorLocation(GizmoLocation + FVector::UpVector);
-    }
-}
-
 void AManipulationGizmo::OnForwardDragAxis(float InValue)
 {
-    if (ActiveGizmoComponent)
+    if (GizmoActions.ActiveGizmo)
     {
-        GEngine->AddOnScreenDebugMessage(0x10, 0.0f, FColor::Yellow, TEXT("Dragging gizmo forward"));
+        
     }
 }
 
 void AManipulationGizmo::OnRightDragAxis(float InValue)
 {
-    if (ActiveGizmoComponent)
+    if (GizmoActions.ActiveGizmo)
     {
-        GEngine->AddOnScreenDebugMessage(0x11, 0.0f, FColor::Yellow, TEXT("Dragging gizmo right"));
+        
     }
 }
 

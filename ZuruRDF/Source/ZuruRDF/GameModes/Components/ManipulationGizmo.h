@@ -7,12 +7,34 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 
+#include "ZuruRDF/GameModes/Inputs/ZuruInputs.h"
 #include "ZuruRDF/Core/ZuruGizmo.h"
 #include "ZuruRDF/Core/ZuruEntity.h"
 
 #include "ManipulationGizmo.generated.h"
 
 // ==================================================================== //
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManipulationGizmoAxis, float, Value);
+
+/************************************************************************/
+/* MANIPULATION GIZMO ACTIONS                                           */
+/************************************************************************/
+
+// Set of manipulation gizmo actions.
+//
+// @author Raffaele D. Facendola - March 2021.
+struct FManipulationGizmoActions
+{
+    // Active gizmo.
+    UStaticMeshComponent* ActiveGizmo;
+
+    // Gizmo translation.
+    FVector2D Translation{ FVector2D::ZeroVector };
+
+    // Gizmo rotation.
+    FRotator Rotation{ FRotator::ZeroRotator };
+};
 
 /************************************************************************/
 /* MANIPULATION GIZMO                                                   */
@@ -37,14 +59,8 @@ public:
     // Bind to an input component.
     void Bind(UInputComponent& InInputComponent);
 
-    // Add a new entity to the selection.
-    void SelectEntity(AZuruEntity& InEntity);
-
-    // Remove an entity from the selection.
-    void DeselectEntity(AZuruEntity& InEntity);
-
-    // Remove all selected entities.
-    void ClearSelection();
+    // Declare the selected entity set.
+    void SelectEntities(const TSet<AZuruEntity*>& InSelectedEntities);
 
     // Check whether a gizmo is being interacted with and activate it if necessary.
     bool ConditionalActivateGizmo();
@@ -52,14 +68,15 @@ public:
     // Deactivate the active gizmo (if any).
     void DeactivateGizmo();
 
+    // Access the gizmo actions.
+    const FManipulationGizmoActions& GetActions() const;
+
+    // Consume the gizmo actions.
+    void ConsumeActions();
+
     void PostInitProperties() override;
 
-protected:
-
 private:
-
-    // Move the gizmo under the selected entities (or hide it if no entity is selected).
-    void MoveGizmo();
 
     // Called whenever the gizmo forward/backward drag input is detected.
     void OnForwardDragAxis(float InValue);
@@ -87,14 +104,8 @@ private:
     UPROPERTY()
     APlayerController* PlayerController{ nullptr };
 
-    // Selected entity set.
-    UPROPERTY()
-    TSet<AZuruEntity*> SelectedEntities;
-
-    // Active gizmo reference.
-    UPROPERTY()
-    USceneComponent* ActiveGizmoComponent{ nullptr };
-
+    // Pending gizmo actions.
+    FManipulationGizmoActions GizmoActions;
 };
 
 // ==================================================================== //
