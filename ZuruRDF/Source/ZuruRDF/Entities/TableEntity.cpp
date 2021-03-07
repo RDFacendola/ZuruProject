@@ -39,13 +39,15 @@ void ATableEntity::Generate()
     {
         auto ProceduralMeshBuilder = FProceduralGeometryBuilder{};
 
+        auto TableTopSize = FVector2D{ NorthEastGizmo.GetLocation() - SouthWestGizmo.GetLocation() };
+
         // Legs.
 
         ProceduralMeshBuilder << FProceduralMirror{ FVector::RightVector }
                               << FProceduralMirror{ FVector::ForwardVector }
                               << FProceduralExtrude{ FVector::UpVector * LegsHeight }
                               << FProceduralTranslate{ TableTopSize * 0.5f }
-                              << FProceduralTranslate{ { -LegsThickness * 0.5f, -LegsThickness * 0.5f } }
+                              << FProceduralTranslate{ { -LegsThickness * 0.5f, - LegsThickness * 0.5f } }
                               << FProceduralCircle{ { LegsThickness, LegsThickness } };
 
         // Base.
@@ -100,46 +102,33 @@ void ATableEntity::SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocat
 
     auto WorldToEntity = GetActorTransform().Inverse();
 
-    auto LocationLS = WorldToEntity.TransformPosition(FVector{ InLocationWS.X, InLocationWS.Y, 0.0f });
+    auto LocationLS = FVector2D{ WorldToEntity.TransformPosition(FVector{ InLocationWS.X, InLocationWS.Y, 0.0f }) };
 
-    Gizmo->SetLocation(FVector2D{ LocationLS });
+    // Boundary conditions.
 
-    //if (&InGizmo == &NorthWestGizmo)
-    //{
-    //    NorthWestGizmo.SetLocation(NorthWestGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
+    FVector2D OpposingCorner[] =
+    {
+        FVector2D{ -1.0f, +1.0f },
+        FVector2D{ -1.0f, -1.0f },
+        FVector2D{ +1.0f, -1.0f },
+        FVector2D{ +1.0f, +1.0f }
+    };
 
-    //    NorthEastGizmo.SetLocation(Crossover(SouthEastGizmo, NorthWestGizmo));
-    //    SouthWestGizmo.SetLocation(Crossover(NorthWestGizmo, SouthEastGizmo));
-    //}
+    auto OpposingIndex = ((InGizmoIndex + 2) % 4);
 
-    //if (&InGizmo == &NorthEastGizmo)
-    //{
-    //    NorthEastGizmo.SetLocation(NorthEastGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
+    auto MinBoundaryLS = FVector2D{ GetGizmo(OpposingIndex)->GetLocation() } + MinSize * OpposingCorner[OpposingIndex];
+    auto MaxBoundaryLS = FVector2D{ GetGizmo(OpposingIndex)->GetLocation() } + MaxSize * OpposingCorner[OpposingIndex];
 
-    //    NorthWestGizmo.SetLocation(Crossover(SouthWestGizmo, NorthEastGizmo));
-    //    SouthEastGizmo.SetLocation(Crossover(NorthEastGizmo, SouthWestGizmo));
-    //}
+    auto BoundaryLS = FBox2D{};
 
-    //if (&InGizmo == &SouthEastGizmo)
-    //{
-    //    SouthEastGizmo.SetLocation(SouthEastGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
+    BoundaryLS.Min.X = FMath::Min(MinBoundaryLS.X, MaxBoundaryLS.X);
+    BoundaryLS.Min.Y = FMath::Min(MinBoundaryLS.Y, MaxBoundaryLS.Y);
+    BoundaryLS.Max.X = FMath::Max(MinBoundaryLS.X, MaxBoundaryLS.X);
+    BoundaryLS.Max.Y = FMath::Max(MinBoundaryLS.Y, MaxBoundaryLS.Y);
 
-    //    NorthEastGizmo.SetLocation(Crossover(SouthEastGizmo, NorthWestGizmo));
-    //    SouthWestGizmo.SetLocation(Crossover(NorthWestGizmo, SouthEastGizmo));
-    //}
+    auto BoundedLocationLS = BoundaryLS.GetClosestPointTo(LocationLS);
 
-    //if (&InGizmo == &SouthWestGizmo)
-    //{
-    //    SouthWestGizmo.SetLocation(SouthWestGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
-
-    //    NorthWestGizmo.SetLocation(Crossover(SouthWestGizmo, NorthEastGizmo));
-    //    SouthEastGizmo.SetLocation(Crossover(NorthEastGizmo, SouthWestGizmo));
-    //}
-}
-
-FVector ATableEntity::Crossover(const FZuruGizmo& InX, const FZuruGizmo& InY) const
-{
-    return { InX.GetLocation().X, InY.GetLocation().Y, InX.GetLocation().Z };
+    Gizmo->SetLocation(BoundedLocationLS);
 }
 
 #if WITH_EDITOR

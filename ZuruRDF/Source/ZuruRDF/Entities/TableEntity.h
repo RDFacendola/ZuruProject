@@ -44,9 +44,6 @@ public:
 
 private:
 
-    // Returns a vector which has the X coordinate as InX and the Y coordinate as InY.
-    FVector Crossover(const FZuruGizmo& InX, const FZuruGizmo& InY) const;
-
     // Legs' height.
     UPROPERTY(EditAnywhere, Category = Table)
     float LegsHeight{ 40.0f };
@@ -54,10 +51,6 @@ private:
     // Legs' thickness.
     UPROPERTY(EditAnywhere, Category = Table)
     float LegsThickness{ 3.5f };
-
-    // Table-top size, assuming a rectangular shape.
-    UPROPERTY(EditAnywhere, Category = Table)
-    FVector2D TableTopSize{ 40.0f };
 
     // Table-top thickness.
     UPROPERTY(EditAnywhere, Category = Table)
@@ -69,7 +62,7 @@ private:
 
     // Minimum table size.
     UPROPERTY(EditAnywhere, Category = Table)
-    FVector2D MinSize{ 100.0f, 100.0f };
+    FVector2D MinSize{ 500.0f, 500.0f };
 
     // Test procedural mesh.
     UPROPERTY(Category = Components, DisplayName = Table, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
@@ -80,16 +73,16 @@ private:
     UMaterialInterface* Material{ nullptr };
 
     // North-west corner gizmo.
-    FZuruGizmo NorthWestGizmo{ FVector{ +20.0f, -20.0f, 50.0f } };
+    FZuruGizmo NorthWestGizmo{ FVector{ +50.0f, -50.0f, 50.0f } };
 
     // North-west corner gizmo.
-    FZuruGizmo NorthEastGizmo{ FVector{ +20.0f, +20.0f, 50.0f } };
+    FZuruGizmo NorthEastGizmo{ FVector{ +50.0f, +50.0f, 50.0f } };
 
     // North-west corner gizmo.
-    FZuruGizmo SouthEastGizmo{ FVector{ -20.0f, -20.0f, 50.0f } };
+    FZuruGizmo SouthEastGizmo{ FVector{ -50.0f, +50.0f, 50.0f } };
 
     // North-west corner gizmo.
-    FZuruGizmo SouthWestGizmo{ FVector{ -20.0f, +20.0f, 50.0f } };
+    FZuruGizmo SouthWestGizmo{ FVector{ -50.0f, -50.0f, 50.0f } };
 
 #if WITH_EDITOR
 
