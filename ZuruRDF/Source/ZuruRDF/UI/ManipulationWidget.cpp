@@ -59,6 +59,16 @@ void UManipulationWidget::ClearSelection()
     SelectedEntities.Reset();
 }
 
+FOnButtonClickedEvent& UManipulationWidget::OnSpawnTableClicked()
+{
+    return SpawnTableWidget->OnClicked;
+}
+
+FOnButtonClickedEvent& UManipulationWidget::OnSpawnChairClicked()
+{
+    return SpawnChairWidget->OnClicked;
+}
+
 void UManipulationWidget::SetEntityStencilValue(AZuruEntity& InEntity, int32 InValue)
 {
     InEntity.ForEach<UPrimitiveComponent>([InValue](auto& InPrimitiveComponent)

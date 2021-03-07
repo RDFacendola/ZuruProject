@@ -55,8 +55,20 @@ private:
     // Called whenever the select additional entity input is released.
     void OnSelectAdditionalEntityReleased();
 
+    // Called whenever the spawn table input is clicked.
+    UFUNCTION()
+    void OnSpawnTableClicked();
+
+    // Called whenever the spawn chair input is clicked.
+    UFUNCTION()
+    void OnSpawnChairClicked();
+
     // Add the entity under mouse cursor to the selection, if possible.
     void SelectAdditionalEntity();
+
+    // Called whenever the widget is constructed.
+    UFUNCTION()
+    void OnWidgetConstructed();
 
     // Get the widget associated to this component.
     UManipulationWidget& GetWidget();

@@ -43,7 +43,7 @@ public:
     // Event notified whenever the clockwise button is clicked.
     FOnButtonClickedEvent& OnClockwiseClicked();
 
-    // Event notified whenever the counter-clockwise button is detected.
+    // Event notified whenever the counter-clockwise button is clicked.
     FOnButtonClickedEvent& OnCounterClockwiseClicked();
 
     // Event notified whenever the front-view button is clicked.

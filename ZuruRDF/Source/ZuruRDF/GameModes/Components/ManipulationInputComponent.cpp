@@ -76,6 +76,16 @@ void UManipulationInputComponent::OnSelectAdditionalEntityReleased()
     bSelectAdditionalEntityEnabled = true;
 }
 
+void UManipulationInputComponent::OnSpawnTableClicked()
+{
+    SpawnEntity(TEXT("TABLE"));
+}
+
+void UManipulationInputComponent::OnSpawnChairClicked()
+{
+    SpawnEntity(TEXT("CHAIR"));
+}
+
 void UManipulationInputComponent::SelectAdditionalEntity()
 {
     auto HitResult = FHitResult{};
@@ -104,6 +114,14 @@ void UManipulationInputComponent::SelectAdditionalEntity()
     }
 }
 
+void UManipulationInputComponent::OnWidgetConstructed()
+{
+    // Bind to widget inputs.
+
+    Widget->OnSpawnTableClicked().AddDynamic(this, &UManipulationInputComponent::OnSpawnTableClicked);
+    Widget->OnSpawnChairClicked().AddDynamic(this, &UManipulationInputComponent::OnSpawnChairClicked);
+}
+
 UManipulationWidget& UManipulationInputComponent::GetWidget()
 {
     if (!Widget)
@@ -111,6 +129,8 @@ UManipulationWidget& UManipulationInputComponent::GetWidget()
         auto WidgetConcreteClass = WidgetClass ? WidgetClass : UManipulationWidget::StaticClass();
 
         Widget = CreateWidget<UManipulationWidget>(GetWorld(), WidgetConcreteClass);
+
+        Widget->OnConstructed.AddDynamic(this, &UManipulationInputComponent::OnWidgetConstructed);
     }
 
     return *Widget;

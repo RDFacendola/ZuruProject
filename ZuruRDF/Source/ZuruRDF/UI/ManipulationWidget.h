@@ -46,6 +46,22 @@ public:
     // Remove all selected entities.
     void ClearSelection();
 
+    // Event notified whenever the spawn table button is clicked.
+    FOnButtonClickedEvent& OnSpawnTableClicked();
+
+    // Event notified whenever the spawn chair button is clicked.
+    FOnButtonClickedEvent& OnSpawnChairClicked();
+
+protected:
+
+    // Button used to spawn tables.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
+    UButton* SpawnTableWidget{ nullptr };
+
+    // Button used o spawn chairs.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
+    UButton* SpawnChairWidget { nullptr };
+
 private:
 
     // Set the custom stencil value written by primitives in the provided entity.
