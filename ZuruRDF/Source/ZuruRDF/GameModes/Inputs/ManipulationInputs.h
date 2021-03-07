@@ -21,6 +21,15 @@ struct ZURURDF_API FManipulationInputs
 
     // Name of the action used to select additional entities in the world.
     static const FName kSelectAdditionalEntity;
+
+    // Name of the action used to enable gizmo drag via mouse movement.
+    static const FName kGizmoDragEnabled;
+
+    // Name of the action used to drag the gizmo forward and backward via mouse movement.
+    static const FName kGizmoDragForward;
+
+    // Name of the action used to drag the gizmo right and left via mouse movement.
+    static const FName kGizmoDragRight;
 };
 
 // ==================================================================== //

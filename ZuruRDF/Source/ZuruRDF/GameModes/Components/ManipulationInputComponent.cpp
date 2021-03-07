@@ -29,10 +29,15 @@ void UManipulationInputComponent::Bind(APlayerController& InPlayerController)
 
 void UManipulationInputComponent::Bind(UInputComponent& InInputComponent)
 {
+    InInputComponent.BindAxis(FManipulationInputs::kGizmoDragForward, this, &UManipulationInputComponent::OnForwardDragAxis);
+    InInputComponent.BindAxis(FManipulationInputs::kGizmoDragRight, this, &UManipulationInputComponent::OnRightDragAxis);
+
     InInputComponent.BindAction(FManipulationInputs::kSelectEntity, IE_Pressed, this, &UManipulationInputComponent::OnSelectEntityPressed);
     InInputComponent.BindAction(FManipulationInputs::kSelectEntity, IE_Released, this, &UManipulationInputComponent::OnSelectEntityReleased);
     InInputComponent.BindAction(FManipulationInputs::kSelectAdditionalEntity, IE_Pressed, this, &UManipulationInputComponent::OnSelectAdditionalEntityPressed);
     InInputComponent.BindAction(FManipulationInputs::kSelectAdditionalEntity, IE_Released, this, &UManipulationInputComponent::OnSelectAdditionalEntityReleased);
+    InInputComponent.BindAction(FManipulationInputs::kGizmoDragEnabled, IE_Pressed, this, &UManipulationInputComponent::OnDragGizmoPressed);
+    InInputComponent.BindAction(FManipulationInputs::kGizmoDragEnabled, IE_Released, this, &UManipulationInputComponent::OnDragGizmoReleased);
 }
 
 void UManipulationInputComponent::Bind(APawn& InPawn)
@@ -77,6 +82,22 @@ void UManipulationInputComponent::OnSelectAdditionalEntityReleased()
     bSelectAdditionalEntityEnabled = true;
 }
 
+void UManipulationInputComponent::OnForwardDragAxis(float InValue)
+{
+    if (bDragEnabled)
+    {
+        GEngine->AddOnScreenDebugMessage(0x10, 0.0f, FColor::Green, TEXT("Dragging gizmo forward"));
+    }
+}
+
+void UManipulationInputComponent::OnRightDragAxis(float InValue)
+{
+    if (bDragEnabled)
+    {
+        GEngine->AddOnScreenDebugMessage(0x20, 0.0f, FColor::Green, TEXT("Dragging gizmo right"));
+    }
+}
+
 void UManipulationInputComponent::OnSpawnTableClicked()
 {
     SpawnEntity(TEXT("TABLE"));
@@ -85,6 +106,16 @@ void UManipulationInputComponent::OnSpawnTableClicked()
 void UManipulationInputComponent::OnSpawnChairClicked()
 {
     SpawnEntity(TEXT("CHAIR"));
+}
+
+void UManipulationInputComponent::OnDragGizmoPressed()
+{
+    bDragEnabled = true;
+}
+
+void UManipulationInputComponent::OnDragGizmoReleased()
+{
+    bDragEnabled = false;
 }
 
 void UManipulationInputComponent::SelectAdditionalEntity()

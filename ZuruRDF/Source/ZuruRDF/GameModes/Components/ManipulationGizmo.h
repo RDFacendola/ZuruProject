@@ -44,7 +44,7 @@ protected:
 
 private:
 
-    // Move the gizmo under the selected entities.
+    // Move the gizmo under the selected entities (or hide it if no entity is selected).
     void MoveGizmo();
 
     // Gizmo root component.
