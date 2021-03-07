@@ -86,11 +86,8 @@ public:
 
 private:
 
-    // Called whenever the gizmo forward/backward drag input is detected.
-    void OnForwardDragAxis(float InValue);
-
-    // Called whenever the gizmo right/left drag input is detected.
-    void OnRightDragAxis(float InValue);
+    // Called whenever the gizmo drag is detected.
+    void OnDragAxis(float InValue);
 
     // Gizmo root component.
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
@@ -119,6 +116,8 @@ private:
     // Pending gizmo actions.
     FManipulationGizmoActions GizmoActions;
 
+    // Whether the drag action has been consumed.
+    bool bDragAxisConsume{ true };
 };
 
 // ==================================================================== //

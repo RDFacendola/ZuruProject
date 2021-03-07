@@ -67,6 +67,8 @@ void AManipulationGizmo::ConsumeActions()
     GizmoActions.Rotation = FRotator::ZeroRotator;
     GizmoActions.AbsolutePosition = TOptional<FVector2D>{};
     GizmoActions.AbsoluteRotation = TOptional<FRotator>{};
+
+    bDragAxisConsume = true;
 }
 
 void AManipulationGizmo::SelectEntities(const TSet<AZuruEntity*>& InSelectedEntities)
@@ -123,29 +125,23 @@ void AManipulationGizmo::Bind(APlayerController& InPlayerController)
 
 void AManipulationGizmo::Bind(UInputComponent& InInputComponent)
 {
-    InInputComponent.BindAxis(FManipulationInputs::kManipulationGizmoDragForward, this, &AManipulationGizmo::OnForwardDragAxis);
-    InInputComponent.BindAxis(FManipulationInputs::kManipulationGizmoDragRight, this, &AManipulationGizmo::OnRightDragAxis);
+    InInputComponent.BindAxis(FManipulationInputs::kManipulationGizmoDragForward, this, &AManipulationGizmo::OnDragAxis);
+    InInputComponent.BindAxis(FManipulationInputs::kManipulationGizmoDragRight, this, &AManipulationGizmo::OnDragAxis);
 }
 
-void AManipulationGizmo::OnForwardDragAxis(float InValue)
+void AManipulationGizmo::OnDragAxis(float InValue)
 {
-    if (GizmoActions.ActiveGizmo)
+    if (bDragAxisConsume && GizmoActions.ActiveGizmo)
     {
+        bDragAxisConsume = false;
+
         auto HitResult = FHitResult{};
 
         if (PlayerController->GetHitResultUnderCursorForObjects({ FloorObjectType }, false, HitResult))
         {
-            GizmoActions.AbsolutePosition = FVector2D{ HitResult.ImpactPoint };
+            GizmoActions.AbsolutePosition = GizmoActions.ActiveGizmo->ResolveGizmoTranslation(FVector2D{ HitResult.ImpactPoint });
+            GizmoActions.AbsoluteRotation = GizmoActions.ActiveGizmo->ResolveGizmoRotation(FVector2D{ HitResult.ImpactPoint });
         }
-    }
-}
-
-void AManipulationGizmo::OnRightDragAxis(float InValue)
-{
-    if (GizmoActions.ActiveGizmo)
-    {
-        GizmoActions.Translation += FVector2D{ 0.0f, InValue };
-
     }
 }
 

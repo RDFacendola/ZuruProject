@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Math/Vector2D.h"
+#include "Math/Rotator.h"
 
 #include "ZuruGizmoComponent.generated.h"
 
@@ -26,7 +28,9 @@ class ZURURDF_API UZuruGizmoComponent : public UStaticMeshComponent
 
 public:
 
+    virtual TOptional<FVector2D> ResolveGizmoTranslation(const FVector2D& InAction) const;
 
+    virtual TOptional<FRotator> ResolveGizmoRotation(const FVector2D& InAction) const;
 
 private:
 

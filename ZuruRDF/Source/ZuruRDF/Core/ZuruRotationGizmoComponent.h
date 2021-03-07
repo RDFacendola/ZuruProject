@@ -28,7 +28,7 @@ class ZURURDF_API UZuruRotationGizmoComponent : public UZuruGizmoComponent
 
 public:
 
-
+    virtual TOptional<FRotator> ResolveGizmoRotation(const FVector2D& InAction) const;
 
 private:
 
