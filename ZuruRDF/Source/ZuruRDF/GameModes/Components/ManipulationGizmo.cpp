@@ -5,6 +5,8 @@
 
 // ==================================================================== //
 
+PRAGMA_DISABLE_OPTIMIZATION
+
 /************************************************************************/
 /* MANIPULATION GIZMO                                                   */
 /************************************************************************/
@@ -67,11 +69,11 @@ void AManipulationGizmo::MoveGizmo()
 {
     if (SelectedEntities.Num() == 0)
     {
-        SetHidden(true);
+         SetActorHiddenInGame(true);
     }
     else
     {
-        SetHidden(false);
+        SetActorHiddenInGame(false);
 
         auto GizmoLocation = FVector::ZeroVector;
 
@@ -88,3 +90,4 @@ void AManipulationGizmo::MoveGizmo()
 
 // ==================================================================== //
 
+PRAGMA_ENABLE_OPTIMIZATION
