@@ -42,5 +42,10 @@ FZuruGizmo*AZuruEntity::GetGizmo(int32 InIndex)
     return nullptr;
 }
 
+bool AZuruEntity::UpdateGizmo(const FZuruGizmo& InGizmo, const FVector2D& InTranslation, const FRotator& InRotation)
+{
+    return false;
+}
+
 // ==================================================================== //
 

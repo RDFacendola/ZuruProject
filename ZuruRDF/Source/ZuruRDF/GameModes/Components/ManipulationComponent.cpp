@@ -24,18 +24,33 @@ void UManipulationComponent::SetActions(const FManipulationActions& InActions)
 
 void UManipulationComponent::Advance(float InDeltaTime)
 {
-    for (auto&& Entity : Actions.Entities)
+    if (Actions.ActiveGizmo)
     {
-        auto EntityPosition2D = Actions.AbsoluteGizmoPosition.Get(FVector2D{ Entity->GetActorLocation() } + Actions.GizmoTranslation);
+        if (Actions.ActiveGizmo->GetEntityGizmo())
+        {
+            // Search the entity the gizmo belongs to and update it.
 
-        auto EntityPosition = FVector{ EntityPosition2D.X, EntityPosition2D.Y, Entity->GetActorLocation().Z };
-        auto EntityRotation = Actions.AbsoluteGizmoRotation.Get(Entity->GetActorRotation() + Actions.GizmoRotation);
+            for (auto&& Entity : Actions.Entities)
+            {
+                Entity->UpdateGizmo(*Actions.ActiveGizmo->GetEntityGizmo(), Actions.GizmoTranslation, Actions.GizmoRotation);
+            }
+        }
+        else
+        {
+            // Unbound gizmos move the entity around.
 
-        Entity->SetActorLocation(EntityPosition, false, nullptr, ETeleportType::ResetPhysics);
-        Entity->SetActorRotation(EntityRotation, ETeleportType::ResetPhysics);
+            for (auto&& Entity : Actions.Entities)
+            {
+                auto EntityPosition = Entity->GetActorLocation() + FVector{ Actions.GizmoTranslation.X, Actions.GizmoTranslation.Y, 0.0f };
+                auto EntityRotation = Entity->GetActorRotation() + Actions.GizmoRotation;
+
+                Entity->SetActorLocation(EntityPosition, false, nullptr, ETeleportType::ResetPhysics);
+                Entity->SetActorRotation(EntityRotation, ETeleportType::ResetPhysics);
+            }
+
+            Actions = {};
+        }
     }
-
-    Actions = {};
 }
 
 void UManipulationComponent::SpawnEntityAt(const FName& InEntityKey, const FTransform& InEntityTransform)

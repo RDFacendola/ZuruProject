@@ -34,12 +34,6 @@ struct FManipulationGizmoActions
 
     // Gizmo rotation.
     FRotator Rotation{ FRotator::ZeroRotator };
-
-    // Absolute gizmo position.
-    TOptional<FVector2D> AbsolutePosition{};
-
-    // Absolute gizmo rotation.
-    TOptional<FRotator> AbsoluteRotation{};
 };
 
 /************************************************************************/
@@ -64,6 +58,9 @@ public:
 
     // Bind to an input component.
     void Bind(UInputComponent& InInputComponent);
+
+    // Refresh the gizmo status.
+    void Advance(float InDeltaSeconds);
 
     // Declare the selected entity set.
     void SelectEntities(const TSet<AZuruEntity*>& InSelectedEntities);
@@ -137,6 +134,9 @@ private:
 
     // Whether the drag action has been consumed.
     bool bDragAxisConsume{ true };
+
+    // List of entities selected so far.
+    TSet<AZuruEntity*> SelectedEntities;
 };
 
 // ==================================================================== //

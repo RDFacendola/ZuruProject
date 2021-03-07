@@ -54,8 +54,6 @@ void UManipulationInputComponent::Advance(float InDeltaSeconds)
     Actions.ActiveGizmo = GizmoActions.ActiveGizmo;
     Actions.GizmoTranslation = GizmoActions.Translation;
     Actions.GizmoRotation = GizmoActions.Rotation;
-    Actions.AbsoluteGizmoPosition = GizmoActions.AbsolutePosition;
-    Actions.AbsoluteGizmoRotation = GizmoActions.AbsoluteRotation;
 
     // IMPORTANT: This component only exists on the server! This method has to replicate the actions
     //            on the remote ManipulationInputComponent and apply them there (and wait for synchronization
@@ -75,6 +73,8 @@ void UManipulationInputComponent::Advance(float InDeltaSeconds)
     // NOTE: This is not particularly efficient, but we don't expect hundreds of entities being moved around.
 
     // GetGizmo().SelectEntities(Actions.Entities);
+
+    GetGizmo().Advance(InDeltaSeconds);
 }
 
 void UManipulationInputComponent::OnSelectPressed()

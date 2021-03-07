@@ -40,7 +40,12 @@ public:
 
     virtual FZuruGizmo* GetGizmo(int32 InIndex) override;
 
+    virtual bool UpdateGizmo(const FZuruGizmo& InGizmo, const FVector2D& InTranslation, const FRotator& InRotation) override;
+
 private:
+
+    // Returns a vector which has the X coordinate as InX and the Y coordinate as InY.
+    FVector Crossover(const FZuruGizmo& InX, const FZuruGizmo& InY) const;
 
     // Legs' height.
     UPROPERTY(EditAnywhere, Category = Table)
@@ -57,6 +62,14 @@ private:
     // Table-top thickness.
     UPROPERTY(EditAnywhere, Category = Table)
     float TableTopThickness{ 6.0f };
+
+    // Maximum table size.
+    UPROPERTY(EditAnywhere, Category = Table)
+    FVector2D MaxSize{ 100.0f, 100.0f };
+
+    // Minimum table size.
+    UPROPERTY(EditAnywhere, Category = Table)
+    FVector2D MinSize{ 100.0f, 100.0f };
 
     // Test procedural mesh.
     UPROPERTY(Category = Components, DisplayName = Table, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))

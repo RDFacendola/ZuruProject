@@ -44,6 +44,10 @@ public:
     // Get a gizmo on this entity by index. If no such gizmo exists return nullptr.
     virtual FZuruGizmo* GetGizmo(int32 InIndex);
 
+    // Update a gizmo on this entity. If the provided gizmo doesn't belong to this entity, this method does
+    // nothing and returns false.
+    virtual bool UpdateGizmo(const FZuruGizmo& InGizmo, const FVector2D& InTranslation, const FRotator& InRotation);
+
     void PostInitProperties() override;
 
 protected:

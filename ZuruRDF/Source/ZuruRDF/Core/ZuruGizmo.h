@@ -22,7 +22,7 @@ struct ZURURDF_API FZuruGizmo
 public:
 
     // Create a new gizmo
-    FZuruGizmo();
+    FZuruGizmo() = default;
 
     // Create a new gizmo.
     FZuruGizmo(const FVector& InDefaultLocation);

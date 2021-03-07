@@ -82,24 +82,59 @@ int32 ATableEntity::GetNumGizmos() const
 
 FZuruGizmo* ATableEntity::GetGizmo(int32 InIndex)
 {
-    if (InIndex == 0)
+    FZuruGizmo* Gizmos[4] = { &NorthWestGizmo, &NorthEastGizmo, &SouthEastGizmo, &SouthWestGizmo };
+
+    return ((InIndex >= 0) && (InIndex < 4)) ? Gizmos[InIndex] : nullptr;
+}
+
+bool ATableEntity::UpdateGizmo(const FZuruGizmo& InGizmo, const FVector2D& InTranslation, const FRotator& InRotation)
+{
+    if (&InGizmo == &NorthWestGizmo)
     {
-        return &NorthWestGizmo;
-    }
-    if (InIndex == 1)
-    {
-        return &NorthEastGizmo;
-    }
-    if (InIndex == 2)
-    {
-        return &SouthEastGizmo;
-    }
-    if (InIndex == 3)
-    {
-        return &SouthWestGizmo;
+        NorthWestGizmo.SetLocation(NorthWestGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
+
+        NorthEastGizmo.SetLocation(Crossover(SouthEastGizmo, NorthWestGizmo));
+        SouthWestGizmo.SetLocation(Crossover(NorthWestGizmo, SouthEastGizmo));
+
+        return true;
     }
 
-    return nullptr;
+    if (&InGizmo == &NorthEastGizmo)
+    {
+        NorthEastGizmo.SetLocation(NorthEastGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
+
+        NorthWestGizmo.SetLocation(Crossover(SouthWestGizmo, NorthEastGizmo));
+        SouthEastGizmo.SetLocation(Crossover(NorthEastGizmo, SouthWestGizmo));
+
+        return true;
+    }
+
+    if (&InGizmo == &SouthEastGizmo)
+    {
+        SouthEastGizmo.SetLocation(SouthEastGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
+
+        NorthEastGizmo.SetLocation(Crossover(SouthEastGizmo, NorthWestGizmo));
+        SouthWestGizmo.SetLocation(Crossover(NorthWestGizmo, SouthEastGizmo));
+
+        return true;
+    }
+
+    if (&InGizmo == &SouthWestGizmo)
+    {
+        SouthWestGizmo.SetLocation(SouthWestGizmo.GetLocation() + FVector{ InTranslation.X, InTranslation.Y, 0.0f });
+
+        NorthWestGizmo.SetLocation(Crossover(SouthWestGizmo, NorthEastGizmo));
+        SouthEastGizmo.SetLocation(Crossover(NorthEastGizmo, SouthWestGizmo));
+
+        return true;
+    }
+
+    return false;
+}
+
+FVector ATableEntity::Crossover(const FZuruGizmo& InX, const FZuruGizmo& InY) const
+{
+    return { InX.GetLocation().X, InY.GetLocation().Y, InX.GetLocation().Z };
 }
 
 #if WITH_EDITOR
