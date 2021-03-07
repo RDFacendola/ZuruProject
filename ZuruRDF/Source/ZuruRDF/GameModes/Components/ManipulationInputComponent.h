@@ -56,18 +56,6 @@ private:
     // Called whenever the select additional entity input is released.
     void OnSelectAdditionalEntityReleased();
 
-    // Called whenever the gizmo enable drag input is pressed.
-    void OnDragGizmoPressed();
-
-    // Called whenever the gizmo enable drag input is released.
-    void OnDragGizmoReleased();
-
-    // Called whenever the gizmo forward/backward drag input is detected.
-    void OnForwardDragAxis(float InValue);
-
-    // Called whenever the gizmo right/left drag input is detected.
-    void OnRightDragAxis(float InValue);
-
     // Called whenever the spawn table input is clicked.
     UFUNCTION()
     void OnSpawnTableClicked();
@@ -137,9 +125,6 @@ private:
 
     // Enable the select-additional-entity action. Avoids repeating the action while the key's pressed.
     bool bSelectAdditionalEntityEnabled{ true };
-
-    // Enable the gizmo drag input.
-    bool bDragEnabled{ false };
 
 };
 

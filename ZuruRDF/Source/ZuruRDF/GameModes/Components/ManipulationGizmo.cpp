@@ -3,6 +3,8 @@
 
 #include "ManipulationGizmo.h"
 
+#include "ZuruRDF/GameModes/Inputs/ManipulationInputs.h"
+
 // ==================================================================== //
 
 PRAGMA_DISABLE_OPTIMIZATION
@@ -65,6 +67,20 @@ void AManipulationGizmo::ClearSelection()
     MoveGizmo();
 }
 
+void AManipulationGizmo::Bind(APlayerController& InPlayerController)
+{
+    PlayerController = &InPlayerController;
+}
+
+void AManipulationGizmo::Bind(UInputComponent& InInputComponent)
+{
+    InInputComponent.BindAxis(FManipulationInputs::kGizmoDragForward, this, &AManipulationGizmo::OnForwardDragAxis);
+    InInputComponent.BindAxis(FManipulationInputs::kGizmoDragRight, this, &AManipulationGizmo::OnRightDragAxis);
+
+    InInputComponent.BindAction(FManipulationInputs::kGizmoDragEnabled, IE_Pressed, this, &AManipulationGizmo::OnDragGizmoPressed);
+    InInputComponent.BindAction(FManipulationInputs::kGizmoDragEnabled, IE_Released, this, &AManipulationGizmo::OnDragGizmoReleased);
+}
+
 void AManipulationGizmo::MoveGizmo()
 {
     if (SelectedEntities.Num() == 0)
@@ -85,6 +101,32 @@ void AManipulationGizmo::MoveGizmo()
         GizmoLocation /= SelectedEntities.Num();
 
         SetActorLocation(GizmoLocation + FVector::UpVector);
+    }
+}
+
+void AManipulationGizmo::OnDragGizmoPressed()
+{
+    bDragEnabled = true;
+}
+
+void AManipulationGizmo::OnDragGizmoReleased()
+{
+    bDragEnabled = false;
+}
+
+void AManipulationGizmo::OnForwardDragAxis(float InValue)
+{
+    if (bDragEnabled)
+    {
+
+    }
+}
+
+void AManipulationGizmo::OnRightDragAxis(float InValue)
+{
+    if (bDragEnabled)
+    {
+
     }
 }
 

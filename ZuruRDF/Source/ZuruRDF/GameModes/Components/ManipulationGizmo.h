@@ -31,6 +31,12 @@ public:
     // Create a new entity.
     AManipulationGizmo();
 
+    // Bind to the player controller.
+    void Bind(APlayerController& InPlayerController);
+
+    // Bind to an input component.
+    void Bind(UInputComponent& InInputComponent);
+
     // Add a new entity to the selection.
     void SelectEntity(AZuruEntity& InEntity);
 
@@ -47,6 +53,18 @@ private:
     // Move the gizmo under the selected entities (or hide it if no entity is selected).
     void MoveGizmo();
 
+    // Called whenever the gizmo enable drag input is pressed.
+    void OnDragGizmoPressed();
+
+    // Called whenever the gizmo enable drag input is released.
+    void OnDragGizmoReleased();
+
+    // Called whenever the gizmo forward/backward drag input is detected.
+    void OnForwardDragAxis(float InValue);
+
+    // Called whenever the gizmo right/left drag input is detected.
+    void OnRightDragAxis(float InValue);
+
     // Gizmo root component.
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
     USceneComponent* GizmoRoot{ nullptr };
@@ -59,9 +77,16 @@ private:
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
     UStaticMeshComponent* RotateGizmoComponent { nullptr };
 
+    // Player controller this gizmo belongs to.
+    UPROPERTY()
+    APlayerController* PlayerController{ nullptr };
+
     // Selected entity set.
     UPROPERTY()
     TSet<AZuruEntity*> SelectedEntities;
+
+    // Enable the gizmo drag input.
+    bool bDragEnabled{ false };
 
 };
 
