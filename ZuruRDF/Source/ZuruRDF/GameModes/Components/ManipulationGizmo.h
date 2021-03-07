@@ -46,6 +46,12 @@ public:
     // Remove all selected entities.
     void ClearSelection();
 
+    // Check whether a gizmo is being interacted with and activate it if necessary.
+    bool ConditionalActivateGizmo();
+
+    // Deactivate the active gizmo (if any).
+    void DeactivateGizmo();
+
     void PostInitProperties() override;
 
 protected:
@@ -54,12 +60,6 @@ private:
 
     // Move the gizmo under the selected entities (or hide it if no entity is selected).
     void MoveGizmo();
-
-    // Called whenever the gizmo enable drag input is pressed.
-    void OnDragGizmoPressed();
-
-    // Called whenever the gizmo enable drag input is released.
-    void OnDragGizmoReleased();
 
     // Called whenever the gizmo forward/backward drag input is detected.
     void OnForwardDragAxis(float InValue);
@@ -91,8 +91,9 @@ private:
     UPROPERTY()
     TSet<AZuruEntity*> SelectedEntities;
 
-    // Enable the gizmo drag input.
-    bool bDragEnabled{ false };
+    // Active gizmo reference.
+    UPROPERTY()
+    USceneComponent* ActiveGizmoComponent{ nullptr };
 
 };
 

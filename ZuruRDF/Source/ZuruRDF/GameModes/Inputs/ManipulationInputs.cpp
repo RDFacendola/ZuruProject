@@ -5,11 +5,10 @@
 
 // ==================================================================== //
 
-const FName FManipulationInputs::kSelectEntity = TEXT("SelectEntity");
-const FName FManipulationInputs::kSelectAdditionalEntity = TEXT("SelectAdditionalEntity");
-const FName FManipulationInputs::kGizmoDragEnabled = TEXT("GizmoDragEnabled");
-const FName FManipulationInputs::kGizmoDragForward = TEXT("GizmoDragForward");
-const FName FManipulationInputs::kGizmoDragRight = TEXT("GizmoDragRight");
+const FName FManipulationInputs::kManipulationSelect = TEXT("ManipulationSelect");
+const FName FManipulationInputs::kManipulationSelectAdditionalEntity = TEXT("ManipulationSelectAdditionalEntity");
+const FName FManipulationInputs::kManipulationGizmoDragForward = TEXT("ManipulationGizmoDragForward");
+const FName FManipulationInputs::kManipulationGizmoDragRight = TEXT("ManipulationGizmoDragRight");
 
 // ==================================================================== //
 

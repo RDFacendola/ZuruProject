@@ -77,6 +77,28 @@ void AManipulationGizmo::ClearSelection()
     MoveGizmo();
 }
 
+bool AManipulationGizmo::ConditionalActivateGizmo()
+{
+    auto HitResult = FHitResult{};
+
+    ActiveGizmoComponent = nullptr;
+
+    if (!IsHidden() && PlayerController->GetHitResultUnderCursorForObjects({ GizmoObjectType }, false, HitResult))
+    {
+        if ((HitResult.Actor.Get() == this) &&  (HitResult.GetComponent()))
+        {
+            ActiveGizmoComponent = HitResult.GetComponent();
+        }
+    }
+
+    return !!ActiveGizmoComponent;
+}
+
+void AManipulationGizmo::DeactivateGizmo()
+{
+    ActiveGizmoComponent = nullptr;
+}
+
 void AManipulationGizmo::Bind(APlayerController& InPlayerController)
 {
     PlayerController = &InPlayerController;
@@ -84,11 +106,8 @@ void AManipulationGizmo::Bind(APlayerController& InPlayerController)
 
 void AManipulationGizmo::Bind(UInputComponent& InInputComponent)
 {
-    InInputComponent.BindAxis(FManipulationInputs::kGizmoDragForward, this, &AManipulationGizmo::OnForwardDragAxis);
-    InInputComponent.BindAxis(FManipulationInputs::kGizmoDragRight, this, &AManipulationGizmo::OnRightDragAxis);
-
-    InInputComponent.BindAction(FManipulationInputs::kGizmoDragEnabled, IE_Pressed, this, &AManipulationGizmo::OnDragGizmoPressed);
-    InInputComponent.BindAction(FManipulationInputs::kGizmoDragEnabled, IE_Released, this, &AManipulationGizmo::OnDragGizmoReleased);
+    InInputComponent.BindAxis(FManipulationInputs::kManipulationGizmoDragForward, this, &AManipulationGizmo::OnForwardDragAxis);
+    InInputComponent.BindAxis(FManipulationInputs::kManipulationGizmoDragRight, this, &AManipulationGizmo::OnRightDragAxis);
 }
 
 void AManipulationGizmo::MoveGizmo()
@@ -114,42 +133,19 @@ void AManipulationGizmo::MoveGizmo()
     }
 }
 
-void AManipulationGizmo::OnDragGizmoPressed()
-{
-    // Check whether a gizmo is being activated.
-
-    auto HitResult = FHitResult{};
-
-    if (PlayerController->GetHitResultUnderCursorForObjects({ GizmoObjectType }, false, HitResult))
-    {
-        if (HitResult.Actor.Get() == this)
-        {
-            GEngine->AddOnScreenDebugMessage(0x10, 3.0f, FColor::Orange, TEXT("GIZMO ACTIVATED!"));
-        }
-    }
-
-
-    bDragEnabled = true;
-}
-
-void AManipulationGizmo::OnDragGizmoReleased()
-{
-    bDragEnabled = false;
-}
-
 void AManipulationGizmo::OnForwardDragAxis(float InValue)
 {
-    if (bDragEnabled)
+    if (ActiveGizmoComponent)
     {
-
+        GEngine->AddOnScreenDebugMessage(0x10, 0.0f, FColor::Yellow, TEXT("Dragging gizmo forward"));
     }
 }
 
 void AManipulationGizmo::OnRightDragAxis(float InValue)
 {
-    if (bDragEnabled)
+    if (ActiveGizmoComponent)
     {
-
+        GEngine->AddOnScreenDebugMessage(0x11, 0.0f, FColor::Yellow, TEXT("Dragging gizmo right"));
     }
 }
 

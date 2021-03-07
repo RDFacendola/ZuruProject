@@ -30,10 +30,10 @@ void UManipulationInputComponent::Bind(APlayerController& InPlayerController)
 
 void UManipulationInputComponent::Bind(UInputComponent& InInputComponent)
 {
-    InInputComponent.BindAction(FManipulationInputs::kSelectEntity, IE_Pressed, this, &UManipulationInputComponent::OnSelectEntityPressed);
-    InInputComponent.BindAction(FManipulationInputs::kSelectEntity, IE_Released, this, &UManipulationInputComponent::OnSelectEntityReleased);
-    InInputComponent.BindAction(FManipulationInputs::kSelectAdditionalEntity, IE_Pressed, this, &UManipulationInputComponent::OnSelectAdditionalEntityPressed);
-    InInputComponent.BindAction(FManipulationInputs::kSelectAdditionalEntity, IE_Released, this, &UManipulationInputComponent::OnSelectAdditionalEntityReleased);
+    InInputComponent.BindAction(FManipulationInputs::kManipulationSelect, IE_Pressed, this, &UManipulationInputComponent::OnSelectPressed);
+    InInputComponent.BindAction(FManipulationInputs::kManipulationSelect, IE_Released, this, &UManipulationInputComponent::OnSelectReleased);
+    InInputComponent.BindAction(FManipulationInputs::kManipulationSelectAdditionalEntity, IE_Pressed, this, &UManipulationInputComponent::OnSelectAdditionalEntityPressed);
+    InInputComponent.BindAction(FManipulationInputs::kManipulationSelectAdditionalEntity, IE_Released, this, &UManipulationInputComponent::OnSelectAdditionalEntityReleased);
 
     GetGizmo().Bind(InInputComponent);
 }
@@ -45,24 +45,33 @@ void UManipulationInputComponent::Bind(APawn& InPawn)
     GetWidget().Bind(InPawn);
 }
 
-void UManipulationInputComponent::OnSelectEntityPressed()
+void UManipulationInputComponent::OnSelectPressed()
 {
-    if (bSelectEntityEnabled)
+    if (bSelectEnabled)
     {
-        bSelectEntityEnabled = false;
+        bSelectEnabled = false;
 
-        SelectedEntities.Reset();
+        // Gizmo interaction starts with a click on a gizmo component
+        // and has precedence over entity selection.
+        // If no gizmo was hit, check whether a new entity is being selected.
 
-        GetWidget().ClearSelection();
-        GetGizmo().ClearSelection();
+        if (!GetGizmo().ConditionalActivateGizmo())
+        {
+            SelectedEntities.Reset();
 
-        SelectAdditionalEntity();
+            GetWidget().ClearSelection();
+            GetGizmo().ClearSelection();
+
+            SelectAdditionalEntity();
+        }
     }
 }
 
-void UManipulationInputComponent::OnSelectEntityReleased()
+void UManipulationInputComponent::OnSelectReleased()
 {
-    bSelectEntityEnabled = true;
+    bSelectEnabled = true;
+
+    GetGizmo().DeactivateGizmo();
 }
 
 void UManipulationInputComponent::OnSelectAdditionalEntityPressed()
@@ -70,6 +79,8 @@ void UManipulationInputComponent::OnSelectAdditionalEntityPressed()
     if (bSelectAdditionalEntityEnabled)
     {
         bSelectAdditionalEntityEnabled = false;
+
+        GetGizmo().DeactivateGizmo();
 
         SelectAdditionalEntity();
     }

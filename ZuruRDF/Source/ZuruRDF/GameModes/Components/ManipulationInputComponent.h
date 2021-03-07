@@ -44,11 +44,11 @@ public:
 
 private:
 
-    // Called whenever the select entity input is pressed.
-    void OnSelectEntityPressed();
+    // Called whenever the select entity\gizmo input is pressed.
+    void OnSelectPressed();
 
     // Called whenever the select entity input is released.
-    void OnSelectEntityReleased();
+    void OnSelectReleased();
 
     // Called whenever the select additional entity input is pressed.
     void OnSelectAdditionalEntityPressed();
@@ -120,8 +120,8 @@ private:
     UPROPERTY()
     TSet<AZuruEntity*> SelectedEntities;
 
-    // Enable the select-entity action. Avoids repeating the action while the key's pressed.
-    bool bSelectEntityEnabled{ true };
+    // Enable the select entity\gizmo action. Avoids repeating the action while the key's pressed.
+    bool bSelectEnabled{ true };
 
     // Enable the select-additional-entity action. Avoids repeating the action while the key's pressed.
     bool bSelectAdditionalEntityEnabled{ true };
