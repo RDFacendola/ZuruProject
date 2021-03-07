@@ -42,6 +42,8 @@ public:
     template <typename TFunction>
     void ForEachGizmo(TFunction&& InFunction) const;
 
+    void PostInitProperties() override;
+
 protected:
 
     // Set the entity collision bounds.
@@ -51,6 +53,10 @@ protected:
     void RegisterGizmo(FZuruGizmo& InGizmo);
 
 private:
+
+    // Object type used to filter out entities.
+    UPROPERTY(EditAnywhere, Category = Input)
+    TEnumAsByte<EObjectTypeQuery> EntityObjectType{ EObjectTypeQuery::ObjectTypeQuery1 };
 
     // Entity collision bounds.
     UPROPERTY(Category = Components, DisplayName = Entity, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))

@@ -26,7 +26,7 @@ AManipulationGizmo::AManipulationGizmo()
     TranslateGizmoComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GizmoTranslate"));
 
     TranslateGizmoComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    TranslateGizmoComponent->SetCollisionObjectType(ECC_GameTraceChannel3);
+
     TranslateGizmoComponent->SetCastShadow(false);
 
     TranslateGizmoComponent->SetupAttachment(GizmoRoot);
@@ -36,7 +36,7 @@ AManipulationGizmo::AManipulationGizmo()
     RotateGizmoComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GizmoRotate"));
 
     RotateGizmoComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    RotateGizmoComponent->SetCollisionObjectType(ECC_GameTraceChannel3);
+
     RotateGizmoComponent->SetCastShadow(false);
 
     RotateGizmoComponent->SetupAttachment(GizmoRoot);
@@ -44,6 +44,16 @@ AManipulationGizmo::AManipulationGizmo()
     // Jump-start the gizmo.
 
     MoveGizmo();
+}
+
+void AManipulationGizmo::PostInitProperties()
+{
+    Super::PostInitProperties();
+    
+    auto CollisionChannel = UEngineTypes::ConvertToCollisionChannel(GizmoObjectType);
+
+    TranslateGizmoComponent->SetCollisionObjectType(CollisionChannel);
+    RotateGizmoComponent->SetCollisionObjectType(CollisionChannel);
 }
 
 void AManipulationGizmo::SelectEntity(AZuruEntity& InEntity)
@@ -106,6 +116,19 @@ void AManipulationGizmo::MoveGizmo()
 
 void AManipulationGizmo::OnDragGizmoPressed()
 {
+    // Check whether a gizmo is being activated.
+
+    auto HitResult = FHitResult{};
+
+    if (PlayerController->GetHitResultUnderCursorForObjects({ GizmoObjectType }, false, HitResult))
+    {
+        if (HitResult.Actor.Get() == this)
+        {
+            GEngine->AddOnScreenDebugMessage(0x10, 3.0f, FColor::Orange, TEXT("GIZMO ACTIVATED!"));
+        }
+    }
+
+
     bDragEnabled = true;
 }
 

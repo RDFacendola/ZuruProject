@@ -46,6 +46,8 @@ public:
     // Remove all selected entities.
     void ClearSelection();
 
+    void PostInitProperties() override;
+
 protected:
 
 private:
@@ -76,6 +78,10 @@ private:
     // Gizmo used to rotate the entity.
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
     UStaticMeshComponent* RotateGizmoComponent { nullptr };
+
+    // Object type used to filter out gizmos.
+    UPROPERTY(EditAnywhere, Category = Input)
+    TEnumAsByte<EObjectTypeQuery> GizmoObjectType{ EObjectTypeQuery::ObjectTypeQuery3 };
 
     // Player controller this gizmo belongs to.
     UPROPERTY()
