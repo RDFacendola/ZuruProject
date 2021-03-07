@@ -23,7 +23,7 @@ AManipulationGizmo::AManipulationGizmo()
 
     // Translate gizmo.
 
-    TranslateGizmoComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GizmoTranslate"));
+    TranslateGizmoComponent = CreateDefaultSubobject<UZuruGizmoComponent>(TEXT("GizmoTranslate"));
 
     TranslateGizmoComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
@@ -33,7 +33,7 @@ AManipulationGizmo::AManipulationGizmo()
 
     // Rotate gizmo.
 
-    RotateGizmoComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GizmoRotate"));
+    RotateGizmoComponent = CreateDefaultSubobject<UZuruGizmoComponent>(TEXT("GizmoRotate"));
 
     RotateGizmoComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
@@ -102,7 +102,7 @@ bool AManipulationGizmo::ConditionalActivateGizmo()
     {
         if (HitResult.Actor.Get() == this)
         {
-            GizmoActions.ActiveGizmo = Cast<UStaticMeshComponent>(HitResult.GetComponent());
+            GizmoActions.ActiveGizmo = Cast<UZuruGizmoComponent>(HitResult.GetComponent());
         }
     }
 

@@ -8,8 +8,8 @@
 #include "Components/BoxComponent.h"
 
 #include "ZuruRDF/GameModes/Inputs/ZuruInputs.h"
-#include "ZuruRDF/Core/ZuruGizmo.h"
 #include "ZuruRDF/Core/ZuruEntity.h"
+#include "ZuruRDF/Core/ZuruGizmoComponent.h"
 
 #include "ManipulationGizmo.generated.h"
 
@@ -27,7 +27,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManipulationGizmoAxis, float, Val
 struct FManipulationGizmoActions
 {
     // Active gizmo.
-    UStaticMeshComponent* ActiveGizmo;
+    UZuruGizmoComponent* ActiveGizmo;
 
     // Gizmo translation.
     FVector2D Translation{ FVector2D::ZeroVector };
@@ -90,11 +90,11 @@ private:
 
     // Gizmo used to translate the entity..
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-    UStaticMeshComponent* TranslateGizmoComponent{ nullptr };
+    UZuruGizmoComponent* TranslateGizmoComponent{ nullptr };
 
     // Gizmo used to rotate the entity.
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-    UStaticMeshComponent* RotateGizmoComponent { nullptr };
+    UZuruGizmoComponent* RotateGizmoComponent { nullptr };
 
     // Object type used to filter out gizmos.
     UPROPERTY(EditAnywhere, Category = Input)
