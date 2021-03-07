@@ -23,21 +23,21 @@ AManipulationGizmo::AManipulationGizmo()
 
     // Translate gizmo.
 
-    TranslateGizmoComponent = CreateDefaultSubobject<UZuruTranslationGizmoComponent>(TEXT("GizmoTranslate"));
+    TranslateGizmoComponent = CreateDefaultSubobject<UZuruGizmoComponent>(TEXT("GizmoTranslate"));
 
     TranslateGizmoComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-
     TranslateGizmoComponent->SetCastShadow(false);
+    TranslateGizmoComponent->SetGizmoType(EZuruGizmoType::ZGT_Translation);
 
     TranslateGizmoComponent->SetupAttachment(GizmoRoot);
 
     // Rotate gizmo.
 
-    RotateGizmoComponent = CreateDefaultSubobject<UZuruRotationGizmoComponent>(TEXT("GizmoRotate"));
+    RotateGizmoComponent = CreateDefaultSubobject<UZuruGizmoComponent>(TEXT("GizmoRotate"));
 
     RotateGizmoComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-
     RotateGizmoComponent->SetCastShadow(false);
+    RotateGizmoComponent->SetGizmoType(EZuruGizmoType::ZGT_Rotation);
 
     RotateGizmoComponent->SetupAttachment(GizmoRoot);
 
@@ -107,9 +107,6 @@ bool AManipulationGizmo::ConditionalActivateGizmo()
         if (HitResult.Actor.Get() == this)
         {
             GizmoActions.ActiveGizmo = Cast<UZuruGizmoComponent>(HitResult.GetComponent());
-
-            OriginalGizmoLocation = FVector2D{ HitResult.GetComponent()->GetComponentLocation() };
-            OriginalGizmoRotation = HitResult.GetComponent()->GetComponentRotation();
         }
     }
 
@@ -146,23 +143,21 @@ void AManipulationGizmo::OnDragAxis(float InValue)
 
             // Detect gizmo actions based on the cursor position.
 
-            GizmoActions.Translation = GizmoActions.ActiveGizmo->ResolveGizmoTranslation(OriginalGizmoLocation, OriginalGizmoRotation, CursorLocation);
+            GizmoActions.Translation = GizmoActions.ActiveGizmo->ResolveGizmoTranslation(CursorLocation);
+            GizmoActions.Rotation = GizmoActions.ActiveGizmo->ResolveGizmoRotation(CursorLocation);
 
-            // Update the gizmo itself to reflect the actions.
+            // Update the gizmo itself to reflect those actions.
 
             auto ActiveGizmo = (GizmoActions.ActiveGizmo == TranslateGizmoComponent || GizmoActions.ActiveGizmo == RotateGizmoComponent) ? GetRootComponent() : GizmoActions.ActiveGizmo;
 
             auto ActiveGizmoLocation = ActiveGizmo->GetComponentLocation();
-            auto ActiveGizmoTranslation = FVector{ GizmoActions.Translation.X, GizmoActions.Translation.Y, 0.0f };
+            auto ActiveGizmoRotation = ActiveGizmo->GetComponentRotation();
 
-            ActiveGizmo->SetWorldLocation(ActiveGizmoLocation + ActiveGizmoTranslation);
-
-
-            // GizmoActions.AbsoluteRotation = GizmoActions.ActiveGizmo->ResolveGizmoRotation(OriginalGizmoLocation, OriginalGizmoRotation, CursorLocation);
-//             if (GizmoActions.AbsoluteRotation.IsSet())
-//             {
-//                 ActiveGizmo->SetWorldRotation(GizmoActions.AbsoluteRotation.GetValue());
-//             }            
+            auto TranslationAction = FVector{ GizmoActions.Translation.X, GizmoActions.Translation.Y, 0.0f };
+            auto RotationAction = GizmoActions.Rotation;
+            
+            ActiveGizmo->SetWorldLocation(ActiveGizmoLocation + TranslationAction);
+            ActiveGizmo->SetWorldRotation(ActiveGizmoRotation + RotationAction);
         }
     }
 }

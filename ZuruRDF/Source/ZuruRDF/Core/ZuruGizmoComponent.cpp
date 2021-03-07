@@ -9,15 +9,39 @@
 /* ZURU GIZMO COMPONENT                                                 */
 /************************************************************************/
 
-FVector2D UZuruGizmoComponent::ResolveGizmoTranslation(const FVector2D& InGizmoLocation, const FRotator& InGizmoRotation, const FVector2D& InCursorLocation) const
+PRAGMA_DISABLE_OPTIMIZATION
+
+FVector2D UZuruGizmoComponent::ResolveGizmoTranslation(const FVector2D& InCursorLocation) const
 {
-    return FVector2D::ZeroVector;
+    auto Translation = InCursorLocation - FVector2D{ GetComponentLocation() };
+
+    return (GizmoType == EZuruGizmoType::ZGT_Translation) ? (Translation) : (FVector2D::ZeroVector);
 }
 
-TOptional<FRotator> UZuruGizmoComponent::ResolveGizmoRotation(const FVector2D& InGizmoLocation, const FRotator& InGizmoRotation, const FVector2D& InCursorLocation) const
+FRotator UZuruGizmoComponent::ResolveGizmoRotation(const FVector2D& InCursorLocation) const
 {
-    return TOptional<FRotator>{};
+    auto GizmoRotation = GetComponentRotation();
+    auto GizmoLocation = GetComponentLocation();
+    auto CursorLocation = FVector{ InCursorLocation.X, InCursorLocation.Y, 0.0f };
+
+    auto CursorDirection = GizmoRotation.UnrotateVector(CursorLocation).GetSafeNormal2D();
+
+    auto Rotation = FRotationMatrix::MakeFromX(CursorDirection).Rotator();
+
+    return (GizmoType == EZuruGizmoType::ZGT_Rotation) ? (Rotation) : (FRotator::ZeroRotator);
 }
+
+void UZuruGizmoComponent::SetGizmoType(EZuruGizmoType InGizmoType)
+{
+    GizmoType = InGizmoType;
+}
+
+EZuruGizmoType UZuruGizmoComponent::GetGizmoType() const
+{
+    return GizmoType;
+}
+
+PRAGMA_ENABLE_OPTIMIZATION
 
 // ==================================================================== //
 

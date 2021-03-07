@@ -15,6 +15,21 @@
 // ==================================================================== //
 
 /************************************************************************/
+/* ZURU GIZMO TYPE                                                      */
+/************************************************************************/
+
+// Type of a gizmo.
+UENUM()
+enum class EZuruGizmoType : uint8
+{
+    // Gizmo affecting translation.
+    ZGT_Translation,
+
+    // Gizmo affecting rotation.
+    ZGT_Rotation
+};
+
+/************************************************************************/
 /* ZURU GIZMO COMPONENT                                                 */
 /************************************************************************/
 
@@ -28,12 +43,23 @@ class ZURURDF_API UZuruGizmoComponent : public UStaticMeshComponent
 
 public:
 
-    virtual FVector2D ResolveGizmoTranslation(const FVector2D& InGizmoLocation, const FRotator& InGizmoRotation, const FVector2D& InCursorLocation) const;
+    // Evaluate gizmo translation relative to the current cursor position, in world space.
+    FVector2D ResolveGizmoTranslation(const FVector2D& InCursorLocation) const;
 
-    virtual TOptional<FRotator> ResolveGizmoRotation(const FVector2D& InGizmoLocation, const FRotator& InGizmoRotation, const FVector2D& InCursorLocation) const;
+    // Evaluate gizmo rotation action relative to the current cursor position, in world space.
+    FRotator ResolveGizmoRotation(const FVector2D& InCursorLocation) const;
+
+    // Set the gizmo type.
+    void SetGizmoType(EZuruGizmoType InGizmoType);
+
+    // Get the gizmo type.
+    EZuruGizmoType GetGizmoType() const;
 
 private:
 
+    // Whether this gizmo affects translation.
+    UPROPERTY(EditAnywhere, Category = Gizmo)
+    EZuruGizmoType GizmoType{ EZuruGizmoType::ZGT_Translation };
 
 };
 

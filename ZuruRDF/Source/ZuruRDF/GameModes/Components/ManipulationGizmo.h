@@ -10,8 +10,6 @@
 #include "ZuruRDF/GameModes/Inputs/ZuruInputs.h"
 #include "ZuruRDF/Core/ZuruEntity.h"
 #include "ZuruRDF/Core/ZuruGizmoComponent.h"
-#include "ZuruRDF/Core/ZuruTranslationGizmoComponent.h"
-#include "ZuruRDF/Core/ZuruRotationGizmoComponent.h"
 
 #include "ManipulationGizmo.generated.h"
 
@@ -95,11 +93,11 @@ private:
 
     // Gizmo used to translate the entity..
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-    UZuruTranslationGizmoComponent* TranslateGizmoComponent{ nullptr };
+    UZuruGizmoComponent* TranslateGizmoComponent{ nullptr };
 
     // Gizmo used to rotate the entity.
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-    UZuruRotationGizmoComponent* RotateGizmoComponent { nullptr };
+    UZuruGizmoComponent* RotateGizmoComponent { nullptr };
 
     // Object type used to filter out gizmos.
     UPROPERTY(EditAnywhere, Category = Input)
@@ -115,12 +113,6 @@ private:
 
     // Pending gizmo actions.
     FManipulationGizmoActions GizmoActions;
-
-    // Location of the gizmo when the interaction begun.
-    FVector2D OriginalGizmoLocation;
-
-    // Rotation of the gizmo when the interaction begun.
-    FRotator OriginalGizmoRotation;
 
     // Whether the drag action has been consumed.
     bool bDragAxisConsume{ true };
