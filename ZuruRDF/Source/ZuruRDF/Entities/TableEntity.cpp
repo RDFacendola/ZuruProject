@@ -75,6 +75,33 @@ void ATableEntity::PostInitProperties()
     Generate();
 }
 
+int32 ATableEntity::GetNumGizmos() const
+{
+    return 4;
+}
+
+FZuruGizmo* ATableEntity::GetGizmo(int32 InIndex)
+{
+    if (InIndex == 0)
+    {
+        return &NorthWestGizmo;
+    }
+    if (InIndex == 1)
+    {
+        return &NorthEastGizmo;
+    }
+    if (InIndex == 2)
+    {
+        return &SouthEastGizmo;
+    }
+    if (InIndex == 3)
+    {
+        return &SouthWestGizmo;
+    }
+
+    return nullptr;
+}
+
 #if WITH_EDITOR
 
 void ATableEntity::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)

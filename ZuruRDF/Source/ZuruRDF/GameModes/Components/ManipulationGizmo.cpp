@@ -41,19 +41,19 @@ AManipulationGizmo::AManipulationGizmo()
 
     RotateGizmoComponent->SetupAttachment(GizmoRoot);
 
-    // Jump-start the gizmo.
+    // Hidden until at least one entity is selected.
 
-    SelectEntities({});
+    SetActorHiddenInGame(true);
 }
 
 void AManipulationGizmo::PostInitProperties()
 {
     Super::PostInitProperties();
     
-    auto CollisionChannel = UEngineTypes::ConvertToCollisionChannel(GizmoObjectType);
+    auto GizmoObjectTypeCollisionChannel = UEngineTypes::ConvertToCollisionChannel(GizmoObjectType);
 
-    TranslateGizmoComponent->SetCollisionObjectType(CollisionChannel);
-    RotateGizmoComponent->SetCollisionObjectType(CollisionChannel);
+    TranslateGizmoComponent->SetCollisionObjectType(GizmoObjectTypeCollisionChannel);
+    RotateGizmoComponent->SetCollisionObjectType(GizmoObjectTypeCollisionChannel);
 }
 
 const FManipulationGizmoActions& AManipulationGizmo::GetActions() const
@@ -93,7 +93,72 @@ void AManipulationGizmo::SelectEntities(const TSet<AZuruEntity*>& InSelectedEnti
         SetActorLocation(GizmoLocation + FVector::UpVector, false, nullptr, ETeleportType::ResetPhysics);
     }
 
-    // #TODO Show custom gizmos.
+    // #TODO This is not particularly efficient.
+
+    RetrieveGizmos(InSelectedEntities);
+}
+
+void AManipulationGizmo::RetrieveGizmos(const TSet<AZuruEntity*>& InSelectedEntities)
+{
+    InvalidateGizmos();
+
+    for (auto&& SelectedEntity : InSelectedEntities)
+    {
+        for (auto GizmoIndex = 0; GizmoIndex < SelectedEntity->GetNumGizmos(); ++GizmoIndex)
+        {
+            if (auto Gizmo = SelectedEntity->GetGizmo(GizmoIndex))
+            {
+                auto& GizmoComponent = SpawnProceduralGizmoComponent();
+
+                GizmoComponent.Bind(*Gizmo);
+            }
+        }
+    }
+}
+
+UZuruGizmoComponent& AManipulationGizmo::SpawnProceduralGizmoComponent()
+{
+    UZuruGizmoComponent* GizmoComponent{ nullptr };
+
+    if (ProceduralGizmoComponentPool.Num() > 0)
+    {
+        // Recycle an old gizmo component.
+
+        GizmoComponent = ProceduralGizmoComponentPool.Pop();
+    }
+    else
+    {
+        // Spawn a brand-new gizmo component and set it up.
+
+        auto ConcreteProceduralGizmoComponentClass = ProceduralGizmoComponentClass ? ProceduralGizmoComponentClass : UZuruGizmoComponent::StaticClass();
+
+        GizmoComponent = NewObject<UZuruGizmoComponent>(this, ConcreteProceduralGizmoComponentClass, NAME_None, RF_Transient);
+        
+        GizmoComponent->RegisterComponent();
+        GizmoComponent->AttachToComponent(GizmoRoot, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+        auto GizmoObjectTypeCollisionChannel = UEngineTypes::ConvertToCollisionChannel(GizmoObjectType);
+
+        GizmoComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+        GizmoComponent->SetCastShadow(false);
+        GizmoComponent->SetGizmoType(EZuruGizmoType::ZGT_Translation);
+        GizmoComponent->SetCollisionObjectType(GizmoObjectTypeCollisionChannel);
+    }
+
+    ProceduralGizmoComponents.Emplace(GizmoComponent);
+
+    return *GizmoComponent;
+}
+
+void AManipulationGizmo::InvalidateGizmos()
+{
+    for (auto&& ProceduralGizmoComponent : ProceduralGizmoComponents)
+    {
+        ProceduralGizmoComponent->Unbind();
+        ProceduralGizmoComponentPool.Emplace(ProceduralGizmoComponent);
+    }
+
+    ProceduralGizmoComponents.Reset();
 }
 
 bool AManipulationGizmo::ConditionalActivateGizmo()

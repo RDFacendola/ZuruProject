@@ -32,9 +32,14 @@ void AZuruEntity::SetCollisionBounds(const FBox& InCollisionBounds)
 
 }
 
-void AZuruEntity::RegisterGizmo(FZuruGizmo& InGizmo)
+int32 AZuruEntity::GetNumGizmos() const
 {
-    Gizmos.AddUnique(&InGizmo);
+    return 0;
+}
+
+FZuruGizmo*AZuruEntity::GetGizmo(int32 InIndex)
+{
+    return nullptr;
 }
 
 // ==================================================================== //

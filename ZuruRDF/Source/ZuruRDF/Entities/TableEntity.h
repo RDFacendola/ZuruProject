@@ -36,6 +36,10 @@ public:
 
     void PostInitProperties() override;
 
+    virtual int32 GetNumGizmos() const override;
+
+    virtual FZuruGizmo* GetGizmo(int32 InIndex) override;
+
 private:
 
     // Legs' height.
@@ -61,6 +65,18 @@ private:
     // Test material
     UPROPERTY(Category = Components, EditAnywhere)
     UMaterialInterface* Material{ nullptr };
+
+    // North-west corner gizmo.
+    FZuruGizmo NorthWestGizmo{ FVector{ +20.0f, -20.0f, 50.0f } };
+
+    // North-west corner gizmo.
+    FZuruGizmo NorthEastGizmo{ FVector{ +20.0f, +20.0f, 50.0f } };
+
+    // North-west corner gizmo.
+    FZuruGizmo SouthEastGizmo{ FVector{ -20.0f, -20.0f, 50.0f } };
+
+    // North-west corner gizmo.
+    FZuruGizmo SouthWestGizmo{ FVector{ -20.0f, +20.0f, 50.0f } };
 
 #if WITH_EDITOR
 

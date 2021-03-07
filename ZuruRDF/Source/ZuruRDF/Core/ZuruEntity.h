@@ -20,7 +20,7 @@
 // Represents a physical object in the project.
 //
 // @author Raffaele D. Facendola - February 2021.
-UCLASS(Blueprintable, BlueprintType, ClassGroup = Entites)
+UCLASS(Blueprintable, BlueprintType, ClassGroup = Entities)
 class ZURURDF_API AZuruEntity: public AActor
 {
     GENERATED_BODY()
@@ -38,9 +38,11 @@ public:
     template <typename TFunction>
     void ForEachGizmo(TFunction&& InFunction);
 
-    // Execute a function on each gizmo owned by the entity.
-    template <typename TFunction>
-    void ForEachGizmo(TFunction&& InFunction) const;
+    // Get the number of gizmos on this entity.
+    virtual int32 GetNumGizmos() const;
+
+    // Get a gizmo on this entity by index. If no such gizmo exists return nullptr.
+    virtual FZuruGizmo* GetGizmo(int32 InIndex);
 
     void PostInitProperties() override;
 
@@ -48,9 +50,6 @@ protected:
 
     // Set the entity collision bounds.
     void SetCollisionBounds(const FBox& InCollisionBounds);
-
-    // Register a gizmo to the entity.
-    void RegisterGizmo(FZuruGizmo& InGizmo);
 
 private:
 
@@ -61,9 +60,6 @@ private:
     // Entity collision bounds.
     UPROPERTY(Category = Components, DisplayName = Entity, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
     UBoxComponent* EntityCollision{ nullptr };
-
-    // Entity gizmos, used to drive procedural mesh generation.
-    TArray<FZuruGizmo*> Gizmos;
 
 };
 
@@ -97,13 +93,5 @@ inline void AZuruEntity::ForEachGizmo(TFunction&& InFunction)
     }
 }
 
-template <typename TFunction>
-inline void AZuruEntity::ForEachGizmo(TFunction&& InFunction) const
-{
-    for (auto&& Gizmo : Gizmos)
-    {
-        InFunction(static_cast<const FZuruGizmo&>(*Gizmo));
-    }
-}
 // ==================================================================== //
 

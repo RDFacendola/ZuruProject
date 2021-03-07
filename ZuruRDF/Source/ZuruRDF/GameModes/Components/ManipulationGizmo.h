@@ -49,7 +49,7 @@ struct FManipulationGizmoActions
 // Actor used to display 3D gizmo control over an entity being manipulated.
 //
 // @author Raffaele D. Facendola - March 2021.
-UCLASS(Blueprintable, BlueprintType, ClassGroup = Entites)
+UCLASS(Blueprintable, BlueprintType, ClassGroup = Entities)
 class ZURURDF_API AManipulationGizmo : public AActor
 {
     GENERATED_BODY()
@@ -87,6 +87,15 @@ private:
     // Called whenever the gizmo drag is detected.
     void OnDragAxis(float InValue);
 
+    // Retrieve the list of gizmos in the provided.
+    void RetrieveGizmos(const TSet<AZuruEntity*>& InSelectedEntities);
+
+    // Generate a new gizmo component (or recycle an unused one).
+    UZuruGizmoComponent& SpawnProceduralGizmoComponent();
+
+    // Invalidate all procedurally-generated gizmos on this actor.
+    void InvalidateGizmos();
+
     // Gizmo root component.
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
     USceneComponent* GizmoRoot{ nullptr };
@@ -99,12 +108,24 @@ private:
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
     UZuruGizmoComponent* RotateGizmoComponent { nullptr };
 
+    // List of entity procedurally-generated gizmos.
+    UPROPERTY()
+    TArray<UZuruGizmoComponent*> ProceduralGizmoComponents;
+
+    // Pooled gizmo components ready to be used.
+    UPROPERTY()
+    TArray<UZuruGizmoComponent*> ProceduralGizmoComponentPool;
+
+    // Concrete class of procedurally-generated gizmos.
+    UPROPERTY(EditAnywhere, Category = Gizmo)
+    TSubclassOf<UZuruGizmoComponent> ProceduralGizmoComponentClass{ UZuruGizmoComponent::StaticClass() };
+
     // Object type used to filter out gizmos.
-    UPROPERTY(EditAnywhere, Category = Input)
+    UPROPERTY(EditAnywhere, Category = Gizmo)
     TEnumAsByte<EObjectTypeQuery> GizmoObjectType{ EObjectTypeQuery::ObjectTypeQuery3 };
 
     // Object type used to filter out floors.
-    UPROPERTY(EditAnywhere, Category = Input)
+    UPROPERTY(EditAnywhere, Category = Gizmo)
     TEnumAsByte<EObjectTypeQuery> FloorObjectType{ EObjectTypeQuery::ObjectTypeQuery2 };
 
     // Player controller this gizmo belongs to.

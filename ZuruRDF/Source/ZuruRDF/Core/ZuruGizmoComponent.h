@@ -36,12 +36,18 @@ enum class EZuruGizmoType : uint8
 // A visual representation of a gizmo on a procedural entity.
 //
 // @author Raffaele D. Facendola - March 2021.
-UCLASS()
+UCLASS(Blueprintable, BlueprintType, ClassGroup = Entities)
 class ZURURDF_API UZuruGizmoComponent : public UStaticMeshComponent
 {
     GENERATED_BODY()
 
 public:
+
+    // Bind this component to an entity gizmo.
+    void Bind(FZuruGizmo& InGizmo);
+
+    // Unbind this component from an entity gizmo.
+    void Unbind();
 
     // Evaluate gizmo translation relative to the current cursor position, in world space.
     FVector2D ResolveGizmoTranslation(const FVector2D& InCursorLocation) const;
@@ -61,6 +67,8 @@ private:
     UPROPERTY(EditAnywhere, Category = Gizmo)
     EZuruGizmoType GizmoType{ EZuruGizmoType::ZGT_Translation };
 
+    // Entity gizmo.
+    FZuruGizmo* Gizmo{ nullptr };
 };
 
 

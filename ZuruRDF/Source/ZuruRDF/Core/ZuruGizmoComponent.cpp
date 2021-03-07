@@ -11,6 +11,24 @@
 
 PRAGMA_DISABLE_OPTIMIZATION
 
+void UZuruGizmoComponent::Bind(FZuruGizmo& InGizmo)
+{
+    Gizmo = &InGizmo;
+
+    auto WorldLocation = GetOwner()->GetActorTransform().TransformPosition(Gizmo->GetLocation());
+
+    SetWorldLocation(WorldLocation, false, nullptr, ETeleportType::None);
+
+    SetHiddenInGame(false);
+}
+
+void UZuruGizmoComponent::Unbind()
+{
+    Gizmo = nullptr;
+
+    SetHiddenInGame(true);
+}
+
 FVector2D UZuruGizmoComponent::ResolveGizmoTranslation(const FVector2D& InCursorLocation) const
 {
     auto Translation = InCursorLocation - FVector2D{ GetComponentLocation() };
