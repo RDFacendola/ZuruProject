@@ -187,7 +187,10 @@ void ATableEntity::SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocat
     SouthEastGizmo.SetLocation(SouthEastLocation);
     SouthWestGizmo.SetLocation(SouthWestLocation);
 
-    //Generate();
+    // #TODO This is horribly inefficient. Legs geometry can be cached, also without a proper
+    //       hidden surface strategy we end up generating a tons of triangles.
+
+    Generate();
 }
 
 #if WITH_EDITOR
