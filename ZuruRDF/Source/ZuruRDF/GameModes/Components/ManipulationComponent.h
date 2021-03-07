@@ -31,17 +31,11 @@ struct FManipulationActions
     // Active gizmo.
     UZuruGizmoComponent* ActiveGizmo;
 
-    // Gizmo translation.
-    FVector2D GizmoTranslation{ FVector2D::ZeroVector };
+    // Absolute target position.
+    TOptional<FVector2D> AbsolutePosition{};
 
-    // Gizmo rotation.
-    FRotator GizmoRotation{ FRotator::ZeroRotator };
-
-    // Absolute gizmo position.
-    TOptional<FVector2D> AbsoluteGizmoPosition{};
-
-    // Absolute gizmo rotation.
-    TOptional<FRotator> AbsoluteGizmoRotation{};
+    // Absolute target rotation.
+    TOptional<FRotator> AbsoluteRotation{};
 };
 
 /************************************************************************/

@@ -63,8 +63,8 @@ const FManipulationGizmoActions& AManipulationGizmo::GetActions() const
 
 void AManipulationGizmo::ConsumeActions()
 {
-    GizmoActions.Translation = FVector2D::ZeroVector;
-    GizmoActions.Rotation = FRotator::ZeroRotator;
+    GizmoActions.AbsolutePosition = TOptional<FVector2D>{};
+    GizmoActions.AbsoluteRotation = TOptional<FRotator>{};
 
     bDragAxisConsume = true;
 }
@@ -216,8 +216,17 @@ void AManipulationGizmo::OnDragAxis(float InValue)
 
         if (PlayerController->GetHitResultUnderCursorForObjects({ FloorObjectType }, false, HitResult))
         {
-            GizmoActions.Translation = GizmoActions.ActiveGizmo->ResolveGizmoTranslation(FVector2D{ HitResult.ImpactPoint });
-            GizmoActions.Rotation = GizmoActions.ActiveGizmo->ResolveGizmoRotation(FVector2D{ HitResult.ImpactPoint });
+            auto ActiveGizmoType = GizmoActions.ActiveGizmo->GetGizmoType();
+
+            if (ActiveGizmoType == EZuruGizmoType::ZGT_Translation)
+            {
+                GizmoActions.AbsolutePosition =  FVector2D{ HitResult.ImpactPoint };
+            }
+
+            if (ActiveGizmoType == EZuruGizmoType::ZGT_Rotation)
+            {
+                // GizmoActions.AbsoluteRotation = FVector2D{ HitResult.ImpactPoint };
+            }
         }
     }
 }

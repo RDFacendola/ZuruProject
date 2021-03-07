@@ -52,12 +52,12 @@ void UManipulationInputComponent::Advance(float InDeltaSeconds)
     auto& GizmoActions = GetGizmo().GetActions();
 
     Actions.ActiveGizmo = GizmoActions.ActiveGizmo;
-    Actions.GizmoTranslation = GizmoActions.Translation;
-    Actions.GizmoRotation = GizmoActions.Rotation;
+    Actions.AbsolutePosition = GizmoActions.AbsolutePosition;
+    Actions.AbsoluteRotation = GizmoActions.AbsoluteRotation;
 
     // IMPORTANT: This component only exists on the server! This method has to replicate the actions
     //            on the remote ManipulationInputComponent and apply them there (and wait for synchronization
-    //            to see those actions remplicated on the clients).
+    //            to see those actions replicated on the clients).
 
     ManipulationComponent->SetActions(Actions);
 
@@ -66,8 +66,8 @@ void UManipulationInputComponent::Advance(float InDeltaSeconds)
     GetGizmo().ConsumeActions();
 
     Actions.ActiveGizmo = nullptr;
-    Actions.GizmoTranslation = FVector2D::ZeroVector;
-    Actions.GizmoRotation = FRotator::ZeroRotator;
+    Actions.AbsolutePosition = TOptional<FVector2D>{};
+    Actions.AbsoluteRotation = TOptional<FRotator>{};
 
     // Update the gizmo status.
     // NOTE: This is not particularly efficient, but we don't expect hundreds of entities being moved around.

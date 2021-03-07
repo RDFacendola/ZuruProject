@@ -32,25 +32,40 @@ void UManipulationComponent::Advance(float InDeltaTime)
 
             for (auto&& Entity : Actions.Entities)
             {
-                Entity->UpdateGizmo(*Actions.ActiveGizmo->GetEntityGizmo(), Actions.GizmoTranslation, Actions.GizmoRotation);
+                // Entity->UpdateGizmo(*Actions.ActiveGizmo->GetEntityGizmo(), Actions.GizmoTranslation, Actions.GizmoRotation);
             }
         }
         else
         {
-            // Unbound gizmos move the entity around.
+            // Update entity position.
 
-            for (auto&& Entity : Actions.Entities)
+            if (Actions.AbsolutePosition.IsSet())
             {
-                auto EntityPosition = Entity->GetActorLocation() + FVector{ Actions.GizmoTranslation.X, Actions.GizmoTranslation.Y, 0.0f };
-                auto EntityRotation = Entity->GetActorRotation() + Actions.GizmoRotation;
+                for (auto&& Entity : Actions.Entities)
+                {
+                    auto EntityLocation2D = Actions.AbsolutePosition.GetValue();
+                    auto EntityLocation3D = Entity->GetActorLocation();
 
-                Entity->SetActorLocation(EntityPosition, false, nullptr, ETeleportType::ResetPhysics);
-                Entity->SetActorRotation(EntityRotation, ETeleportType::ResetPhysics);
+                    Entity->SetActorLocation(FVector{ EntityLocation2D.X, EntityLocation2D.Y, EntityLocation3D.Z });
+                }
             }
 
-            Actions = {};
+            // Update entity rotation.
+
+            if (Actions.AbsoluteRotation.IsSet())
+            {
+                for (auto&& Entity : Actions.Entities)
+                {
+                    auto EntityRotation2D = Actions.AbsoluteRotation.GetValue();
+                    auto EntityRotation3D = Entity->GetActorRotation();
+
+                    Entity->SetActorRotation(FRotator{ EntityRotation3D.Pitch, EntityRotation2D.Yaw, EntityRotation3D.Roll });
+                }
+            }
         }
     }
+
+    Actions = {};
 }
 
 void UManipulationComponent::SpawnEntityAt(const FName& InEntityKey, const FTransform& InEntityTransform)
