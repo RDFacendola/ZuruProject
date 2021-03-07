@@ -47,6 +47,9 @@ public:
 
 private:
 
+    // Update widget status.
+    void UpdateWidget();
+
     // Called whenever the camera forward/backward input is detected.
     void OnForwardAxis(float InValue);
 
@@ -56,11 +59,23 @@ private:
     // Called whenever the camera orbit input is detected.
     void OnOrbitAxis(float InValue);
 
+    // Called whenever the camera orbit input changes.
+    UFUNCTION()
+    void OnOrbitChanged(float InValue);
+
     // Called whenever the camera pivot input is detected.
     void OnPivotAxis(float InValue);
 
+    // Called whenever the camera pivot input changes.
+    UFUNCTION()
+    void OnPivotChanged(float InValue);
+
     // Called whenever the camera distance input is detected.
     void OnDistanceAxis(float InValue);
+
+    // Called whenever the camera distance input changes.
+    UFUNCTION()
+    void OnDistanceChanged(float InValue);
     
     // Called whenever the camera forward/backward drag input is detected.
     void OnForwardDragAxis(float InValue);

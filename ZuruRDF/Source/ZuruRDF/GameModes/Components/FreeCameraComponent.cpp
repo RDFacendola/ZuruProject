@@ -55,6 +55,36 @@ float UFreeCameraComponent::GetDistance() const
     return FVector::Distance(GetLocation() + VerticalOffset * FVector::UpVector , GetComponentLocation());
 }
 
+FRotator UFreeCameraComponent::GetMinOrbit() const
+{
+    return FRotator{ 0.0f, 0.0f, 0.0f };
+}
+
+FRotator UFreeCameraComponent::GetMaxOrbit() const
+{
+    return FRotator{ 0.0f, 360.0f, 0.0f };
+}
+
+float UFreeCameraComponent::GetMinPivot() const
+{
+    return MinPivot;
+}
+
+float UFreeCameraComponent::GetMaxPivot() const
+{
+    return MaxPivot;
+}
+
+float UFreeCameraComponent::GetMinDistance() const
+{
+    return MinDistance;
+}
+
+float UFreeCameraComponent::GetMaxDistance() const
+{
+    return MaxDistance;
+}
+
 void UFreeCameraComponent::IntegrateActions(float InDeltaTime)
 {
     // Strafe action.

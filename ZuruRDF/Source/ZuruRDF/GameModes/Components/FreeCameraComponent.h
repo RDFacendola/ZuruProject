@@ -88,6 +88,24 @@ public:
     // Get the distance of the camera from its target.
     float GetDistance() const;
 
+    // Get the minimum orbit value, in degrees.
+    FRotator GetMinOrbit() const;
+
+    // Get the maximum orbit value, in degrees.
+    FRotator GetMaxOrbit() const;
+
+    // Get the minimum pivot angle, in degrees.
+    float GetMinPivot() const;
+
+    // Get the minimum pivot angle, in degrees.
+    float GetMaxPivot() const;
+
+    // Get the minimum camera distance from its view target, in world units.
+    float GetMinDistance() const;
+
+    // Get the maximum camera distance from its view target, in world units.
+    float GetMaxDistance() const;
+
     void BeginPlay() override;
 
 private:

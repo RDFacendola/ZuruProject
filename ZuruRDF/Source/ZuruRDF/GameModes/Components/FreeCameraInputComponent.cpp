@@ -71,6 +71,31 @@ void UFreeCameraInputComponent::Advance(float InDeltaSeconds)
     }
 
     Actions = {};
+
+    UpdateWidget();
+}
+
+void UFreeCameraInputComponent::UpdateWidget()
+{
+    auto Orbit = FreeCameraComponent->GetOrbit().GetDenormalized().Yaw;
+    auto MinOrbit = FreeCameraComponent->GetMinOrbit().Yaw;
+    auto MaxOrbit = FreeCameraComponent->GetMaxOrbit().Yaw;
+
+    auto Pivot = FreeCameraComponent->GetPivot();
+    auto MinPivot = FreeCameraComponent->GetMinPivot();
+    auto MaxPivot = FreeCameraComponent->GetMaxPivot();
+
+    auto Distance = FreeCameraComponent->GetDistance();
+    auto MinDistance = FreeCameraComponent->GetMinDistance();
+    auto MaxDistance = FreeCameraComponent->GetMaxDistance();
+
+    auto NormalizedOrbit = (Orbit - MinOrbit) / (MaxOrbit - MinOrbit);
+    auto NormalizedPivot = (Pivot - MinPivot) / (MaxPivot - MinPivot);
+    auto NormalizedDistance = (Distance - MinDistance) / (MaxDistance - MinDistance);
+
+    GetWidget().SetOrbitValue(NormalizedOrbit);
+    GetWidget().SetPivotValue(NormalizedPivot);
+    GetWidget().SetDistanceValue(NormalizedDistance);
 }
 
 void UFreeCameraInputComponent::OnForwardAxis(float InValue)
@@ -94,14 +119,29 @@ void UFreeCameraInputComponent::OnOrbitAxis(float InValue)
     Actions.Orbit += InValue;
 }
 
+void UFreeCameraInputComponent::OnOrbitChanged(float InValue)
+{
+
+}
+
 void UFreeCameraInputComponent::OnPivotAxis(float InValue)
 {
     Actions.Pivot += InValue;
 }
 
+void UFreeCameraInputComponent::OnPivotChanged(float InValue)
+{
+
+}
+
 void UFreeCameraInputComponent::OnDistanceAxis(float InValue)
 {
     Actions.Distance += InValue;
+}
+
+void UFreeCameraInputComponent::OnDistanceChanged(float InValue)
+{
+
 }
 
 void UFreeCameraInputComponent::OnForwardDragAxis(float InValue)
@@ -133,8 +173,7 @@ void UFreeCameraInputComponent::OnTopViewReleased()
 
 void UFreeCameraInputComponent::OnTopViewClicked()
 {
-    OnTopViewPressed();
-    OnTopViewReleased();
+    Actions.bTopView = true;
 }
 
 void UFreeCameraInputComponent::OnFrontViewPressed()
@@ -150,8 +189,7 @@ void UFreeCameraInputComponent::OnFrontViewReleased()
 
 void UFreeCameraInputComponent::OnFrontViewClicked()
 {
-    OnFrontViewPressed();
-    OnFrontViewReleased();
+    Actions.bFrontView = true;
 }
 
 void UFreeCameraInputComponent::OnClockwisePressed()
@@ -167,8 +205,7 @@ void UFreeCameraInputComponent::OnClockwiseReleased()
 
 void UFreeCameraInputComponent::OnClockwiseClicked()
 {
-    OnClockwisePressed();
-    OnClockwiseReleased();
+    Actions.bClockwise = true;
 }
 
 void UFreeCameraInputComponent::OnCounterClockwisePressed()
@@ -184,8 +221,7 @@ void UFreeCameraInputComponent::OnCounterClockwiseReleased()
 
 void UFreeCameraInputComponent::OnCounterClockwiseClicked()
 {
-    OnCounterClockwisePressed();
-    OnCounterClockwiseReleased();
+    Actions.bCounterClockwise = true;
 }
 
 void UFreeCameraInputComponent::OnDragCameraPressed()
@@ -206,6 +242,10 @@ void UFreeCameraInputComponent::OnWidgetConstructed()
     Widget->OnFrontViewClicked().AddDynamic(this, &UFreeCameraInputComponent::OnFrontViewClicked);
     Widget->OnClockwiseClicked().AddDynamic(this, &UFreeCameraInputComponent::OnClockwiseClicked);
     Widget->OnCounterClockwiseClicked().AddDynamic(this, &UFreeCameraInputComponent::OnCounterClockwiseClicked);
+
+    Widget->OnOrbitChanged().AddDynamic(this, &UFreeCameraInputComponent::OnOrbitChanged);
+    Widget->OnPivotChanged().AddDynamic(this, &UFreeCameraInputComponent::OnPivotChanged);
+    Widget->OnDistanceChanged().AddDynamic(this, &UFreeCameraInputComponent::OnDistanceChanged);
 }
 
 UFreeCameraWidget& UFreeCameraInputComponent::GetWidget()

@@ -5,6 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/Button.h"
+#include "Components/Slider.h"
 
 #include "ZuruWidget.h"
 
@@ -30,6 +31,15 @@ public:
 
     void Bind(APawn& InPawn) override;
 
+    // Set the camera orbit value in normalized range [0;1].
+    void SetOrbitValue(float InOrbit);
+
+    // Set the camera pivot value in normalized range [0;1].
+    void SetPivotValue(float InPivot);
+
+    // Set the camera distance value in normalized range [0;1].
+    void SetDistanceValue(float InDistance);
+
     // Event notified whenever the clockwise button is clicked.
     FOnButtonClickedEvent& OnClockwiseClicked();
 
@@ -42,23 +52,45 @@ public:
     // Event notified whenever the top-view button is notified.
     FOnButtonClickedEvent& OnTopViewClicked();
 
+    // Event notified whenever the orbit slider value changes.
+    FOnFloatValueChangedEvent& OnOrbitChanged();
+
+    // Event notified whenever the pivot slider value changes.
+    FOnFloatValueChangedEvent& OnPivotChanged();
+
+    // Event notified whenever the distance slider value changes.
+    FOnFloatValueChangedEvent& OnDistanceChanged();
+
 protected:
 
-    // Button 
+    // Button associated to the clockwise action. 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
     UButton* ClockwiseWidget{ nullptr };
 
-    // Button 
+    // Button associated to the counter-clockwise action.
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
     UButton* CounterClockwiseWidget { nullptr };
 
-    // Button 
+    // Button associated to the front view action.
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
     UButton* FrontViewWidget { nullptr };
 
-    // Button 
+    // Button associated to the top view action.
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
     UButton* TopViewWidget { nullptr };
+
+    // Slider associated to the orbit input.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
+    USlider* OrbitWidget{ nullptr };
+
+    // Slider associated to the pivot input.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
+    USlider* PivotWidget{ nullptr };
+
+    // Slider associated to the distance input.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
+    USlider* DistanceWidget{ nullptr };
+
 
 };
 
