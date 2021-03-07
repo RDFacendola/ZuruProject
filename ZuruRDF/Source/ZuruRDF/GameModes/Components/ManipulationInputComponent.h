@@ -74,6 +74,9 @@ private:
     // Get the widget associated to this component.
     UManipulationWidget& GetWidget();
 
+    // Get the gizmo associated to this component.
+    AManipulationGizmo& GetGizmo();
+
     // Spawn an entity by key.
     UFUNCTION(Exec)
     void SpawnEntity(const FName& InEntityKey);
@@ -108,6 +111,10 @@ private:
     // Widget instance.
     UPROPERTY()
     UManipulationWidget* Widget{ nullptr };
+
+    // Gizmo instance.
+    UPROPERTY()
+    AManipulationGizmo* Gizmo{ nullptr };
 
     // List of selected entities.
     UPROPERTY()

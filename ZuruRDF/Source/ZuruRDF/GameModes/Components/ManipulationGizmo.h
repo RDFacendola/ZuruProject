@@ -31,9 +31,21 @@ public:
     // Create a new entity.
     AManipulationGizmo();
 
+    // Add a new entity to the selection.
+    void SelectEntity(AZuruEntity& InEntity);
+
+    // Remove an entity from the selection.
+    void DeselectEntity(AZuruEntity& InEntity);
+
+    // Remove all selected entities.
+    void ClearSelection();
+
 protected:
 
 private:
+
+    // Move the gizmo under the selected entities.
+    void MoveGizmo();
 
     // Gizmo root component.
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
@@ -46,6 +58,10 @@ private:
     // Gizmo used to rotate the entity.
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
     UStaticMeshComponent* RotateGizmoComponent { nullptr };
+
+    // Selected entity set.
+    UPROPERTY()
+    TSet<AZuruEntity*> SelectedEntities;
 
 };
 

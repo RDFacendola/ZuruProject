@@ -37,6 +37,53 @@ AManipulationGizmo::AManipulationGizmo()
 
     RotateGizmoComponent->SetupAttachment(GizmoRoot);
 
+    // Jump-start the gizmo.
+
+    MoveGizmo();
+}
+
+void AManipulationGizmo::SelectEntity(AZuruEntity& InEntity)
+{
+    SelectedEntities.Add(&InEntity);
+
+    MoveGizmo();
+}
+
+void AManipulationGizmo::DeselectEntity(AZuruEntity& InEntity)
+{
+    SelectedEntities.Remove(&InEntity);
+
+    MoveGizmo();
+}
+
+void AManipulationGizmo::ClearSelection()
+{
+    SelectedEntities.Reset();
+
+    MoveGizmo();
+}
+
+void AManipulationGizmo::MoveGizmo()
+{
+    if (SelectedEntities.Num() == 0)
+    {
+        SetHidden(true);
+    }
+    else
+    {
+        SetHidden(false);
+
+        auto GizmoLocation = FVector::ZeroVector;
+
+        for (auto&& SelectedEntity : SelectedEntities)
+        {
+            GizmoLocation += SelectedEntity->GetActorLocation();
+        }
+
+        GizmoLocation /= SelectedEntities.Num();
+
+        SetActorLocation(GizmoLocation + FVector::UpVector);
+    }
 }
 
 // ==================================================================== //

@@ -51,6 +51,7 @@ void UManipulationInputComponent::OnSelectEntityPressed()
         SelectedEntities.Reset();
 
         GetWidget().ClearSelection();
+        GetGizmo().ClearSelection();
 
         SelectAdditionalEntity();
     }
@@ -101,6 +102,7 @@ void UManipulationInputComponent::SelectAdditionalEntity()
                 SelectedEntities.Add(ZuruEntity);
 
                 GetWidget().SelectEntity(*ZuruEntity);
+                GetGizmo().SelectEntity(*ZuruEntity);
             }
             else
             {
@@ -109,6 +111,7 @@ void UManipulationInputComponent::SelectAdditionalEntity()
                 SelectedEntities.Remove(ZuruEntity);
 
                 GetWidget().DeselectEntity(*ZuruEntity);
+                GetGizmo().DeselectEntity(*ZuruEntity);
             }
         }
     }
@@ -134,6 +137,22 @@ UManipulationWidget& UManipulationInputComponent::GetWidget()
     }
 
     return *Widget;
+}
+
+AManipulationGizmo& UManipulationInputComponent::GetGizmo()
+{
+    if (!Gizmo)
+    {
+        auto GizmoConcreteClass = GizmoClass ? GizmoClass : AManipulationGizmo::StaticClass();
+
+        auto SpawnParameters = FActorSpawnParameters{};
+
+        SpawnParameters.bNoFail = true;
+
+        Gizmo = GetWorld()->SpawnActor<AManipulationGizmo>(GizmoConcreteClass, FTransform::Identity, SpawnParameters);
+    }
+
+    return *Gizmo;
 }
 
 void UManipulationInputComponent::SpawnEntity(const FName& InEntityKey)
