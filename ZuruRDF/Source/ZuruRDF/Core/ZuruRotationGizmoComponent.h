@@ -8,19 +8,21 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 
-#include "ZuruGizmoComponent.generated.h"
+#include "ZuruGizmoComponent.h"
+
+#include "ZuruRotationGizmoComponent.generated.h"
 
 // ==================================================================== //
 
 /************************************************************************/
-/* ZURU GIZMO COMPONENT                                                 */
+/* ZURU ROTATION GIZMO COMPONENT                                        */
 /************************************************************************/
 
 // A visual representation of a gizmo on a procedural entity.
 //
 // @author Raffaele D. Facendola - March 2021.
 UCLASS()
-class ZURURDF_API UZuruGizmoComponent : public UStaticMeshComponent
+class ZURURDF_API UZuruRotationGizmoComponent : public UZuruGizmoComponent
 {
     GENERATED_BODY()
 
@@ -29,7 +31,6 @@ public:
 
 
 private:
-
 
 };
 

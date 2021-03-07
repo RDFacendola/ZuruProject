@@ -23,7 +23,7 @@ AManipulationGizmo::AManipulationGizmo()
 
     // Translate gizmo.
 
-    TranslateGizmoComponent = CreateDefaultSubobject<UZuruGizmoComponent>(TEXT("GizmoTranslate"));
+    TranslateGizmoComponent = CreateDefaultSubobject<UZuruTranslationGizmoComponent>(TEXT("GizmoTranslate"));
 
     TranslateGizmoComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
@@ -33,7 +33,7 @@ AManipulationGizmo::AManipulationGizmo()
 
     // Rotate gizmo.
 
-    RotateGizmoComponent = CreateDefaultSubobject<UZuruGizmoComponent>(TEXT("GizmoRotate"));
+    RotateGizmoComponent = CreateDefaultSubobject<UZuruRotationGizmoComponent>(TEXT("GizmoRotate"));
 
     RotateGizmoComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 

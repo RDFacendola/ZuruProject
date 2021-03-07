@@ -10,6 +10,8 @@
 #include "ZuruRDF/GameModes/Inputs/ZuruInputs.h"
 #include "ZuruRDF/Core/ZuruEntity.h"
 #include "ZuruRDF/Core/ZuruGizmoComponent.h"
+#include "ZuruRDF/Core/ZuruTranslationGizmoComponent.h"
+#include "ZuruRDF/Core/ZuruRotationGizmoComponent.h"
 
 #include "ManipulationGizmo.generated.h"
 
@@ -90,11 +92,11 @@ private:
 
     // Gizmo used to translate the entity..
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-    UZuruGizmoComponent* TranslateGizmoComponent{ nullptr };
+    UZuruTranslationGizmoComponent* TranslateGizmoComponent{ nullptr };
 
     // Gizmo used to rotate the entity.
     UPROPERTY(Category = Components, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-    UZuruGizmoComponent* RotateGizmoComponent { nullptr };
+    UZuruRotationGizmoComponent* RotateGizmoComponent { nullptr };
 
     // Object type used to filter out gizmos.
     UPROPERTY(EditAnywhere, Category = Input)
