@@ -74,7 +74,7 @@ void UManipulationInputComponent::Advance(float InDeltaSeconds)
     // Update the gizmo status.
     // NOTE: This is not particularly efficient, but we don't expect hundreds of entities being moved around.
 
-    GetGizmo().SelectEntities(Actions.Entities);
+    // GetGizmo().SelectEntities(Actions.Entities);
 }
 
 void UManipulationInputComponent::OnSelectPressed()

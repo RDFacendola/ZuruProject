@@ -9,9 +9,9 @@
 /* ZURU TRANSLATION GIZMO COMPONENT                                     */
 /************************************************************************/
 
-TOptional<FVector2D> UZuruTranslationGizmoComponent::ResolveGizmoTranslation(const FVector2D& InAction) const
+FVector2D UZuruTranslationGizmoComponent::ResolveGizmoTranslation(const FVector2D& InGizmoLocation, const FRotator& InGizmoRotation, const FVector2D& InCursorLocation) const
 {
-    return InAction;
+    return InCursorLocation - FVector2D{ GetComponentLocation() };
 }
 
 // ==================================================================== //

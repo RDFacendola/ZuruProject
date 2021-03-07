@@ -116,6 +116,12 @@ private:
     // Pending gizmo actions.
     FManipulationGizmoActions GizmoActions;
 
+    // Location of the gizmo when the interaction begun.
+    FVector2D OriginalGizmoLocation;
+
+    // Rotation of the gizmo when the interaction begun.
+    FRotator OriginalGizmoRotation;
+
     // Whether the drag action has been consumed.
     bool bDragAxisConsume{ true };
 };

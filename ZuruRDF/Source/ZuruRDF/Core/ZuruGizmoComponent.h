@@ -28,9 +28,9 @@ class ZURURDF_API UZuruGizmoComponent : public UStaticMeshComponent
 
 public:
 
-    virtual TOptional<FVector2D> ResolveGizmoTranslation(const FVector2D& InAction) const;
+    virtual FVector2D ResolveGizmoTranslation(const FVector2D& InGizmoLocation, const FRotator& InGizmoRotation, const FVector2D& InCursorLocation) const;
 
-    virtual TOptional<FRotator> ResolveGizmoRotation(const FVector2D& InAction) const;
+    virtual TOptional<FRotator> ResolveGizmoRotation(const FVector2D& InGizmoLocation, const FRotator& InGizmoRotation, const FVector2D& InCursorLocation) const;
 
 private:
 

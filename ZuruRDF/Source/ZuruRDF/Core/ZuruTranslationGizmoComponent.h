@@ -28,7 +28,7 @@ class ZURURDF_API UZuruTranslationGizmoComponent : public UZuruGizmoComponent
 
 public:
 
-    virtual TOptional<FVector2D> ResolveGizmoTranslation(const FVector2D& InAction) const override;
+    virtual FVector2D ResolveGizmoTranslation(const FVector2D& InGizmoLocation, const FRotator& InGizmoRotation, const FVector2D& InCursorLocation) const override;
 
 private:
 

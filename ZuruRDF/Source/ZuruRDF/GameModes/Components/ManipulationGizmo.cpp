@@ -107,6 +107,9 @@ bool AManipulationGizmo::ConditionalActivateGizmo()
         if (HitResult.Actor.Get() == this)
         {
             GizmoActions.ActiveGizmo = Cast<UZuruGizmoComponent>(HitResult.GetComponent());
+
+            OriginalGizmoLocation = FVector2D{ HitResult.GetComponent()->GetComponentLocation() };
+            OriginalGizmoRotation = HitResult.GetComponent()->GetComponentRotation();
         }
     }
 
@@ -139,8 +142,27 @@ void AManipulationGizmo::OnDragAxis(float InValue)
 
         if (PlayerController->GetHitResultUnderCursorForObjects({ FloorObjectType }, false, HitResult))
         {
-            GizmoActions.AbsolutePosition = GizmoActions.ActiveGizmo->ResolveGizmoTranslation(FVector2D{ HitResult.ImpactPoint });
-            GizmoActions.AbsoluteRotation = GizmoActions.ActiveGizmo->ResolveGizmoRotation(FVector2D{ HitResult.ImpactPoint });
+            auto CursorLocation = FVector2D{ HitResult.ImpactPoint };
+
+            // Detect gizmo actions based on the cursor position.
+
+            GizmoActions.Translation = GizmoActions.ActiveGizmo->ResolveGizmoTranslation(OriginalGizmoLocation, OriginalGizmoRotation, CursorLocation);
+
+            // Update the gizmo itself to reflect the actions.
+
+            auto ActiveGizmo = (GizmoActions.ActiveGizmo == TranslateGizmoComponent || GizmoActions.ActiveGizmo == RotateGizmoComponent) ? GetRootComponent() : GizmoActions.ActiveGizmo;
+
+            auto ActiveGizmoLocation = ActiveGizmo->GetComponentLocation();
+            auto ActiveGizmoTranslation = FVector{ GizmoActions.Translation.X, GizmoActions.Translation.Y, 0.0f };
+
+            ActiveGizmo->SetWorldLocation(ActiveGizmoLocation + ActiveGizmoTranslation);
+
+
+            // GizmoActions.AbsoluteRotation = GizmoActions.ActiveGizmo->ResolveGizmoRotation(OriginalGizmoLocation, OriginalGizmoRotation, CursorLocation);
+//             if (GizmoActions.AbsoluteRotation.IsSet())
+//             {
+//                 ActiveGizmo->SetWorldRotation(GizmoActions.AbsoluteRotation.GetValue());
+//             }            
         }
     }
 }
