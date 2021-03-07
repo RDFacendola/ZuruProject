@@ -10,6 +10,7 @@
 #include "ManipulationComponent.h"
 
 #include "ZuruRDF/UI/ManipulationWidget.h"
+#include "ManipulationGizmo.h"
 
 #include "ManipulationInputComponent.generated.h"
 
@@ -87,6 +88,10 @@ private:
     // Widget class.
     UPROPERTY(EditAnywhere, Category = View)
     TSubclassOf<UManipulationWidget> WidgetClass{ UManipulationWidget::StaticClass() };
+
+    // Gizmo class.
+    UPROPERTY(EditAnywhere, Category = View)
+    TSubclassOf<AManipulationGizmo> GizmoClass{ AManipulationGizmo::StaticClass() };
 
     // Controlled pawn.
     UPROPERTY()
