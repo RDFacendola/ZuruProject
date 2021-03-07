@@ -121,7 +121,12 @@ void UFreeCameraInputComponent::OnOrbitAxis(float InValue)
 
 void UFreeCameraInputComponent::OnOrbitChanged(float InValue)
 {
+    auto MinOrbit = FreeCameraComponent->GetMinOrbit().Yaw;
+    auto MaxOrbit = FreeCameraComponent->GetMaxOrbit().Yaw;
 
+    auto Orbit = InValue * (MaxOrbit - MinOrbit) + MinOrbit;
+
+    Actions.AbsoluteOrbit = Orbit;
 }
 
 void UFreeCameraInputComponent::OnPivotAxis(float InValue)
@@ -131,7 +136,12 @@ void UFreeCameraInputComponent::OnPivotAxis(float InValue)
 
 void UFreeCameraInputComponent::OnPivotChanged(float InValue)
 {
+    auto MinPivot = FreeCameraComponent->GetMinPivot();
+    auto MaxPivot = FreeCameraComponent->GetMaxPivot();
 
+    auto Pivot = InValue * (MaxPivot - MinPivot) + MinPivot;
+
+    Actions.AbsolutePivot = Pivot;
 }
 
 void UFreeCameraInputComponent::OnDistanceAxis(float InValue)
@@ -141,7 +151,12 @@ void UFreeCameraInputComponent::OnDistanceAxis(float InValue)
 
 void UFreeCameraInputComponent::OnDistanceChanged(float InValue)
 {
+    auto MinDistance = FreeCameraComponent->GetMinDistance();
+    auto MaxDistance = FreeCameraComponent->GetMaxDistance();
 
+    auto Distance = InValue * (MaxDistance - MinDistance) + MinDistance;
+
+    Actions.AbsoluteDistance = Distance;
 }
 
 void UFreeCameraInputComponent::OnForwardDragAxis(float InValue)

@@ -63,6 +63,14 @@ public:
 
 protected:
 
+    // Called whenever user input begins.
+    UFUNCTION()
+    void OnInputBegin();
+
+    // Called whenever user input ends.
+    UFUNCTION()
+    void OnInputEnd();
+
     // Button associated to the clockwise action. 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
     UButton* ClockwiseWidget{ nullptr };
@@ -90,6 +98,9 @@ protected:
     // Slider associated to the distance input.
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widgets)
     USlider* DistanceWidget{ nullptr };
+
+    // Whether the user is currently interacting with the widget.
+    bool bUserInteraction{ false };
 
 
 };

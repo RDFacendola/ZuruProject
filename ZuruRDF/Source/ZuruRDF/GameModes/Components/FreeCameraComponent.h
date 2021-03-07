@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Misc/Optional.h"
 
 #include "FreeCameraComponent.generated.h"
 
@@ -27,6 +28,15 @@ struct FFreeCameraActions
 
     // Move the camera close or far aways from its target.
     float Distance{ 0.0f };
+
+    // Target orbit.
+    TOptional<float> AbsoluteOrbit;
+
+    // Target orbit.
+    TOptional<float> AbsolutePivot;
+
+    // Target orbit.
+    TOptional<float> AbsoluteDistance;
 
     // Switch to a top-view camera and snap.
     bool bTopView{ false };
