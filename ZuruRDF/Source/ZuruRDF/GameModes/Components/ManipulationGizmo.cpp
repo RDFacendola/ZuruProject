@@ -88,7 +88,7 @@ void AManipulationGizmo::SelectEntities(const TSet<AZuruEntity*>& InSelectedEnti
 
         GizmoLocation /= InSelectedEntities.Num();
 
-        SetActorLocation(GizmoLocation + FVector::UpVector);
+        SetActorLocation(GizmoLocation + FVector::UpVector, false, nullptr, ETeleportType::ResetPhysics);
     }
 
     // #TODO Show custom gizmos.

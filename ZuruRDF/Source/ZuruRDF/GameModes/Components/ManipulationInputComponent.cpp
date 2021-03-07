@@ -70,6 +70,11 @@ void UManipulationInputComponent::Advance(float InDeltaSeconds)
     Actions.ActiveGizmo = nullptr;
     Actions.GizmoTranslation = FVector2D::ZeroVector;
     Actions.GizmoRotation = FRotator::ZeroRotator;
+
+    // Update the gizmo status.
+    // NOTE: This is not particularly efficient, but we don't expect hundreds of entities being moved around.
+
+    GetGizmo().SelectEntities(Actions.Entities);
 }
 
 void UManipulationInputComponent::OnSelectPressed()
