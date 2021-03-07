@@ -137,6 +137,8 @@ private:
 
     // List of entities selected so far.
     TSet<AZuruEntity*> SelectedEntities;
+
+    FVector2D GizmoBaseRotationForward;
 };
 
 // ==================================================================== //

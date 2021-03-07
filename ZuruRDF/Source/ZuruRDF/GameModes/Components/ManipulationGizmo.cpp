@@ -154,6 +154,11 @@ bool AManipulationGizmo::ConditionalActivateGizmo()
         if (HitResult.Actor.Get() == this)
         {
             GizmoActions.ActiveGizmo = Cast<UZuruGizmoComponent>(HitResult.GetComponent());
+
+            auto GizmoLocation2D = FVector2D{ GizmoActions.ActiveGizmo->GetComponentLocation() };
+            auto HitLocation2D = FVector2D{ HitResult.ImpactPoint };
+
+            GizmoBaseRotationForward = (HitLocation2D - GizmoLocation2D).GetSafeNormal();
         }
     }
 
@@ -203,7 +208,18 @@ void AManipulationGizmo::Advance(float InDeltaSeconds)
 
     // Gizmo rotation.
 
+    if (SelectedEntities.Num() > 0)
+    {
+        auto GizmoRotation = FRotator::ZeroRotator;
 
+        for (auto&& SelectedEntity : SelectedEntities)
+        {
+            GizmoRotation = SelectedEntity->GetActorRotation();
+            break;
+        }
+
+        SetActorRotation(GizmoRotation, ETeleportType::ResetPhysics);
+    }
 }
 
 void AManipulationGizmo::OnDragAxis(float InValue)
@@ -218,14 +234,23 @@ void AManipulationGizmo::OnDragAxis(float InValue)
         {
             auto ActiveGizmoType = GizmoActions.ActiveGizmo->GetGizmoType();
 
+            auto GizmoLocation2D = FVector2D{ GizmoActions.ActiveGizmo->GetComponentLocation() };
+            auto HitLocation2D = FVector2D{ HitResult.ImpactPoint };
+
             if (ActiveGizmoType == EZuruGizmoType::ZGT_Translation)
             {
-                GizmoActions.AbsolutePosition =  FVector2D{ HitResult.ImpactPoint };
+                GizmoActions.AbsolutePosition = HitLocation2D;
             }
 
             if (ActiveGizmoType == EZuruGizmoType::ZGT_Rotation)
             {
-                // GizmoActions.AbsoluteRotation = FVector2D{ HitResult.ImpactPoint };
+                auto GizmoRotationForward = (HitLocation2D - GizmoLocation2D).GetSafeNormal();
+
+                auto DeltaRotation = GizmoRotationForward - GizmoBaseRotationForward;
+
+                auto Rotation = FRotationMatrix::MakeFromX(FVector{ DeltaRotation.X, DeltaRotation.Y, 0.0f }).Rotator();
+
+                GizmoActions.AbsoluteRotation = Rotation;
             }
         }
     }
