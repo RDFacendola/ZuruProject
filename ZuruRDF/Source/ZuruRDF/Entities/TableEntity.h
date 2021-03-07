@@ -75,13 +75,13 @@ private:
     // North-west corner gizmo.
     FZuruGizmo NorthWestGizmo{ FVector{ +50.0f, -50.0f, 50.0f } };
 
-    // North-west corner gizmo.
+    // North-east corner gizmo.
     FZuruGizmo NorthEastGizmo{ FVector{ +50.0f, +50.0f, 50.0f } };
 
-    // North-west corner gizmo.
+    // South-west corner gizmo.
     FZuruGizmo SouthEastGizmo{ FVector{ -50.0f, +50.0f, 50.0f } };
 
-    // North-west corner gizmo.
+    // South-east corner gizmo.
     FZuruGizmo SouthWestGizmo{ FVector{ -50.0f, -50.0f, 50.0f } };
 
 #if WITH_EDITOR

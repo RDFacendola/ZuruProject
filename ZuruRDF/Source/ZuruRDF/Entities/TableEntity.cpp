@@ -104,7 +104,7 @@ void ATableEntity::SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocat
 
     auto LocationLS = FVector2D{ WorldToEntity.TransformPosition(FVector{ InLocationWS.X, InLocationWS.Y, 0.0f }) };
 
-    // Boundary conditions.
+    // Limit gizmo according to table size and opposite gizmo location.
 
     FVector2D OpposingCorner[] =
     {
@@ -129,6 +129,43 @@ void ATableEntity::SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocat
     auto BoundedLocationLS = BoundaryLS.GetClosestPointTo(LocationLS);
 
     Gizmo->SetLocation(BoundedLocationLS);
+
+    // Recompute other gizmos.
+
+    auto NorthWestLocation = NorthWestGizmo.GetLocation();
+    auto NorthEastLocation = NorthEastGizmo.GetLocation();
+    auto SouthEastLocation = SouthEastGizmo.GetLocation();
+    auto SouthWestLocation = SouthWestGizmo.GetLocation();
+
+    if (InGizmoIndex == 0)
+    {
+        NorthEastLocation.X = NorthWestLocation.X;
+        SouthWestLocation.Y = NorthWestLocation.Y;
+    }
+
+    if (InGizmoIndex == 1)
+    {
+        NorthWestLocation.X = NorthEastLocation.X;
+        SouthEastLocation.Y = NorthEastLocation.Y;
+    }
+
+    if (InGizmoIndex == 2)
+    {
+        SouthWestLocation.X = SouthEastLocation.X;
+        NorthEastLocation.Y = SouthEastLocation.Y;
+    }
+
+    if (InGizmoIndex == 3)
+    {
+        SouthEastLocation.X = SouthWestLocation.X;
+        NorthWestLocation.Y = SouthWestLocation.Y;
+    }
+
+    NorthWestGizmo.SetLocation(NorthWestLocation);
+    NorthEastGizmo.SetLocation(NorthEastLocation);
+    SouthEastGizmo.SetLocation(SouthEastLocation);
+    SouthWestGizmo.SetLocation(SouthWestLocation);
+
 }
 
 #if WITH_EDITOR
