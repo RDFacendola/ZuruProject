@@ -60,6 +60,8 @@ void ATableEntity::Generate()
 
         auto Prefab = ProceduralMeshBuilder.Build();
 
+        SetCollisionBounds(Prefab.GetBounds());
+
         // Generate.
 
         ProceduralComponent->ClearAllMeshSections();

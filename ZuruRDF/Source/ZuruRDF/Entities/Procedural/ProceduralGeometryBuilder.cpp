@@ -19,6 +19,8 @@ FProceduralGeometryStream& FProceduralGeometryBuilder::AppendVertex(const FProce
 {
     Vertices.Emplace(InVertex);
 
+    Bounds += InVertex.Position;
+
     return *this;
 }
 
@@ -46,7 +48,12 @@ void FProceduralGeometryBuilder::Reset()
 
 FProceduralGeometryPrefab FProceduralGeometryBuilder::Build() const
 {
-    return { Vertices };
+    return { Vertices, Bounds };
+}
+
+const FBox& FProceduralGeometryBuilder::GetBounds() const
+{
+    return Bounds;
 }
 
 // ==================================================================== //

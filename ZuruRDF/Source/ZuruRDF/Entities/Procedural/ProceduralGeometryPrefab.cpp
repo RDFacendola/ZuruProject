@@ -10,7 +10,8 @@
 /* PROCEDURAL GEOMETRY PREFAB                                           */
 /************************************************************************/
 
-FProceduralGeometryPrefab::FProceduralGeometryPrefab(const TArray<FProceduralVertex>& InVertices)
+FProceduralGeometryPrefab::FProceduralGeometryPrefab(const TArray<FProceduralVertex>& InVertices, const FBox& InBounds)
+    : Bounds(InBounds)
 {
     auto Count = InVertices.Num();
 
@@ -31,6 +32,11 @@ FProceduralGeometryPrefab::FProceduralGeometryPrefab(const TArray<FProceduralVer
 void FProceduralGeometryPrefab::Generate(UProceduralMeshComponent& InProceduralMeshComponent, int32 InMeshSection) const
 {
     InProceduralMeshComponent.CreateMeshSection(InMeshSection, Positions, Indices, Normals, UVs, TArray<FColor>{}, TArray<FProcMeshTangent>{}, false);
+}
+
+const FBox& FProceduralGeometryPrefab::GetBounds() const
+{
+    return Bounds;
 }
 
 // ==================================================================== //

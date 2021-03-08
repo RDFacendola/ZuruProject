@@ -5,6 +5,8 @@
 
 // ==================================================================== //
 
+PRAGMA_DISABLE_OPTIMIZATION
+
 /************************************************************************/
 /* ZURU ENTITY                                                          */
 /************************************************************************/
@@ -34,7 +36,13 @@ void AZuruEntity::PostInitProperties()
 
 void AZuruEntity::SetCollisionBounds(const FBox& InCollisionBounds)
 {
+    // The entity collision is centered on the entity, so it has to be symmetric.
 
+    auto MaxX = FMath::Max(FMath::Abs(InCollisionBounds.Min.X), FMath::Abs(InCollisionBounds.Max.X));
+    auto MaxY = FMath::Max(FMath::Abs(InCollisionBounds.Min.Y), FMath::Abs(InCollisionBounds.Max.Y));
+    auto MaxZ = FMath::Max(FMath::Abs(InCollisionBounds.Min.Z), FMath::Abs(InCollisionBounds.Max.Z));
+
+    EntityCollision->SetBoxExtent(FVector{ MaxX, MaxY, MaxZ });
 }
 
 int32 AZuruEntity::GetNumGizmos() const
@@ -59,3 +67,4 @@ void AZuruEntity::SetGizmoRotation(int32 InGizmoIndex, const FRotator& InRotatio
 
 // ==================================================================== //
 
+PRAGMA_ENABLE_OPTIMIZATION

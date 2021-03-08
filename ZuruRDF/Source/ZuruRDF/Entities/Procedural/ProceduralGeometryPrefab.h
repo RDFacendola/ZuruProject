@@ -28,7 +28,7 @@ public:
     FProceduralGeometryPrefab() = default;
 
     // Create a new prefab.
-    FProceduralGeometryPrefab(const TArray<FProceduralVertex>& InVertices);
+    FProceduralGeometryPrefab(const TArray<FProceduralVertex>& InVertices, const FBox& InBounds);
 
     // Default copy-constructor.
     FProceduralGeometryPrefab(const FProceduralGeometryPrefab& InRHS) = default;
@@ -41,6 +41,9 @@ public:
 
     // Create a mesh section to a procedural mesh component, overwriting an existing one, if possible.
     void Generate(UProceduralMeshComponent& InProceduralMeshComponent, int32 InMeshSection) const;
+
+    // Get the bounds of the prefab.
+    const FBox& GetBounds() const;
 
 private:
 
@@ -55,6 +58,9 @@ private:
 
     // Vertex indices.
     TArray<int32> Indices;
+
+    // Geometry bounds
+    FBox Bounds;
 
 };
 

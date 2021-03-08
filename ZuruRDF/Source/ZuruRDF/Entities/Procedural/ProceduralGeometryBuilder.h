@@ -57,10 +57,16 @@ public:
 
     virtual int32 GetVertexCount() const override;
 
+    // Get the bounds of the geometry generated so far.
+    const FBox& GetBounds() const;
+
 private:
 
     // Procedurally-generated vertices.
     TArray<FProceduralVertex> Vertices;
+
+    // Mesh bounds.
+    FBox Bounds{ EForceInit::ForceInitToZero };
 
 };
 

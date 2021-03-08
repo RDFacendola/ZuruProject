@@ -37,6 +37,8 @@ void AChairEntity::Generate()
 {
     if (ProceduralComponent)
     {
+        // #TODO Prefabs can be generated once and shared between any number of procedural entities.
+
         auto ProceduralMeshBuilder = FProceduralGeometryBuilder{};
 
         // Legs.
@@ -77,6 +79,8 @@ void AChairEntity::Generate()
         // Prefab.
 
         auto Prefab = ProceduralMeshBuilder.Build();
+
+        SetCollisionBounds(Prefab.GetBounds());
 
         // Generate.
 
