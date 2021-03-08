@@ -13,36 +13,38 @@
 
 void UProjectComponent::SpawnEntityAt(const FName& InEntityKey, const FTransform& InEntityTransform)
 {
-	auto World = GetWorld();
+    auto World = GetWorld();
 
-	check(World);
+    check(World);
 
-	auto GameInstance = World->GetGameInstance<UZuruGameInstance>();
+    auto GameInstance = World->GetGameInstance<UZuruGameInstance>();
 
-	check(GameInstance);
+    check(GameInstance);
 
-	auto& Database = GameInstance->GetDatabase();
+    auto& Database = GameInstance->GetDatabase();
 
-	if (auto EntityClass = Database.FindEntity(InEntityKey))
-	{
-		// Entity found.
+    if (auto EntityClass = Database.FindEntity(InEntityKey))
+    {
+        // Entity found.
 
-		auto SpawnParameters = FActorSpawnParameters{};
+        auto SpawnParameters = FActorSpawnParameters{};
 
-		SpawnParameters.bNoFail = true;
+        SpawnParameters.bNoFail = true;
 
-		auto Entity = World->SpawnActor<AZuruEntity>(EntityClass, InEntityTransform, SpawnParameters);
+        auto Entity = World->SpawnActor<AZuruEntity>(EntityClass, InEntityTransform, SpawnParameters);
 
-		Entities.Emplace(Entity);
-	}
-	else
-	{
-		// No such entity.
+        Entity->Generate();
 
-		auto Message = FString::Printf(TEXT("No entity with key '%s'."), *InEntityKey.ToString());
+        Entities.Emplace(Entity);
+    }
+    else
+    {
+        // No such entity.
 
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE, 3.0f, FColor::Red, *Message);
-	}
+        auto Message = FString::Printf(TEXT("No entity with key '%s'."), *InEntityKey.ToString());
+
+        GEngine->AddOnScreenDebugMessage(INDEX_NONE, 3.0f, FColor::Red, *Message);
+    }
 }
 
 // ==================================================================== //

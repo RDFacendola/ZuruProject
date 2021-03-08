@@ -42,5 +42,10 @@ void FZuruGizmo::SetLocation(const FVector2D& InLocation)
     Location.Y = InLocation.Y;
 }
 
+void FZuruGizmo::SetHeight(float InHeight)
+{
+    Location.Z = InHeight;
+}
+
 // ==================================================================== //
 

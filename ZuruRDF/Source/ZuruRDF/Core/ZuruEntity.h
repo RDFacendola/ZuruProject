@@ -30,6 +30,9 @@ public:
     // Create a new entity.
     AZuruEntity();
 
+    // (Re)generate entity geometry.
+    virtual void Generate();
+
     // Execute a function on each component of type TComponent owned by the entity.
     template <typename TComponent, typename TFunction>
     void ForEach(TFunction&& InFunction);

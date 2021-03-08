@@ -67,7 +67,47 @@ void ATableEntity::Generate()
         Prefab.Generate(*ProceduralComponent, 0);
 
         ProceduralComponent->SetMaterial(0, Material);
+
+        // Add chairs.
+
+        auto Flags = GetFlags();
+        auto World = GetWorld();
+        auto WorldType = World ? World->WorldType : EWorldType::None;
+
+        auto bIsClassDefaultObject = (Flags & EObjectFlags::RF_ClassDefaultObject) != 0;
+        auto bIsGameWorld = (WorldType == EWorldType::Game) || (WorldType == EWorldType::PIE);
+
+        if (!bIsClassDefaultObject && bIsGameWorld)
+        {
+            GenerateChairs();
+        }
+
+        // Update gizmos height.
+
+        auto GizmoHeight = LegsHeight + TableTopThickness + 3.0f;
+
+        NorthWestGizmo.SetHeight(GizmoHeight);
+        NorthEastGizmo.SetHeight(GizmoHeight);
+        SouthEastGizmo.SetHeight(GizmoHeight);
+        SouthWestGizmo.SetHeight(GizmoHeight);
     }
+}
+
+void ATableEntity::GenerateChairs()
+{
+    // Generate chairs.
+
+    CollectChairs();
+
+    auto NorthWestLocation = FVector2D{ NorthWestGizmo.GetLocation() };
+    auto NorthEastLocation = FVector2D{ NorthEastGizmo.GetLocation() };
+    auto SouthEastLocation = FVector2D{ SouthEastGizmo.GetLocation() };
+    auto SouthWestLocation = FVector2D{ SouthWestGizmo.GetLocation() };
+
+    SpawnChairRow(NorthWestLocation, NorthEastLocation, FRotator{ 0.0f, -180.0f, 0.0f }, ChairSpacing, NorthChairs);
+    SpawnChairRow(NorthEastLocation, SouthEastLocation, FRotator{ 0.0f, -90.0f, 0.0f }, ChairSpacing, EastChairs);
+    SpawnChairRow(SouthEastLocation, SouthWestLocation, FRotator{ 0.0f, 0.0f, 0.0f }, ChairSpacing, SouthChairs);
+    SpawnChairRow(SouthWestLocation, NorthWestLocation, FRotator{ 0.0f, +90.0f, 0.0f }, ChairSpacing, WestChairs);
 }
 
 void ATableEntity::PostInitProperties()
@@ -92,6 +132,36 @@ FZuruGizmo* ATableEntity::GetGizmo(int32 InIndex)
     }
 
     return nullptr;
+}
+
+AChairEntity* ATableEntity::SpawnChair()
+{
+    AChairEntity* ChairEntity{ nullptr };
+
+    if (ChairPool.Num() > 0)
+    {
+        // Recycle an old chair.
+
+        ChairEntity = ChairPool.Pop();
+    }
+    else
+    {
+        // Spawn a brand new chair.
+
+        auto ConcreteChairEntityClass = ChairEntityClass ? ChairEntityClass : AChairEntity::StaticClass();
+
+        auto SpawnParameters = FActorSpawnParameters{};
+
+        SpawnParameters.bNoFail = true;
+
+        ChairEntity = GetWorld()->SpawnActor<AChairEntity>(ConcreteChairEntityClass, FTransform::Identity, SpawnParameters);
+
+        ChairEntity->AttachToActor(this, FAttachmentTransformRules::SnapToTargetIncludingScale);
+    }
+
+    ChairEntity->SetActorHiddenInGame(false);
+
+    return ChairEntity;
 }
 
 void ATableEntity::SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocationWS)
@@ -191,6 +261,47 @@ void ATableEntity::SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocat
     //       hidden surface strategy we end up generating a tons of triangles.
 
     Generate();
+}
+
+void ATableEntity::CollectChairs()
+{
+    ChairPool.Append(NorthChairs);
+    ChairPool.Append(EastChairs);
+    ChairPool.Append(SouthChairs);
+    ChairPool.Append(WestChairs);
+
+    NorthChairs.Reset();
+    EastChairs.Reset();
+    SouthChairs.Reset();
+    WestChairs.Reset();
+
+    for (auto&& Chair : ChairPool)
+    {
+        Chair->SetActorHiddenInGame(true);
+    }
+}
+
+void ATableEntity::SpawnChairRow(const FVector2D& InStartLS, const FVector2D& InEndLS, const FRotator& InRotationLS, float InSpacing, TArray<AChairEntity*>& OutChairs)
+{
+    auto Distance = (InEndLS - InStartLS).Size();
+    auto Direction = (InEndLS - InStartLS).GetSafeNormal();
+
+    auto TableToWorldTransform = GetActorTransform();
+
+    for (auto ChairDistance = 0.0f; ChairDistance < Distance; ChairDistance += InSpacing)
+    {
+        auto Chair = SpawnChair();
+
+        auto ChairPosition2DLS = FVector2D{ Direction.X * ChairDistance, Direction.Y * ChairDistance } + InStartLS;
+        auto ChairPosition3DLS = FVector{ ChairPosition2DLS.X, ChairPosition2DLS.Y, 0.0f };
+        
+        auto ChairPositionWS = TableToWorldTransform.TransformPosition(ChairPosition3DLS);
+        auto ChairRotationWS = TableToWorldTransform.TransformRotation(FQuat{ InRotationLS });
+
+        Chair->SetActorLocationAndRotation(ChairPositionWS, ChairRotationWS);
+
+        OutChairs.Emplace(Chair);
+    }
 }
 
 #if WITH_EDITOR

@@ -9,6 +9,7 @@
 #include "ProceduralMeshComponent.h"
 
 #include "ZuruRDF/Core/ZuruEntity.h"
+#include "ChairEntity.h"
 
 #include "TableEntity.generated.h"
 
@@ -31,8 +32,10 @@ public:
     // Default constructor.
     ATableEntity();
 
-    // (Re)generate chair geometry.
-    void Generate();
+    virtual void Generate() override;
+
+    // Generate chairs.
+    void GenerateChairs();
 
     void PostInitProperties() override;
 
@@ -43,6 +46,15 @@ public:
     virtual void SetGizmoLocation(int32 InGizmoIndex, const FVector2D& InLocationWS) override;
 
 private:
+
+    // Generate or recycle a new chair.
+    AChairEntity* SpawnChair();
+    
+    // Collect all chairs spawned so far.
+    void CollectChairs();
+
+    // Spawn a row chair.
+    void SpawnChairRow(const FVector2D& InStartLS, const FVector2D& InEndLS, const FRotator& InRotationLS, float InSpacing, TArray<AChairEntity*>& OutChairs);
 
     // Legs' height.
     UPROPERTY(EditAnywhere, Category = Table)
@@ -64,6 +76,14 @@ private:
     UPROPERTY(EditAnywhere, Category = Table)
     FVector2D MinSize{ 500.0f, 500.0f };
 
+    // Chair spacing, in world units.
+    UPROPERTY(EditAnywhere, Category = Table)
+    float ChairSpacing{ 50.0f };
+
+    // Concrete chair class type.
+    UPROPERTY(EditAnywhere, Category = Table)
+    TSubclassOf<AChairEntity> ChairEntityClass{ AChairEntity::StaticClass() };
+
     // Test procedural mesh.
     UPROPERTY(Category = Components, DisplayName = Table, VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
     UProceduralMeshComponent* ProceduralComponent{ nullptr };
@@ -83,6 +103,26 @@ private:
 
     // South-east corner gizmo.
     FZuruGizmo SouthWestGizmo{ FVector{ -50.0f, -50.0f, 50.0f } };
+
+    // North chair row.
+    UPROPERTY()
+    TArray<AChairEntity*> NorthChairs;
+
+    // East chair row.
+    UPROPERTY()
+    TArray<AChairEntity*> EastChairs;
+
+    // South chair row.
+    UPROPERTY()
+    TArray<AChairEntity*> SouthChairs;
+
+    // West chair row.
+    UPROPERTY()
+    TArray<AChairEntity*> WestChairs;
+
+    // Pool of chairs ready to be recycled.
+    UPROPERTY()
+    TArray<AChairEntity*> ChairPool;
 
 #if WITH_EDITOR
 

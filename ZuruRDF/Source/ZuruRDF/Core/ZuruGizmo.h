@@ -43,6 +43,9 @@ public:
     // This overload ignores the Z component.
     void SetLocation(const FVector2D& InLocation);
 
+    // Set the Z component.
+    void SetHeight(float InHeight);
+
 private:
 
     // Default gizmo location.
