@@ -283,19 +283,26 @@ void ATableEntity::CollectChairs()
 
 void ATableEntity::SpawnChairRow(const FVector2D& InStartLS, const FVector2D& InEndLS, const FRotator& InRotationLS, float InSpacing, TArray<AChairEntity*>& OutChairs)
 {
-    auto Distance = (InEndLS - InStartLS).Size();
     auto Direction = (InEndLS - InStartLS).GetSafeNormal();
+
+    auto ChairStartLS = InStartLS + Direction * InSpacing * 0.5f;
+    auto ChairEndLS = InEndLS - Direction * InSpacing * 0.5f;
+
+    auto Distance = (ChairEndLS - ChairStartLS).Size();
+
+    auto ChairsToSpawn = FMath::FloorToInt(Distance / InSpacing);
 
     auto TableToWorldTransform = GetActorTransform();
 
-    for (auto ChairDistance = 0.0f; ChairDistance < Distance; ChairDistance += InSpacing)
+    for (auto ChairIndex = 0; ChairIndex < ChairsToSpawn; ++ChairIndex)
     {
         auto Chair = SpawnChair();
 
-        auto ChairPosition2DLS = FVector2D{ Direction.X * ChairDistance, Direction.Y * ChairDistance } + InStartLS;
-        auto ChairPosition3DLS = FVector{ ChairPosition2DLS.X, ChairPosition2DLS.Y, 0.0f };
-        
-        auto ChairPositionWS = TableToWorldTransform.TransformPosition(ChairPosition3DLS);
+        auto Blend = (ChairIndex + 0.5f) / ChairsToSpawn;
+
+        auto ChairPositionLS = FMath::Lerp(ChairStartLS, ChairEndLS, Blend);
+
+        auto ChairPositionWS = TableToWorldTransform.TransformPosition(FVector{ ChairPositionLS.X, ChairPositionLS.Y, 0.0f });
         auto ChairRotationWS = TableToWorldTransform.TransformRotation(FQuat{ InRotationLS });
 
         Chair->SetActorLocationAndRotation(ChairPositionWS, ChairRotationWS);
